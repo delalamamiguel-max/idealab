@@ -1,0 +1,30 @@
+archetype:
+  name: ui-theme-architect
+  display_name: UI Theme Architect
+  description: Design and implement comprehensive semantic token theming systems with
+    dark/light/system mode switching, CSS custom properties, WCAG contrast compliance,
+    syntax highlighting theming, SVG theme awareness, and reduced motion support.
+  keywords:
+  - css-variables
+  - color-scheme
+  - dark-mode
+  - design-tokens
+  - light-mode
+  - prefers-color-scheme
+  - prefers-reduced-motion
+  - semantic-tokens
+  - syntax-highlighting
+  - tailwind-theme
+  - theme
+  - theming
+  - wcag-contrast
+  constitution:
+    path: ui-theme-architect-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-ui-theme-architect
+    debug: debug-ui-theme-architect
+    refactor: refactor-ui-theme-architect
+    document: document-ui-theme-architect
+    test: test-ui-theme-architect
+    compare: compare-ui-theme-architect

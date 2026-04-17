@@ -1,0 +1,27 @@
+archetype:
+  name: backend-only
+  display_name: Backend Only
+  description: 'This constitution defines the foundational principles and hard-stop
+    rules for the **Backend Only** archetype, which generates production-ready backend
+    API services with FastAPI, Poetry, Docker, Helm, '
+  keywords:
+  - aks
+  - api
+  - azure
+  - backend
+  - ci-cd
+  - devops
+  - docker
+  - fastapi
+  - helm
+  - kubernetes
+  constitution:
+    path: backend-only-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-backend-only
+    test: test-backend-only
+    scaffold: scaffold-backend-only
+    compare: compare-backend-only
+    refactor: refactor-backend-only
+    document: document-backend-only

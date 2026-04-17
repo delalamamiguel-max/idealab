@@ -1,0 +1,101 @@
+# Environment Configuration for Terraform CI/CD Architect
+# Focus: platform provisioning pipelines, policy as code, and drift detection
+
+terraform:
+  cloud_organization: "<CLOUD_ORG>"
+  workspaces:
+    - name: "networking-prod"
+      project: "platform"
+      execution_mode: "remote"
+    - name: "analytics-prod"
+      project: "<DATA_PROJECT>"
+      execution_mode: "remote"
+  backend:
+    type: "s3"
+    bucket: "<TF_STATE_BUCKET>"
+    key_prefix: "<TF_STATE_KEY_PREFIX>"
+    dynamodb_table: "<TF_DDB_LOCK_TABLE>"
+
+pipelines:
+  orchestrator: "<CI_ORCHESTRATOR>"
+  plan_stage: "terraform-plan"
+  apply_stage: "terraform-apply"
+  approval_required: true
+  artifact_retention_days: 14
+  notifications:
+    channel: "<NOTIFICATION_CHANNEL>"
+    pagerduty_service: "<PAGERDUTY_SERVICE>"
+
+policy_as_code:
+  sentinel:
+    policy_sets:
+      - name: "guardrails-network"
+        enforcement: "hard-mandatory"
+      - name: "guardrails-security"
+        enforcement: "soft-mandatory"
+  conftest:
+    rego_path: "policy"
+    minimum_pass: 100
+  checkov:
+    framework: "terraform"
+    soft_fail: false
+
+observability:
+  drift_detection:
+    cadence_hours: 6
+    alert_channel: "#infra-alerts"
+  change_metrics:
+    change_failure_rate_target_pct: 3
+    mean_time_to_recover_minutes: 60
+    plan_to_apply_lead_time_minutes: 45
+  dashboards:
+    scorecard: "dashboards/terraform_cicd_scorecard.json"
+    runbook: "runbooks/terraform_pipeline_incident.md"
+
+security:
+  secret_management: "<SECRET_MANAGEMENT>"
+  signing:
+    gpg_key_id: "terraform-release-sign"
+  least_privilege_roles:
+    - "TerraformExecutor"
+    - "ReadOnlyAuditor"
+
+variables:
+  module_directory: "modules/networking"
+  tf_version: "<TERRAFORM_VERSION>"
+  provider_versions:
+    azurerm: "<AZURERM_PROVIDER_VERSION>"
+    aws: "<AWS_PROVIDER_VERSION>"
+  release_ticket_project: "CLOUD"
+  change_request_template: "../templates/change-request.md"
+
+validation:
+  required_cli_tools:
+    - name: "terraform"
+      min_version: "1.6.0"
+    - name: "tflint"
+      min_version: "0.50.0"
+    - name: "opa"
+      min_version: "0.58.0"
+    - name: "checkov"
+      min_version: "2.5.0"
+  required_env_vars:
+    - "ARM_CLIENT_ID"
+    - "ARM_CLIENT_SECRET"
+    - "ARM_TENANT_ID"
+  optional_env_vars:
+    - "AWS_ACCESS_KEY_ID"
+    - "AWS_SECRET_ACCESS_KEY"
+    - "AZDO_PERSONAL_ACCESS_TOKEN"
+  preflight_commands:
+    - "terraform -version"
+    - "tflint --version"
+    - "opa version"
+
+examples:
+  prompts:
+    - "Generate a Terraform deployment pipeline with plan, policy check, manual approval, and apply gates."
+    - "List the guardrails required before merging a networking module update into production."
+  scripts:
+    - "snippets/terraform-preflight.sh"
+    - "snippets/policy-report.sh"

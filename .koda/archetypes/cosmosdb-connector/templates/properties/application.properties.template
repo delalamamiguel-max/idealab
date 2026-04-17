@@ -1,0 +1,41 @@
+# Cosmos DB Connector Configuration
+
+# Enable auto-configuration
+cosmos.autoconfig.enabled=true
+
+# Database connection configuration
+# Replace {key} with your database identifier (e.g., orders, inventory)
+# cosmos.config.{key}.hostName=https://{account}.documents.azure.com:443/
+# cosmos.config.{key}.secretKey=${COSMOS_SECRET_KEY}
+# cosmos.config.{key}.databaseName={DATABASE_NAME}
+# cosmos.config.{key}.preferredRegion=East US 2
+# cosmos.config.{key}.consistencyLevel=BOUNDED_STALENESS
+# cosmos.config.{key}.maxConnectionPool=50
+# cosmos.config.{key}.idleConnectionTimeout=1000
+# cosmos.config.{key}.directModeEnabled=true
+# cosmos.config.{key}.agentSuffix=CosmosDB
+# cosmos.config.{key}.contentResponseOnWriteEnabled=false
+
+# Example: Orders database configuration
+cosmos.config.orders.hostName=https://myaccount.documents.azure.com:443/
+cosmos.config.orders.secretKey=${COSMOS_SECRET_KEY}
+cosmos.config.orders.databaseName=ORDERS
+cosmos.config.orders.preferredRegion=East US 2
+cosmos.config.orders.consistencyLevel=SESSION
+cosmos.config.orders.maxConnectionPool=50
+
+# Retry configuration
+cosmos.retry.enabled=true
+cosmos.retry.count=3
+cosmos.retry.sleep.time=100
+cosmos.sync.retry.enabled=true
+cosmos.sync.retry.count=3
+
+# Retriable exceptions (comma-separated)
+cosmos.retryable.exceptions=io.netty.handler.timeout.ReadTimeoutException,com.azure.cosmos.CosmosException
+
+# Retriable status codes (comma-separated)
+cosmos.retry.status.code=429,503
+
+# Metrics
+cosmos.print.metrics=false

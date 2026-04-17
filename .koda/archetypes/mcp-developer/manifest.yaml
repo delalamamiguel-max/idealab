@@ -1,0 +1,37 @@
+archetype:
+  name: mcp-developer
+  display_name: MCP Developer
+  description: |
+    Build Model Context Protocol (MCP) tool servers with proper schema validation,
+    error handling, and security boundaries. Implements tool correctness patterns
+    for agent integration.
+  category: 10-agentic-development
+  keywords:
+    - mcp developer
+    - model context protocol developer
+    - MCP
+    - Model Context Protocol
+    - tool server
+    - function calling
+    - tool
+    - API
+    - schema
+    - validation
+    - tool correctness
+    - function
+    - capability
+    - integration
+  constitution:
+    path: mcp-developer-constitution.md
+  dependencies:
+    - mcp
+    - langchain
+    - pydantic
+    - fastapi
+  workflows:
+    scaffold: scaffold-mcp-developer
+    refactor: refactor-mcp-developer
+    compare: compare-mcp-developer
+    test: test-mcp-developer
+    debug: debug-mcp-developer
+    document: document-mcp-developer

@@ -1,0 +1,23 @@
+archetype:
+  name: data-validation
+  display_name: Data Validation
+  description: Establish enforceable standards ensuring datasets are complete, accurate,
+    timely, consistent, and contract-compliant across ingestion, transformation, and
+    serving tiers—reducing downstream risk and in
+  keywords:
+  - data
+  - delta
+  - governance
+  - react
+  - scala
+  - validation
+  constitution:
+    path: data-validation-constitution.md
+  dependencies: []
+  workflows:
+    document: document-data-validation
+    debug: debug-data-validation
+    scaffold: scaffold-data-validation
+    compare: compare-data-validation
+    test: test-data-validation
+    refactor: refactor-data-validation

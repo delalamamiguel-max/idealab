@@ -1,0 +1,52 @@
+# Environment Configuration for eda navigator
+# Focus: collaborative exploratory analysis inside Databricks notebooks
+
+spark:
+  version: "3.5+"
+  unity_catalog: true
+
+python:
+  version: "3.10"
+
+r:
+  enabled: true
+  version: "4.3"
+
+libraries:
+  - pandas: "2.1+"
+  - pyspark: "3.5+"
+  - databricks-feature-store: "0.18+"
+  - plotly: "5.18+"
+  - seaborn: "0.13+"
+  - mlflow: "2.11+"
+
+notebooks:
+  default_language: "python"
+  supported_languages:
+    - python
+    - sql
+    - r
+  collaborative_comments: true
+  review_checklist: "eda-quality-checklist.md"
+
+experiments:
+  tracking_uri: "databricks"
+  mlflow_workspace_dir: "/Shared/experiments/EDA"
+  feature_store_catalog: "enterprise_feature_store"
+
+security:
+  personal_compute_disabled: true
+  secret_scope: "eda-shared-scope"
+
+visualization:
+  default_theme: "att_brand"
+  dashboard_target: "/Shared/dashboards/EDA"
+
+ci:
+  azure_devops_project: "AI-Analytics"
+  notebook_review_pipeline: "EDA-Notebook-Checks"
+
+variables:
+  default_profile_row_limit: 100000
+  max_parallel_profilers: 4
+  visualization_export_format: "html"

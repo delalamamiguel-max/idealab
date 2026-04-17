@@ -1,0 +1,108 @@
+# Responsible Prompting Archetype Environment Configuration
+
+archetype: responsible_prompting_steward
+name: "Responsible Prompting Steward"
+description: "Designs, validates, and governs safe, policy-aligned prompt and agent patterns"
+
+python:
+  min_version: "3.11"
+  command: "python --version"
+
+required_tools:
+  - name: "jq"
+    command: "jq --version"
+  - name: "pytest"
+    command: "pytest --version"
+  - name: "curl"
+    command: "curl --version"
+  - name: "guardrails-hub"
+    command: "guardrails --version"
+  - name: "promptfoo"
+    command: "promptfoo --version"
+  - name: "openai-cli"
+    command: "openai --version"
+
+moderation:
+  provider: "azure_openai"
+  fallback_provider: "perspective_api"
+  enforce_block_categories:
+    - hate
+    - harassment
+    - sexual
+    - self_harm
+    - violence
+    - illicit_behavior
+  review_threshold:
+    severity: medium
+    auto_escalate_on:
+      - jailbreak_detected
+      - pii_leak
+      - regulatory_term_match
+
+prompt_repository:
+  storage: "git"
+  repo_path: "responsible_prompting/prompts"
+  versioning: "semver"
+  require_signed_commits: true
+  lint_command: "promptfoo eval promptfoo.yaml"
+
+guardrails:
+  template_dir: "responsible_prompting/guardrails"
+  policy_reference: "policies/ai_safety_policies.md"
+  output_filters:
+    - name: "pii_redactor"
+      enabled: true
+    - name: "toxicity_filter"
+      enabled: true
+    - name: "bias_checker"
+      enabled: true
+
+evaluation:
+  harness_dir: "responsible_prompting/tests"
+  golden_dataset: "datasets/safety_golden_set.jsonl"
+  jailbreak_suite: "datasets/jailbreak_suite.jsonl"
+  bias_suite: "datasets/bias_suite.jsonl"
+  required_pass_pct:
+    jailbreak: 99
+    toxicity: 98
+    bias: 95
+  latency_budget_ms_p95: 250
+
+logging:
+  sink: "kafka://prompt-logs"
+  format: "json_lines"
+  include:
+    - trace_id
+    - prompt_version
+    - guardrail_outcome
+    - moderation_decision
+    - escalation_reference
+  retention_days: 365
+
+compliance:
+  privacy_review_required: true
+  legal_review_required: true
+  data_retention_policy: "standard"
+  audit_export_schedule_cron: "0 2 * * 1"
+
+incident_response:
+  escalation_channel: "#responsible-prompting-pager"
+  oncall_rotation: "responsible_prompting.json"
+  playbook: "runbooks/responsible_prompting_incident.md"
+  max_ack_minutes: 15
+
+ownership:
+  team: "responsible-prompting"
+  slack: "#responsible-prompting"
+  email_distribution: "responsible.prompting@att.com"
+  stakeholders:
+    ethics_liaison: "ethics@att.com"
+    compliance_partner: "compliance@att.com"
+
+placeholders:
+  sandbox_env: "dev"
+  prod_env: "prod"
+  feature_flag: "RESP_PRTCT_GUARDRAILS"
+  risk_registry: "docs/risk_register.md"
+
+# Extend with additional provider configs or guardrail modules as needed.

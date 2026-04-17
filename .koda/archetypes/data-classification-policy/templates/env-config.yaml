@@ -1,0 +1,44 @@
+# Environment Configuration for Data Classification Policy
+# This file defines environment-specific parameters for data classification rules and enforcement.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-classification-config
+  namespace: data-governance
+  labels:
+    app: data-classifier
+    archetype: data-governance-quality
+    component: policy-enforcement
+
+data:
+  # ---------------------------------------------------------------------------
+  # General Settings
+  # ---------------------------------------------------------------------------
+  ENVIRONMENT_NAME: "development"
+  LOG_LEVEL: "INFO" # Options: DEBUG, INFO, WARN, ERROR
+  DRY_RUN_MODE: "true" # If true, violations are logged but data is not blocked
+
+  # ---------------------------------------------------------------------------
+  # Classification Rules Configuration
+  # ---------------------------------------------------------------------------
+  # Path to the remote or local policy definitions
+  POLICY_SOURCE_URL: "s3://config-bucket/policies/classification-rules.json"
+  
+  # Sensitivity Levels enabled in this environment
+  ENABLED_SENSITIVITY_LEVELS: "PUBLIC,INTERNAL,CONFIDENTIAL,RESTRICTED"
+
+  # Pattern matching thresholds (0.0 to 1.0)
+  CONFIDENCE_THRESHOLD_PII: "0.85"
+  CONFIDENCE_THRESHOLD_PCI: "0.95"
+
+  # ---------------------------------------------------------------------------
+  # Integration Settings
+  # ---------------------------------------------------------------------------
+  # Where to send classification reports/alerts
+  AUDIT_STREAM_TOPIC: "data-governance-audit-logs"
+  METRICS_ENDPOINT: "/metrics"
+
+  # Data Catalog Integration
+  DATA_CATALOG_URL: "https://catalog.internal.example.com"
+  AUTO_TAGGING_ENABLED: "true"

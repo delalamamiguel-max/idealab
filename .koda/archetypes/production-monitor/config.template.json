@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Production Monitor Configuration",
+  "description": "Configuration template for production monitoring setup",
+  
+  "arize_phoenix": {
+    "space_id": "REPLACE_WITH_YOUR_ARIZE_SPACE_ID",
+    "api_key": "${ARIZE_API_KEY}",
+    "endpoint": "https://app.arize.com/v1",
+    "project_name": "agent-monitoring",
+    "enabled": true
+  },
+  
+  "alert_channels": {
+    "critical": {
+      "slack_channel": "#oncall-alerts",
+      "slack_webhook": "${SLACK_WEBHOOK_CRITICAL}",
+      "pagerduty_key": "${PAGERDUTY_INTEGRATION_KEY}",
+      "email": ["oncall@example.com"]
+    },
+    "warning": {
+      "slack_channel": "#monitoring",
+      "slack_webhook": "${SLACK_WEBHOOK_WARNING}",
+      "email": ["team@example.com"]
+    },
+    "info": {
+      "slack_channel": "#agent-logs",
+      "slack_webhook": "${SLACK_WEBHOOK_INFO}"
+    }
+  },
+  
+  "slo_thresholds": {
+    "latency_p50_ms": 200,
+    "latency_p95_ms": 500,
+    "latency_p99_ms": 1000,
+    "error_rate": 0.01,
+    "availability": 0.999,
+    "token_usage_per_request": 5000
+  },
+  
+  "monitoring_intervals": {
+    "metrics_collection_seconds": 60,
+    "health_check_seconds": 30,
+    "alert_evaluation_seconds": 120
+  },
+  
+  "retention_policies": {
+    "traces_days": 90,
+    "metrics_days": 365,
+    "logs_days": 30,
+    "sox_audit_logs_years": 7
+  },
+  
+  "dashboards": {
+    "grafana_url": "https://grafana.example.com",
+    "phoenix_url": "https://app.arize.com",
+    "custom_dashboards": [
+      {
+        "name": "Agent Performance",
+        "url": "https://grafana.example.com/d/agent-perf"
+      },
+      {
+        "name": "Cost Tracking",
+        "url": "https://grafana.example.com/d/agent-cost"
+      }
+    ]
+  },
+  
+  "cost_tracking": {
+    "enabled": true,
+    "budget_alerts": {
+      "daily_usd": 1000,
+      "monthly_usd": 25000
+    },
+    "cost_per_1k_tokens": {
+      "gpt-4": 0.03,
+      "gpt-4-turbo": 0.01,
+      "gpt-3.5-turbo": 0.002
+    }
+  },
+  
+  "sox_compliance": {
+    "enabled": true,
+    "audit_log_path": "${AGENT_DATA}/audit_logs/",
+    "immutable_logging": true,
+    "encryption_at_rest": true,
+    "retention_years": 7
+  },
+  
+  "agent_specific": {
+    "agent_name": "REPLACE_WITH_AGENT_NAME",
+    "maturity_level": "L3",
+    "critical_path": false,
+    "custom_metrics": []
+  }
+}

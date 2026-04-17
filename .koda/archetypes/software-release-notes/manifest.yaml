@@ -1,0 +1,24 @@
+archetype:
+  name: software-release-notes
+  display_name: Software Release Notes
+  description: This constitution defines the principles and rules for generating comprehensive
+    release notes from JIRA user stories across one or more sprints. ensures clarity,
+    traceability, and business relevance i
+  keywords:
+  - delta
+  - notes
+  - release
+  - software
+  - changelog
+  - sprint
+  - jira
+  constitution:
+    path: software-release-notes-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-software-release-notes
+    test: test-software-release-notes
+    debug: debug-software-release-notes
+    document: document-software-release-notes
+    scaffold: scaffold-software-release-notes
+    compare: compare-software-release-notes

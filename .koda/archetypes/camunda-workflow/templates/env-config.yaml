@@ -1,0 +1,65 @@
+# Environment Configuration for Camunda Orchestration
+
+engine:
+  type: "Camunda 7 EE"
+  version: "7.20+"
+  spring_boot_starter: "camunda-bpm-spring-boot-starter-webapp-ee"
+  rest_starter: "camunda-bpm-spring-boot-starter-rest"
+  history_time_to_live: 60
+
+runtime:
+  java_version: "17"
+  groovy_version: "4.x"
+  build_tool: "Maven"
+  spring_boot_version: "3.x"
+
+database:
+  runtime: "PostgreSQL"
+  test: "H2"
+  schema_management: "auto"
+
+integration:
+  camel:
+    enabled: true
+    exclude_health_check: true
+    route_packages:
+      - "route"
+      - "integration"
+  kafka:
+    enabled: true
+    consumer_topics: []
+    producer_topics: []
+
+deployment:
+  container: "Docker"
+  orchestrator: "AKS"
+  process_resources:
+    bpmn_directory: "src/main/resources/bpmn/"
+    dmn_directory: "src/main/resources/dmn/"
+    processes_xml: "META-INF/processes.xml"
+
+security:
+  authentication:
+    method: "OAuth2"
+    provider: "Azure AD"
+  credentials_source:
+    - azure_keyvault
+    - env_vars
+  network:
+    tls_minimum_version: "1.2"
+
+testing:
+  framework: "Spock"
+  assertion_library: "camunda-bpm-assert"
+  test_resources: "src/test/resources/bpmn/"
+  coverage_threshold: "80%"
+
+monitoring:
+  cockpit: true
+  elasticsearch: true
+  spring_actuator: true
+
+variables:
+  default_history_ttl: 60
+  default_topic_prefix: "external"
+  naming_convention: "snake_case"

@@ -1,0 +1,26 @@
+archetype:
+  name: pub-sub-load-testing
+  display_name: Pub Sub Load Testing
+  description: Ensure the Pub/Sub system can handle expected and peak loads reliably,
+    with minimal latency and no message loss. This agent governs the design, execution,
+    and analysis of load testing scenarios.
+  keywords:
+  - api
+  - ci-cd
+  - java
+  - kafka
+  - load
+  - pub
+  - sub
+  - testing
+  - validation
+  constitution:
+    path: pub-sub-load-testing-constitution.md
+  dependencies: []
+  workflows:
+    test: test-pub-sub-load-testing
+    debug: debug-pub-sub-load-testing
+    compare: compare-pub-sub-load-testing
+    scaffold: scaffold-pub-sub-load-testing
+    refactor: refactor-pub-sub-load-testing
+    document: document-pub-sub-load-testing

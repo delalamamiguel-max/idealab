@@ -1,0 +1,31 @@
+archetype:
+  name: quality-guardian
+  display_name: Quality Guardian
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the quality guardian archetype.
+  keywords:
+  - checks
+  - data-quality
+  - deequ
+  - delta
+  - governance
+  - great-expectations
+  - guardian
+  - numpy
+  - pandas
+  - python
+  - quality
+  - scala
+  - testing
+  - threshold
+  - validation
+  constitution:
+    path: quality-guardian-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-quality-guardian
+    document: document-quality-guardian
+    scaffold: scaffold-quality-guardian
+    test: test-quality-guardian
+    compare: compare-quality-guardian
+    debug: debug-quality-guardian

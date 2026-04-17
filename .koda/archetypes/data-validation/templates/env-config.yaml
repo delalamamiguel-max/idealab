@@ -1,0 +1,17 @@
+# Data Validation Engineer Archetype Environment Configuration
+
+archetype: data_validation_engineer
+name: "Data Validation Engineer"
+description: "Defines contracts, executes rule packs, detects drift & anomalies, and enforces quality gates"
+
+python:
+  min_version: "3.11"
+  command: "python --version"
+
+required_tools:
+  - name: "jq"
+    command: "jq --version"
+  - name: "pytest"
+    command: "pytest --version"
+  - name: "ks-stat"
+    command: "python -c 'import scipy'

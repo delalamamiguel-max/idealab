@@ -1,0 +1,31 @@
+archetype:
+  name: llm-pipeline-architect
+  display_name: LLM Pipeline Architect
+  description: Design and build AI agent orchestration pipelines with intent classification,
+    multi-phase task planning, purpose-based model routing, phase evaluation with retry/replan,
+    deterministic quality gates, context handoff, cross-phase memory, and streaming event
+    architectures.
+  keywords:
+  - agent-orchestration
+  - agent-pipeline
+  - context-handoff
+  - intent-classification
+  - llm-orchestration
+  - llm-pipeline
+  - loop-guard
+  - model-routing
+  - multi-phase
+  - phase-evaluation
+  - quality-gate
+  - task-decomposition
+  - task-planning
+  constitution:
+    path: llm-pipeline-architect-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-llm-pipeline-architect
+    debug: debug-llm-pipeline-architect
+    refactor: refactor-llm-pipeline-architect
+    document: document-llm-pipeline-architect
+    test: test-llm-pipeline-architect
+    compare: compare-llm-pipeline-architect

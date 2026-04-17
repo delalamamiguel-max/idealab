@@ -1,0 +1,52 @@
+archetype: impact_analyzer
+mode: analysis_only
+search_config:
+  max_depth: 20
+  timeout_seconds: 60
+  case_sensitive: false
+  
+file_patterns:
+  sql: ["*.sql", "*.snowsql", "*.hql", "*.ddl"]
+  python: ["*.py", "*.ipynb"]
+  orchestration: ["*.txt", "*.js", "*.json", "*.yaml"]
+  schedules: ["*.sched"]
+  scala: ["*.scala"]
+  config: ["*.properties", "*.conf", "*.ini", "*.env"]
+
+ignored_directories:
+  - ".git"
+  - ".idea"
+  - ".vscode"
+  - "__pycache__"
+  - "target"
+  - "dist"
+  - "node_modules"
+  - "venv"
+  - ".DS_Store"
+
+risk_keywords:
+  high:
+    - "SELECT *"
+    - "select *"
+    - "DROP TABLE"
+    - "TRUNCATE"
+    - "spark.read.option(\"inferSchema\", \"true\")"
+    - "FOLLOWS"
+  medium:
+    - "ALTER TABLE"
+    - "RENAME"
+    - "CAST("
+
+lineage_extract:
+  sched:
+    keys: ["SCHEDULE", "SCRIPTNAME", "FOLLOWS", "AT"]
+  ksh:
+    driver_patterns: ["snow_driver.ksh", "--load_table_nm=", "--extract_nm=", "--step=", "--logon_string="]
+
+outputs:
+  artifacts:
+    - "Observations/Diagrams/<schedule_name>.dot"
+    - "Observations/Reports/impact_report_<timestamp>.md"
+  constraints:
+    - "No patches or PR guidance"
+    - "Findings and recommendations only"

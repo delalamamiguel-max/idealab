@@ -1,0 +1,27 @@
+archetype:
+  name: microservice-cicd-architect
+  display_name: Microservice Ci/Cd Architect
+  description: This constitution codifies the non-negotiable guardrails and preferred
+    operating model for the Microservice CI/CD Architect archetype. Every generated
+    pipeline, runbook, and automation must uphold the
+  keywords:
+  - architect
+  - ci-cd
+  - cicd
+  - compliance
+  - devops
+  - governance
+  - microservice
+  - observability
+  - scala
+  - security
+  constitution:
+    path: microservice-cicd-architect-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-microservice-cicd-architect
+    document: document-microservice-cicd-architect
+    test: test-microservice-cicd-architect
+    scaffold: scaffold-microservice-cicd-architect
+    compare: compare-microservice-cicd-architect
+    refactor: refactor-microservice-cicd-architect

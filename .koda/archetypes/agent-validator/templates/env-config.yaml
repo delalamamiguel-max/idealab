@@ -1,0 +1,46 @@
+# Agent Archetype: Agent Validator
+# Category: 10-agentic-development
+# Purpose: Agent validation and quality gates
+
+python_version: "3.10"
+
+performance:
+  profile: "balanced"
+  parallel_execution: true
+  max_validation_jobs: 8
+  report_timeout_seconds: 300
+
+variables:
+  required:
+    - OPENAI_API_KEY
+  optional:
+    - LANGSMITH_API_KEY
+
+validation:
+  minimum_metrics_pass: 3
+  block_on_safety_failure: true
+  require_all_metrics: false
+
+available_libraries:
+  - deepeval>=0.21.0
+  - pytest>=8.0.0
+  - pytest-asyncio>=0.23.0
+  - langsmith>=0.0.70
+
+default_parameters:
+  thresholds:
+    task_completion: 0.8
+    tool_correctness: 0.9
+    step_efficiency: 0.7
+    plan_adherence: 0.85
+    safety_score: 0.95
+  gates:
+    block_on_safety_failure: true
+    require_all_metrics: false
+    minimum_metrics_pass: 3
+
+required_env_vars:
+  - OPENAI_API_KEY
+
+optional_env_vars:
+  - LANGSMITH_API_KEY

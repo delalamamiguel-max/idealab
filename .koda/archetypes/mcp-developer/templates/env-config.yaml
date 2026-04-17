@@ -1,0 +1,47 @@
+# Agent Archetype: MCP Developer
+# Category: 10-agentic-development
+# Purpose: MCP tool server development with schema validation
+
+python_version: "3.10"
+
+performance:
+  profile: "balanced"
+  request_timeout_seconds: 30
+  max_retries: 2
+  max_workers: 4
+
+variables:
+  required: []
+  optional:
+    - MCP_SERVER_PORT
+    - LOG_LEVEL
+
+validation:
+  schema_validation_required: true
+  output_validation_required: true
+  structured_error_responses: true
+
+available_libraries:
+  - mcp>=0.1.0
+  - langchain>=0.1.0
+  - pydantic>=2.5.0
+  - fastapi>=0.109.0
+  - uvicorn>=0.27.0
+
+default_parameters:
+  tool:
+    timeout_seconds: 30
+    max_retries: 2
+    validate_inputs: true
+    validate_outputs: true
+    log_executions: true
+  server:
+    host: "0.0.0.0"
+    port: 8000
+    workers: 4
+
+required_env_vars: []
+
+optional_env_vars:
+  - MCP_SERVER_PORT
+  - LOG_LEVEL

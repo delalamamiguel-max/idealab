@@ -1,0 +1,31 @@
+archetype:
+  name: cassandra-connector
+  display_name: Cassandra Connector
+  description: Establish standard, secure, and performant practices for Java Spring
+    Boot applications that connect to Apache Cassandra clusters using the DataStax
+    driver, with governed configuration for SSL/TLS, connection pooling, load balancing,
+    and health monitoring.
+  keywords:
+  - apache-cassandra
+  - azure
+  - datastax
+  - java
+  - spring-boot
+  - ssl
+  - connection-pooling
+  - load-balancing
+  - driver-migration
+  - driver-4x
+  constitution:
+    path: cassandra-connector-constitution.md
+  migration_guide:
+    path: MIGRATION-GUIDE-3x-to-4x.md
+    description: Comprehensive guide for migrating from DataStax Java Driver 3.x to 4.17.x
+  dependencies: []
+  workflows:
+    debug: debug-cassandra-connector
+    compare: compare-cassandra-connector
+    scaffold: scaffold-cassandra-connector
+    refactor: refactor-cassandra-connector
+    document: document-cassandra-connector
+    test: test-cassandra-connector

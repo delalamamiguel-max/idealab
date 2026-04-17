@@ -1,0 +1,44 @@
+# Environment Configuration for notebook collaboration coach
+# Focus: collaborative Databricks/VSCode notebook best practices
+
+notebooks:
+  platforms:
+    - "databricks"
+    - "vscode"
+  version_control: "azure_devops"
+  default_reviewers_group: "data-science-collaborators"
+  comment_policy:
+    requires_resolution: true
+    requires_owner_ack: true
+
+python:
+  version: "3.10"
+
+libraries:
+  - black: "23.12+"
+  - ruff: "0.1+"
+  - nbqa: "1.8+"
+  - jupytext: "1.16+"
+  - papermill: "2.5+"
+  - mlflow: "2.11+"
+
+ci:
+  azure_devops_project: "AI-Analytics"
+  pipeline: "Notebook-Collaboration"
+  checks:
+    - "nbqa lint"
+    - "papermill execute"
+    - "mlflow tag sync"
+
+sync:
+  jupytext_format: "py:percent"
+  default_branch_protection: true
+
+security:
+  secret_scope: "notebook-collab"
+  disallow_personal_tokens: true
+
+variables:
+  max_notebook_runtime_minutes: 20
+  reviewer_sla_hours: 24
+  default_template: "CDO-AIFC/reference/templates/notebooks/ds_notebook_template.py"

@@ -1,0 +1,160 @@
+# Agent Archetype: Guardrails Engineer
+# Category: 10-agentic-development
+# Purpose: Runtime guardrails for agent input validation, output filtering, and safety enforcement
+# Version: 1.0.0
+
+python_version: "3.10"
+
+performance:
+  profile: "balanced"
+  max_input_length: 10000
+  max_concurrent_checks: 5
+  total_timeout_ms: 2000
+
+variables:
+  required:
+    - OPENAI_API_KEY
+  optional:
+    - ANTHROPIC_API_KEY
+    - PHOENIX_ENDPOINT
+    - PHOENIX_API_KEY
+    - PROMETHEUS_PUSHGATEWAY
+    - SLACK_WEBHOOK_URL
+
+# Required libraries and versions
+available_libraries:
+  # Core frameworks
+  - langchain>=0.1.0
+  - langgraph>=0.0.20
+  - langsmith>=0.0.70
+  
+  # Evaluation metrics
+  - deepeval>=0.21.0
+  
+  # PII detection
+  - presidio-analyzer>=2.2.0
+  - presidio-anonymizer>=2.2.0
+  
+  # Observability
+  - arize-phoenix>=4.0.0
+  - openinference-instrumentation-langchain>=0.1.0
+  
+  # LLM providers
+  - openai>=1.10.0
+  - anthropic>=0.8.0
+  
+  # Utilities
+  - pydantic>=2.5.0
+  - pyyaml>=6.0.0
+
+# Default parameters
+default_parameters:
+  # Classifier model for guardrails
+  classifier:
+    provider: "openai"
+    model: "gpt-3.5-turbo"
+    temperature: 0.0
+    max_tokens: 100
+  
+  # Input guardrails defaults
+  input_guardrails:
+    prompt_injection:
+      enabled: true
+      threshold: 0.8
+      action: "block"
+      timeout_ms: 500
+    pii_detection:
+      enabled: true
+      engine: "presidio"
+      action: "mask"
+    topic_boundary:
+      enabled: false
+      action: "redirect"
+  
+  # Output guardrails defaults
+  output_guardrails:
+    hallucination:
+      enabled: true
+      threshold: 0.9
+      action: "block"
+      timeout_ms: 1000
+    pii_leakage:
+      enabled: true
+      threshold: 1.0
+      action: "block"
+    toxicity:
+      enabled: true
+      threshold: 0.99
+      action: "block"
+    non_advice:
+      enabled: false
+      advice_types: ["financial", "legal", "medical"]
+      threshold: 0.95
+      action: "block"
+  
+  # Performance settings
+  performance:
+    max_input_length: 10000
+    enable_caching: true
+    cache_ttl_seconds: 300
+    max_concurrent_checks: 5
+    total_timeout_ms: 2000
+  
+  # Monitoring settings
+  monitoring:
+    log_all_triggers: true
+    alert_on_bypass: true
+    export_to_phoenix: false
+    metrics_enabled: true
+
+# Environment variables required
+required_env_vars:
+  - OPENAI_API_KEY
+
+# Optional environment variables
+optional_env_vars:
+  - ANTHROPIC_API_KEY
+  - PHOENIX_ENDPOINT
+  - PHOENIX_API_KEY
+  - PROMETHEUS_PUSHGATEWAY
+  - SLACK_WEBHOOK_URL
+
+# SOX-scoped configuration overrides
+sox_config:
+  monitoring:
+    log_all_triggers: true
+    alert_on_bypass: true
+    export_to_phoenix: true
+  output_guardrails:
+    hallucination:
+      enabled: true
+      threshold: 0.9
+    pii_leakage:
+      enabled: true
+      threshold: 1.0
+  required_env_vars:
+    - PHOENIX_ENDPOINT
+    - PHOENIX_API_KEY
+    - SOX_EVIDENCE_BUCKET
+
+# Agent level requirements
+level_requirements:
+  L1:
+    input_guardrails: []
+    output_guardrails: ["schema_validation"]
+  L2:
+    input_guardrails: ["pii_detection"]
+    output_guardrails: ["schema_validation", "pii_leakage"]
+  L3:
+    input_guardrails: ["prompt_injection", "pii_detection"]
+    output_guardrails: ["hallucination", "pii_leakage", "schema_validation"]
+  L4:
+    input_guardrails: ["prompt_injection", "pii_detection", "topic_boundary"]
+    output_guardrails: ["hallucination", "pii_leakage", "toxicity", "non_advice", "schema_validation"]
+
+# Validation rules
+validation:
+  min_threshold: 0.5
+  max_threshold: 1.0
+  allowed_actions: ["block", "mask", "redirect", "warn", "log"]
+  required_for_sox: ["hallucination", "pii_leakage", "audit_logging"]

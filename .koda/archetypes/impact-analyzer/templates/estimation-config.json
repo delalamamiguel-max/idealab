@@ -1,0 +1,65 @@
+{
+  "category_weights": {
+    "sql": {
+      "hours_per_file": 1.5,
+      "hours_per_occurrence": 0.05
+    },
+    "python": {
+      "hours_per_file": 2.0,
+      "hours_per_occurrence": 0.1
+    },
+    "scala": {
+      "hours_per_file": 2.5,
+      "hours_per_occurrence": 0.1
+    },
+    "orchestration": {
+      "hours_per_file": 1.8,
+      "hours_per_occurrence": 0.05
+    },
+    "config": {
+      "hours_per_file": 1.0,
+      "hours_per_occurrence": 0.02
+    }
+  },
+  "layer_mapping": {
+    "sql": "ingestion",
+    "python": "transformation",
+    "scala": "transformation",
+    "orchestration": "orchestration",
+    "config": "presentation"
+  },
+  "complexity_thresholds": {
+    "Small": 5,
+    "Medium": 20,
+    "Large": 75,
+    "X-Large": 150
+  },
+  "phase_models": {
+    "single_layer": {
+      "analysis_design": 6,
+      "development": 18,
+      "unit_testing": 9,
+      "integration_testing": 8,
+      "deployment_ops": 4
+    },
+    "multi_layer": {
+      "analysis_design": 12,
+      "development": 36,
+      "unit_testing": 18,
+      "integration_testing": 16,
+      "deployment_ops": 8
+    },
+    "program": {
+      "analysis_design": 24,
+      "development": 72,
+      "unit_testing": 36,
+      "integration_testing": 40,
+      "deployment_ops": 16
+    }
+  },
+  "buffer_defaults": {
+    "single_layer": 0.25,
+    "multi_layer": 0.35,
+    "program": 0.5
+  }
+}

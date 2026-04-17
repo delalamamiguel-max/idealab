@@ -1,0 +1,40 @@
+archetype:
+  name: eval-specialist
+  display_name: Eval Specialist
+  description: |
+    Create and tune evaluations with LLM-as-judge patterns, custom graders, Arize Phoenix 
+    observability, and SOX-compliant audit trails. Supports DeepEval, RAGAS, and LangSmith
+    evaluation frameworks.
+  category: 10-agentic-development
+  keywords:
+    - eval specialist
+    - evaluation specialist
+    - evaluation
+    - eval
+    - judge
+    - benchmark
+    - metrics
+    - LLM-as-judge
+    - grader
+    - scoring
+    - regression
+    - arize
+    - phoenix
+    - deepeval
+    - ragas
+    - faithfulness
+    - hallucination
+  constitution:
+    path: eval-specialist-constitution.md
+  dependencies:
+    - deepeval
+    - ragas
+    - arize-phoenix
+    - langsmith
+  workflows:
+    scaffold: scaffold-eval-specialist
+    refactor: refactor-eval-specialist
+    compare: compare-eval-specialist
+    test: test-eval-specialist
+    debug: debug-eval-specialist
+    document: document-eval-specialist

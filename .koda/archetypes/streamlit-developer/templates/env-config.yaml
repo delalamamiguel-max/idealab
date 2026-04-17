@@ -1,0 +1,47 @@
+# Streamlit Developer Archetype Environment Configuration
+
+archetype: streamlit_developer
+name: "Streamlit Developer"
+description: "Data application development with Streamlit/Python"
+
+# Required environment variables
+required_env_vars:
+  - SNOWFLAKE_ACCOUNT
+  - SNOWFLAKE_USER
+  - SNOWFLAKE_WAREHOUSE
+  - SNOWFLAKE_ROLE
+
+# Optional environment variables
+optional_env_vars:
+  - SNOWFLAKE_PASSWORD
+  - SNOWFLAKE_AUTHENTICATOR
+  - LOG_LEVEL
+
+# Tool requirements
+required_tools:
+  python:
+    min_version: "3.9.0"
+    command: "python --version"
+
+# AT&T Brand Guidelines
+brand_guidelines:
+  colors:
+    primary: "#009FDB"  # AT&T Blue
+    cta: "#00388F"      # Cobalt
+    text: "#212121"     # Dark Gray
+    background: "#FFFFFF"
+  typography:
+    family: "ATT Aleck Sans"
+  accessibility:
+    standard: "WCAG 2.1 AA"
+    contrast_ratio: 4.5
+
+# Project structure
+project_structure:
+  - .streamlit/config.toml
+  - .streamlit/secrets.toml
+  - pages/
+  - src/components/
+  - src/utils/
+  - app.py
+  - requirements.txt

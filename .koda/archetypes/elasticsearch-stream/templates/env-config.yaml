@@ -1,0 +1,107 @@
+# Environment Configuration for Elasticsearch Stream Archetype
+# Captures streaming, indexing, and observability parameters for EventHub -> Elasticsearch pipelines
+
+elasticsearch:
+  endpoint: "https://search-prod-contoso.eastus.azure.elastic-cloud.com"
+  cloud_id: "prod-search:ZXUuMS4yMy4zNC4xOjkyNDA="
+  index_prefix: "telemetry-events"
+  lifecycle_policy: "telemetry-ilm"
+  shard_count: 5
+  replica_count: 1
+  refresh_interval_seconds: 30
+  api_key_secret: "kv-es-prod-api-key"
+  template_file: "infrastructure/elasticsearch/templates/telemetry-index.json"
+
+eventhub:
+  namespace: "telemetry-eh-prod"
+  hub_name: "telemetry-stream"
+  consumer_group: "elasticsearch-streamer"
+  batch_interval_seconds: 5
+  max_batch_size: 500
+  schema:
+    key_fields:
+      - "env"
+      - "feed"
+      - "aiopxServiceId"
+      - "escollection"
+    timestamp_field: "eventTimestamp"
+    partition_key: "feed"
+
+ingestion:
+  runtime: "python3.11"
+  framework: "pyspark-structured-streaming"
+  driver_memory: "4g"
+  executor_memory: "8g"
+  autoscale:
+    min_workers: 2
+    max_workers: 6
+  retry_policy:
+    max_attempts: 5
+    initial_delay_seconds: 15
+    backoff_factor: 2.0
+  dead_letter_queue:
+    storage_account: "telemetrydlq"
+    container: "failed-events"
+    path_prefix: "elasticsearch-stream"
+
+security:
+  key_vault_name: "kv-prod-observability"
+  managed_identity: "mi-elasticsearch-stream"
+  secret_names:
+    es_api_key: "kv-es-prod-api-key"
+    eventhub_connection: "kv-eh-prod-connection"
+  ip_allow_list:
+    - "10.10.0.0/24"
+    - "10.20.0.0/24"
+
+observability:
+  log_analytics_workspace: "log-analytics-prod"
+  workspace_resource_id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/rg-observability/providers/microsoft.operationalinsights/workspaces/log-analytics-prod"
+  alert_rules:
+    - name: "ElasticsearchIndexingFailures"
+      metric: "failed_documents"
+      threshold: 10
+      window_minutes: 15
+      action_group: "ag-search-oncall"
+    - name: "EventHubBacklog"
+      metric: "incoming_messages"
+      threshold: 200000
+      window_minutes: 30
+      action_group: "ag-stream-ops"
+  dashboards:
+    kibana_url: "https://kibana.contoso.com/app/dashboards#/view/elasticsearch-stream"
+    fabric_board: "https://fabric.contoso.com/dashboards/elasticsearch-stream"
+
+quality_gates:
+  latency_sla_seconds: 120
+  success_rate_target_pct: 99.5
+  max_retry_queue_depth: 3
+  schema_validation: true
+
+validation:
+  required_cli_tools:
+    - name: "python3"
+      min_version: "3.10"
+    - name: "az"
+      min_version: "2.58.0"
+    - name: "jq"
+      min_version: "1.6"
+  required_env_vars:
+    - "ES_ENDPOINT"
+    - "ES_API_KEY"
+    - "EVENTHUB_CONNECTION"
+  optional_env_vars:
+    - "KIBANA_URL"
+    - "LOG_ANALYTICS_WORKSPACE"
+  smoke_tests:
+    - "python3 -c 'import elasticsearch; print("connected")'"
+    - "az eventhubs eventhub show --name telemetry-stream --namespace-name telemetry-eh-prod"
+    - "curl -s -H \"Authorization: ApiKey $ES_API_KEY\" $ES_ENDPOINT/_cluster/health | jq .status"
+
+examples:
+  prompts:
+    - "Generate a streaming pipeline that ingests EventHub telemetry and indexes into Elasticsearch with ILM policies."
+    - "Produce a runbook to debug Elasticsearch bulk indexing failures and EventHub backlog spikes."
+  scripts:
+    - "../scripts/register-ilm-policy.sh"
+    - "../scripts/validate-index-template.py"

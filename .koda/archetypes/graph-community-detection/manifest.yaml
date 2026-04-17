@@ -1,0 +1,27 @@
+archetype:
+  name: graph-community-detection
+  display_name: Graph Community Detection
+  description: 'Defines the guardrails for building, validating, and operationalizing
+    graph-based community detection solutions across AT&T domains—covering exploratory
+    analytics, production pipelines, and knowledge '
+  keywords:
+  - api
+  - community
+  - compliance
+  - databricks
+  - delta
+  - detection
+  - governance
+  - graph
+  - kafka
+  - mlflow
+  constitution:
+    path: graph-community-detection-constitution.md
+  dependencies: []
+  workflows:
+    test: test-graph-community-detection
+    refactor: refactor-graph-community-detection
+    compare: compare-graph-community-detection
+    scaffold: scaffold-graph-community-detection
+    document: document-graph-community-detection
+    debug: debug-graph-community-detection

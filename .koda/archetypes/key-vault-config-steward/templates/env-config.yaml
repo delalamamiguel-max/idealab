@@ -1,0 +1,29 @@
+python_version: "3.10"
+
+available_libraries:
+  - azure-keyvault-secrets-4.7.0
+  - azure-identity-1.15.0
+
+key_vault_configuration:
+  authentication_methods:
+    - managed_identity
+    - service_principal
+    - azure_cli
+  secret_types:
+    - connection_string
+    - api_key
+    - certificate
+    - password
+  
+rotation_policies:
+  enabled: true
+  notification_days_before_expiry: 30
+  auto_rotate: false
+
+observability:
+  logging: true
+  monitoring: true
+  alerting: true
+
+references:
+  constitution: ".cdo-aifc/memory/archetypes/05-infrastructure-devops/key-vault-config-steward-constitution.md"

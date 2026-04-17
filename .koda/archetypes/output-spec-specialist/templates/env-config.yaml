@@ -1,0 +1,40 @@
+# Agent Archetype: Output Spec Specialist
+# Category: 10-agentic-development
+# Purpose: Structured output schema design and enforcement
+
+python_version: "3.10"
+
+performance:
+  profile: "strict"
+  max_retries: 2
+  include_examples: true
+  schema_docs_enabled: true
+
+variables:
+  required: []
+  optional:
+    - SCHEMA_REGISTRY_URL
+
+validation:
+  strict_mode: true
+  semantic_versioning_required: true
+  output_validation_required: true
+
+available_libraries:
+  - pydantic>=2.5.0
+  - langchain>=0.1.0
+  - jsonschema>=4.20.0
+
+default_parameters:
+  validation:
+    strict_mode: true
+    max_retries: 2
+    include_examples: true
+  schema:
+    versioning: "semantic"
+    generate_docs: true
+
+required_env_vars: []
+
+optional_env_vars:
+  - SCHEMA_REGISTRY_URL

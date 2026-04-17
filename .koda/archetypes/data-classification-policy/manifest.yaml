@@ -1,0 +1,27 @@
+archetype:
+  name: data-classification-policy
+  display_name: Data Classification Policy
+  description: Establishes guardrails for governing Sensitive Personal Information
+    (SPI) and Personally Identifiable Information (PII) in accordance with AT&T data
+    classification policy, regulatory mandates, and zer
+  keywords:
+  - api
+  - ci-cd
+  - classification
+  - compliance
+  - data
+  - governance
+  - monitoring
+  - policy
+  - rest
+  - security
+  constitution:
+    path: data-classification-policy-constitution.md
+  dependencies: []
+  workflows:
+    compare: compare-data-classification-policy
+    test: test-data-classification-policy
+    debug: debug-data-classification-policy
+    scaffold: scaffold-data-classification-policy
+    refactor: refactor-data-classification-policy
+    document: document-data-classification-policy

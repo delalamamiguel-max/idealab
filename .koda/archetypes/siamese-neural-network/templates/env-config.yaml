@@ -1,0 +1,80 @@
+# Environment Configuration for siamese neural network
+# Focus: governed metric-learning workflows for similarity search, verification, and deduplication services
+
+python:
+  version: "3.10"
+
+framework:
+  primary: "PyTorch 2.3"
+  lightning: "Lightning 2.2"
+  faiss: "1.8.0"
+
+libraries:
+  sentence-transformers: "3.0+"
+  transformers: "4.41+"
+  accelerate: "0.30+"
+  bitsandbytes: "0.43+"
+  scikit-learn: "1.4+"
+  umap-learn: "0.5+"
+  seaborn: "0.13+"
+  pandas: "2.2+"
+  numpy: "1.26+"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/metric-learning/experiments"
+  registry_uri: "databricks-uc"
+  model_name_prefix: "sim_"
+
+data_management:
+  feature_store: "enterprise_feature_store"
+  feature_view_prefix: "similarity_"
+  vector_store: "lakehouse_faiss"
+  embedding_catalog: "uc.similarity_embeddings"
+
+validation:
+  metrics:
+    - "roc_auc"
+    - "precision_at_k"
+    - "recall_at_k"
+    - "embedding_drift"
+  holdout_split_strategy: "entity_disjoint_kfold"
+  fairness_checks: true
+
+hard_negative_mining:
+  cadence_days: 7
+  max_samples_per_anchor: 50
+  audit_log_table: "governance.hnm_audit"
+
+inference:
+  endpoint_name: "siamese-scorer"
+  distance_metric: "cosine"
+  embedding_dimension: 768
+  service_slo_ms: 150
+  threshold_config_table: "governance.similarity_thresholds"
+
+compute:
+  training_cluster:
+    cloud: "Azure Databricks"
+    node_type: "Standard_NC24ads_A100_v4"
+    min_workers: 2
+    max_workers: 8
+  feature_pipeline_cluster:
+    node_type: "Standard_E8ds_v5"
+    autotermination_minutes: 30
+
+security:
+  secret_scope: "metric-learning-secrets"
+  pii_masking_udf: "governance.mask_embedding"
+  approved_runtime: "14.3 LTS ML"
+
+monitoring:
+  drift_dashboard: "lakeview://dashboards/metric-learning"
+  alert_channel: "teams://SimilarityOps"
+  oncall_rotation: "pagerduty://similarity-oncall"
+
+variables:
+  default_positive_ratio: 0.25
+  embedding_norm: "l2"
+  max_pairs_per_batch: 2048
+  training_timeout_minutes: 360

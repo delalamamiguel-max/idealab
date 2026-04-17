@@ -1,0 +1,27 @@
+archetype:
+  name: dev-ops-engineer
+  display_name: Dev Ops Engineer
+  description: Provide enforceable guardrails and operational excellence standards
+    for orchestrating, deploying, and sustaining scalable, observable, and compliant
+    data platform workflows—bridging DevOps, Data Engin
+  keywords:
+  - dev
+  - devops
+  - engineer
+  - governance
+  - observability
+  - ops
+  - rest
+  - scala
+  - security
+  - validation
+  constitution:
+    path: dev-ops-engineer-constitution.md
+  dependencies: []
+  workflows:
+    document: document-dev-ops-engineer
+    scaffold: scaffold-dev-ops-engineer
+    test: test-dev-ops-engineer
+    compare: compare-dev-ops-engineer
+    debug: debug-dev-ops-engineer
+    refactor: refactor-dev-ops-engineer

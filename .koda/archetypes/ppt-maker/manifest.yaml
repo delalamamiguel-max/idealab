@@ -1,0 +1,24 @@
+archetype:
+  name: ppt-maker
+  display_name: PPT Maker
+  description: 'This constitution defines the foundational principles and hard-stop
+    rules for the PPT-Maker archetype, which generates professional AT&T-branded PowerPoint
+    presentations using YAML specifications and '
+  keywords:
+  - aks
+  - maker
+  - ppt
+  - python
+  - rest
+  - testing
+  - validation
+  constitution:
+    path: ppt-maker-constitution.md
+  dependencies: []
+  workflows:
+    document: document-ppt-maker
+    debug: debug-ppt-maker
+    compare: compare-ppt-maker
+    test: test-ppt-maker
+    refactor: refactor-ppt-maker
+    scaffold: scaffold-ppt-maker

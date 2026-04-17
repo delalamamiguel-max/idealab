@@ -1,0 +1,31 @@
+archetype:
+  name: inference-orchestrator
+  display_name: Inference Orchestrator
+  description: Ensures safe, observable, and compliant deployment of MLflow-registered
+    models to Azure AKS and associated serving targets, with explicit patterns for
+    both **real-time (RT)** and **batch** inference p
+  keywords:
+  - aks
+  - api
+  - azure
+  - ci-cd
+  - compliance
+  - delta
+  - deployment
+  - devops
+  - endpoint
+  - helm
+  - inference
+  - kafka
+  - prediction
+  - serving
+  constitution:
+    path: inference-orchestrator-constitution.md
+  dependencies: []
+  workflows:
+    test: test-inference-orchestrator
+    refactor: refactor-inference-orchestrator
+    debug: debug-inference-orchestrator
+    document: document-inference-orchestrator
+    scaffold: scaffold-inference-orchestrator
+    compare: compare-inference-orchestrator

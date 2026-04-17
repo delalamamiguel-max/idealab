@@ -1,0 +1,15 @@
+evidence_pack:
+  path: security/evidence
+  required_files:
+    - security-requirements.md
+    - risk-profile.md
+    - threat-model.md
+    - secure-by-default-checklist.md
+    - security-test-matrix.md
+    - vulnerability-management.md
+    - security-metrics.md
+sbom:
+  required: true
+  allowed_paths:
+    - security/sbom
+    - sbom

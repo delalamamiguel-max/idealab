@@ -1,0 +1,33 @@
+archetype:
+  name: output-spec-specialist
+  display_name: Output Spec Specialist
+  description: |
+    Create and enforce output schemas with structured output patterns, Pydantic models,
+    JSON Schema validation, and LLM output parsing with retry logic.
+  category: 10-agentic-development
+  keywords:
+    - output spec specialist
+    - output specification specialist
+    - output
+    - schema
+    - structured output
+    - Pydantic
+    - JSON Schema
+    - validation
+    - parsing
+    - format
+    - specification
+    - contract
+  constitution:
+    path: output-spec-specialist-constitution.md
+  dependencies:
+    - pydantic
+    - langchain
+    - jsonschema
+  workflows:
+    scaffold: scaffold-output-spec-specialist
+    refactor: refactor-output-spec-specialist
+    compare: compare-output-spec-specialist
+    test: test-output-spec-specialist
+    debug: debug-output-spec-specialist
+    document: document-output-spec-specialist

@@ -1,0 +1,42 @@
+# Environment Configuration for pipeline orchestrator
+
+orchestrator:
+  type: "TWS"  # Tivoli Workload Scheduler (formerly Airflow)
+  version: "9.5+"
+  available_connections:
+    - raw_db
+    - analytics_db
+    - slack_webhook
+    - azure_storage
+
+runtime:
+  python_version: "3.8+"
+  libraries:
+    - azure-storage-file-datalake
+    - azure-identity
+    - tenacity==8.0
+
+security:
+  credentials_source:
+    - azure_keyvault  # Azure Key Vault for secrets
+    - env_vars        # Environment variables
+  network:
+    tls_minimum_version: "1.2"
+  authentication:
+    method: "managed_identity"  # or service_principal
+
+ci:
+  test_framework: "pytest"
+  coverage_threshold: "80%"
+
+# TWS-specific configuration
+tws:
+  job_stream_prefix: "analytics"
+  workstation: "PROD_WS"
+  scheduling:
+    timezone: "America/New_York"
+    default_priority: 5
+
+variables:
+  default_retries: 3
+  default_retry_delay: 300

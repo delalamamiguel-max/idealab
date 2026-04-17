@@ -1,0 +1,76 @@
+# Data Security Architect Archetype Environment Configuration
+
+archetype: data_security_architect
+name: "Data Security Architect"
+description: "Implements encryption, SPI protection, lifecycle governance, SAST/DAST scanning, and key management controls"
+
+# Core runtime / tooling expectations
+python:
+  min_version: "3.11"
+  command: "python --version"
+
+required_tools:
+  - name: "openssl"
+    command: "openssl version"
+  - name: "jq"
+    command: "jq --version"
+  - name: "bandit"
+    command: "bandit --version"
+
+# Policy + configuration asset locations (adjust as deployed)
+policy_paths:
+  voltage_fpe_policy: "config/voltage_fpe_policy.json"
+  # Future extension: add key_rotation_policy, retention_policy, domain_allowlist
+
+scan_toggles:
+  sast_enabled: true
+  dast_enabled: true
+  fpe_enforcement: true
+  data_validity_check: true
+
+sast_ruleset:
+  severity_gate: "high"   # block release if any high severity present
+  allow_suppressions: false
+  memory_leak_pattern: "open\(.*\)"  # example; actual pattern refined in code
+
+# DAST simulation parameters
+# For real integration, provide endpoint discovery source (OpenAPI, service registry, etc.)
+dast:
+  tls_min_version: "1.2"
+  approved_domain_pattern: "^([a-zA-Z0-9-]+\.)*att\.com$"
+  spi_fpe_required_tags:
+    - pan
+    - dob
+    - drivers_license
+
+retention:
+  default_validity_days: 1095   # 3 years
+  purge_batch_max: 100000
+  legal_hold_flag: "LEGAL_HOLD_ACTIVE"
+
+key_management:
+  rotation_sla_days: 90
+  grace_period_days: 0
+  escrow_strategy: "HSM_BACKED_SPLIT_KEY"
+
+logging:
+  audit_channel: "audit.data.security"
+  log_format: "json_lines"
+  redact_spi: true
+
+metrics:
+  risk_score_weights:
+    sast_high: 5
+    dast_high: 5
+    overdue_key_rotation: 7
+    expired_dataset: 6
+    unmasked_spi: 9
+
+notifications:
+  security_oncall: "mailto:data-security-oncall@att.com"
+  incident_slack_channel: "#sec-incident-response"
+
+# Optional future integration fields
+placeholders:
+  policy_api_base: "https://policy.internal.att.com"
+  fpe_service_dns: "fpe.prod.att.com"

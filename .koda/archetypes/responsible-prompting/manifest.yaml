@@ -1,0 +1,23 @@
+archetype:
+  name: responsible-prompting
+  display_name: Responsible Prompting
+  description: Safeguard prompt engineering practices so language model interactions
+    remain safe, inclusive, policy-aligned, and auditable while still enabling high-quality
+    task performance and rapid iteration acros
+  keywords:
+  - api
+  - compliance
+  - governance
+  - prompting
+  - responsible
+  - scala
+  constitution:
+    path: responsible-prompting-constitution.md
+  dependencies: []
+  workflows:
+    test: test-responsible-prompting
+    document: document-responsible-prompting
+    compare: compare-responsible-prompting
+    refactor: refactor-responsible-prompting
+    debug: debug-responsible-prompting
+    scaffold: scaffold-responsible-prompting

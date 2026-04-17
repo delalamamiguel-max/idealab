@@ -1,0 +1,31 @@
+archetype:
+  name: feature-architect
+  display_name: Feature Architect
+  description: Defines the guardrails for producing reusable, high-quality features
+    with reproducible lineage across Databricks Feature Store, Feast, and downstream
+    ML consumers.
+  keywords:
+  - aks
+  - api
+  - architect
+  - azure
+  - compliance
+  - databricks
+  - delta
+  - devops
+  - engineering
+  - feature
+  - governance
+  - point-in-time
+  - store
+  - training-data
+  constitution:
+    path: feature-architect-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-feature-architect
+    compare: compare-feature-architect
+    document: document-feature-architect
+    debug: debug-feature-architect
+    refactor: refactor-feature-architect
+    test: test-feature-architect

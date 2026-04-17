@@ -1,0 +1,32 @@
+archetype:
+  name: app-maker
+  display_name: App Maker
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the App Maker archetype, which generates production-ready web applications
+    adhering to AT&T brand guidelines.
+  keywords:
+  - api
+  - app
+  - application
+  - azure
+  - backend
+  - compliance
+  - fastapi
+  - frontend
+  - maker
+  - python
+  - react
+  - rest
+  - security
+  - ui
+  - web
+  constitution:
+    path: app-maker-constitution.md
+  dependencies: []
+  workflows:
+    compare: compare-app-maker
+    test: test-app-maker
+    refactor: refactor-app-maker
+    scaffold: scaffold-app-maker
+    document: document-app-maker
+    debug: debug-app-maker

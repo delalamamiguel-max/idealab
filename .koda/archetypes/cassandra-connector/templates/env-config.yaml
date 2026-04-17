@@ -1,0 +1,139 @@
+# Environment Configuration for Cassandra Connector Archetype
+# Captures cluster, security, pooling, load-balancing, and observability parameters
+# for Spring Boot applications using the DataStax Cassandra driver.
+
+cassandra:
+  cluster:
+    name: "prod-cassandra-cluster"
+    contact_points:
+      - "10.0.1.10"
+      - "10.0.1.11"
+      - "10.0.1.12"
+    port: 9042
+    local_datacenter: "us-east-1"
+    used_hosts_per_remote_dc: 2
+    keyspace: "my_keyspace"
+    unique_session_key: "prod-my-keyspace"
+
+  authentication:
+    username_secret: "kv-cassandra-prod-username"
+    password_secret: "kv-cassandra-prod-password"
+
+  ssl:
+    enabled: true
+    digicert_enabled: false
+    truststore_location: "/opt/certs/cassandra-truststore.jks"
+    truststore_password_secret: "kv-cassandra-truststore-pwd"
+    ssl_provider: "OPENSSL"
+
+  timeouts:
+    connect_timeout_millis: 5000
+    read_timeout_millis: 12000
+    heartbeat_interval_seconds: 30
+
+  consistency:
+    level: "LOCAL_QUORUM"
+    local_quorum_enabled: true
+
+  connection_pooling:
+    enabled: true
+    core_connections_per_host: 2
+    max_connections_per_host: 8
+    pool_timeout_millis: 5000
+    max_requests_per_connection: 1024
+    new_connection_threshold: 200
+
+  load_balancing:
+    token_aware_enabled: true
+    latency_aware_enabled: true
+    exclusion_threshold: 2.0
+    scale_millis: 100
+    retry_period_seconds: 10
+    update_rate_millis: 100
+    min_measurements: 50
+
+  speculative_execution:
+    enabled: false
+    percentile: 99.0
+    max_executions: 2
+    highest_trackable_latency_millis: 15000
+
+  address_translation:
+    enabled: false
+    ip_mappings: ""
+
+  ttl:
+    default_seconds: 0
+
+  health_check:
+    query: "SELECT now() FROM system.local"
+    alive_query_execution: true
+
+security:
+  key_vault_name: "kv-prod-cassandra"
+  managed_identity: "mi-cassandra-connector"
+  secret_names:
+    cassandra_username: "kv-cassandra-prod-username"
+    cassandra_password: "kv-cassandra-prod-password"
+    truststore_password: "kv-cassandra-truststore-pwd"
+  ip_allow_list:
+    - "10.0.0.0/16"
+
+observability:
+  log_analytics_workspace: "log-analytics-prod"
+  workspace_resource_id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/rg-observability/providers/microsoft.operationalinsights/workspaces/log-analytics-prod"
+  alert_rules:
+    - name: "CassandraConnectionFailure"
+      metric: "cassandra_connection_errors_total"
+      threshold: 5
+      window_minutes: 5
+      action_group: "ag-cassandra-oncall"
+    - name: "CassandraReadLatencyHigh"
+      metric: "cassandra_read_latency_p99_ms"
+      threshold: 500
+      window_minutes: 10
+      action_group: "ag-cassandra-oncall"
+    - name: "CassandraSessionPoolExhausted"
+      metric: "cassandra_pool_exhausted_total"
+      threshold: 1
+      window_minutes: 5
+      action_group: "ag-cassandra-oncall"
+  dashboards:
+    grafana_url: "https://grafana.contoso.com/d/cassandra-connector"
+
+quality_gates:
+  read_latency_p99_ms: 200
+  write_latency_p99_ms: 100
+  connection_success_rate_pct: 99.9
+  health_check_interval_seconds: 30
+  max_retry_attempts: 3
+
+validation:
+  required_cli_tools:
+    - name: "java"
+      min_version: "17"
+    - name: "mvn"
+      min_version: "3.8"
+    - name: "az"
+      min_version: "2.58.0"
+  required_env_vars:
+    - "CASSANDRA_CONTACT_POINTS"
+    - "CASSANDRA_KEYSPACE"
+    - "CASSANDRA_USERNAME"
+    - "CASSANDRA_PASSWORD"
+  optional_env_vars:
+    - "CASSANDRA_LOCAL_DC"
+    - "CASSANDRA_SSL_ENABLED"
+    - "CASSANDRA_TRUSTSTORE_LOCATION"
+  smoke_tests:
+    - "java -version"
+    - "mvn -version"
+    - "az keyvault secret show --vault-name kv-prod-cassandra --name kv-cassandra-prod-username --query value -o tsv"
+
+examples:
+  prompts:
+    - "Generate a Spring Boot Cassandra connector with SSL, connection pooling, and LOCAL_QUORUM consistency."
+    - "Produce a runbook to debug Cassandra connection timeouts and pool exhaustion in a multi-DC deployment."
+  scripts:
+    - "../scripts/validate-cassandra-connectivity.sh"
+    - "../scripts/health-check-probe.sh"

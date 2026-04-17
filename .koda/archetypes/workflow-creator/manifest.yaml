@@ -1,0 +1,32 @@
+archetype:
+  name: workflow-creator
+  display_name: Workflow Creator
+  description: |
+    Design and implement LangGraph workflows with proper node composition,
+    conditional routing, subgraphs, and multi-agent orchestration patterns.
+  category: 10-agentic-development
+  keywords:
+    - workflow creator
+    - agent workflow creator
+    - workflow
+    - graph
+    - orchestration
+    - routing
+    - conditional
+    - subgraph
+    - multi-agent
+    - supervisor
+    - pipeline
+    - DAG
+  constitution:
+    path: workflow-creator-constitution.md
+  dependencies:
+    - langgraph
+    - langchain
+  workflows:
+    scaffold: scaffold-workflow-creator
+    refactor: refactor-workflow-creator
+    compare: compare-workflow-creator
+    test: test-workflow-creator
+    debug: debug-workflow-creator
+    document: document-workflow-creator

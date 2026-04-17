@@ -1,0 +1,26 @@
+archetype:
+  name: integration-specialist
+  display_name: Integration Specialist
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the integration specialist archetype.
+  keywords:
+  - api
+  - fastapi
+  - governance
+  - graphql
+  - integration
+  - java
+  - python
+  - rest
+  - security
+  - specialist
+  constitution:
+    path: integration-specialist-constitution.md
+  dependencies: []
+  workflows:
+    document: document-integration-specialist
+    compare: compare-integration-specialist
+    scaffold: scaffold-integration-specialist
+    test: test-integration-specialist
+    refactor: refactor-integration-specialist
+    debug: debug-integration-specialist

@@ -1,0 +1,26 @@
+archetype:
+  name: collaborative-filtering-model
+  display_name: Collaborative Filtering Model
+  description: Establishes rigorous governance for collaborative filtering recommender
+    design, experimentation, and deployment across enterprise customer-facing touchpoints.
+  keywords:
+  - azure
+  - collaborative
+  - compliance
+  - databricks
+  - delta
+  - devops
+  - filtering
+  - governance
+  - mlflow
+  - model
+  constitution:
+    path: collaborative-filtering-model-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-collaborative-filtering-model
+    compare: compare-collaborative-filtering-model
+    document: document-collaborative-filtering-model
+    scaffold: scaffold-collaborative-filtering-model
+    test: test-collaborative-filtering-model
+    debug: debug-collaborative-filtering-model

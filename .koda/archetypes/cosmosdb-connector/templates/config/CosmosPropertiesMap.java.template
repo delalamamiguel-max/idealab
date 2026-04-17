@@ -1,0 +1,40 @@
+package {{PACKAGE_NAME}}.config;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Configuration properties map for multiple Cosmos DB connections.
+ * Supports map-based configuration with format:
+ * cosmos.config.{key}.hostName=...
+ * cosmos.config.{key}.secretKey=...
+ * cosmos.config.{key}.databaseName=...
+ */
+@Component
+@ConfigurationProperties(prefix = "cosmos.config")
+public class CosmosPropertiesMap {
+
+    private Map<String, Map<String, String>> config = new HashMap<>();
+
+    /**
+     * Gets the configuration map.
+     * Each entry represents a database connection configuration.
+     *
+     * @return Map of database configurations
+     */
+    public Map<String, Map<String, String>> getConfig() {
+        return config;
+    }
+
+    /**
+     * Sets the configuration map.
+     *
+     * @param config Map of database configurations
+     */
+    public void setConfig(Map<String, Map<String, String>> config) {
+        this.config = config;
+    }
+}

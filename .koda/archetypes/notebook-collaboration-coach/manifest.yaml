@@ -1,0 +1,22 @@
+archetype:
+  name: notebook-collaboration-coach
+  display_name: Notebook Collaboration Coach
+  description: Scaffold collaborative notebook workflow with source control, reproducibility,
+    and review discipline (Notebook Collaboration Coach)
+  keywords:
+  - coach
+  - collaboration
+  - notebook
+  - jupyter
+  - jupytext
+  - reproducibility
+  constitution:
+    path: notebook-collaboration-coach-constitution.md
+  dependencies: []
+  workflows:
+    document: document-notebook-collaboration-coach
+    test: test-notebook-collaboration-coach
+    scaffold: scaffold-notebook-collaboration-coach
+    compare: compare-notebook-collaboration-coach
+    refactor: refactor-notebook-collaboration-coach
+    debug: debug-notebook-collaboration-coach

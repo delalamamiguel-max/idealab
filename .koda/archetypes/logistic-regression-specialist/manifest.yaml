@@ -1,0 +1,27 @@
+archetype:
+  name: logistic-regression-specialist
+  display_name: Logistic Regression Specialist
+  description: Defines guardrails for designing, training, and operationalizing logistic
+    regression models with responsible feature governance, calibrated probability
+    outputs, and enterprise observability.
+  keywords:
+  - api
+  - azure
+  - databricks
+  - devops
+  - governance
+  - logistic
+  - mlflow
+  - monitoring
+  - notebook
+  - observability
+  constitution:
+    path: logistic-regression-specialist-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-logistic-regression-specialist
+    test: test-logistic-regression-specialist
+    document: document-logistic-regression-specialist
+    refactor: refactor-logistic-regression-specialist
+    compare: compare-logistic-regression-specialist
+    debug: debug-logistic-regression-specialist

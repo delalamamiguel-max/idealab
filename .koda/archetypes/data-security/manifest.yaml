@@ -1,0 +1,27 @@
+archetype:
+  name: data-security
+  display_name: Data Security
+  description: Safeguard data assets across their lifecycle by enforcing encryption,
+    minimizing exposure of sensitive personal information (SPI), validating retention
+    and masking controls, and establishing proactive
+  keywords:
+  - api
+  - azure
+  - compliance
+  - data
+  - delta
+  - governance
+  - observability
+  - rest
+  - scala
+  - security
+  constitution:
+    path: data-security-constitution.md
+  dependencies: []
+  workflows:
+    document: document-data-security
+    refactor: refactor-data-security
+    scaffold: scaffold-data-security
+    debug: debug-data-security
+    test: test-data-security
+    compare: compare-data-security

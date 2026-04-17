@@ -1,0 +1,449 @@
+# Slide Metadata for ppt_engine_focused.py
+# Defines all 12 slide types, field constraints, and usage guidance
+
+template:
+  name: "ATT_Day_to_Day_Quickstart_Template_2025"
+  file: "ppt-maker-template-library.pptx"
+  location: "../../templates/09-documentation-requirements/ppt-maker/"
+  brand: "AT&T"
+  dimensions:
+    width_inches: 10.0
+    height_inches: 7.5
+    safe_margin_inches: 0.5
+
+slide_types:
+  "01_title":
+    name: "Cover w/ Globe (White)"
+    description: "Title slide with globe graphic"
+    required: true
+    position: "first"
+    fields:
+      title:
+        char_limit: 60
+        description: "Main presentation title (conservative to prevent wrapping)"
+      subtitle:
+        char_limit: 80
+        description: "Presentation subtitle or tagline"
+      metadata:
+        char_limit: 60
+        description: "Date, version, or other metadata"
+    diagram_support: false
+  
+  "02_cover_photo":
+    name: "Cover w/ Subtitle (White)"
+    description: "Cover slide with subtitle and presenter info"
+    fields:
+      title:
+        char_limit: 30
+        description: "Large font on cover - strict limit to prevent wrapping"
+      subtitle:
+        char_limit: 80
+      presenter:
+        char_limit: 50
+      date:
+        char_limit: 30
+    diagram_support: false
+  
+  "03_divider":
+    name: "Divider 01"
+    description: "Simple divider slide"
+    fields:
+      title:
+        char_limit: 30
+        description: "Large divider text - strict limit to prevent wrapping"
+    diagram_support: false
+  
+  "04_divider_section":
+    name: "Divider 05 (w/ Slab #)"
+    description: "Divider with section number"
+    fields:
+      title:
+        char_limit: 30
+        description: "Large divider text - strict limit"
+      subtitle:
+        char_limit: 60
+      section_number:
+        char_limit: 10
+    diagram_support: false
+  
+  "05_content_single_column":
+    name: "Title + Subtitle (1 column w/ headers)"
+    description: "Single column content with header"
+    fields:
+      title:
+        char_limit: 50
+        description: "Title field - prevent wrapping to 3+ lines"
+      body:
+        char_limit: 500
+        description: "Main content text (body has more room)"
+    diagram_support: true
+    best_for:
+      - "Process explanations"
+      - "Instructions"
+      - "Detailed descriptions"
+  
+  "06_large_text_three_columns":
+    name: "Large Text + 3 Columns"
+    description: "Statement with three supporting columns"
+    fields:
+      title:
+        char_limit: 30
+        description: "Large font - strict limit to prevent wrapping"
+      statement:
+        char_limit: 90
+        description: "Statement field above columns"
+      column1_header:
+        char_limit: 30
+      column1_body:
+        char_limit: 100
+        description: "Keep very concise - must leave line gap above footer"
+      column2_header:
+        char_limit: 30
+      column2_body:
+        char_limit: 100
+        description: "Keep very concise - must leave line gap above footer"
+      column3_header:
+        char_limit: 30
+      column3_body:
+        char_limit: 100
+        description: "Keep very concise - must leave line gap above footer"
+    diagram_support: false
+    best_for:
+      - "Key message with supporting points"
+      - "Three-part frameworks"
+      - "Benefit statements"
+    notes: "Column bodies limited to 100 chars to prevent footer overlap"
+  
+  "07_two_columns":
+    name: "Title + Subtitle (2 column w/ headers)"
+    description: "Two equal columns with headers"
+    fields:
+      title:
+        char_limit: 50
+        description: "Prevent wrapping"
+      column1_header:
+        char_limit: 40
+      column1_body:
+        char_limit: 200
+      column2_header:
+        char_limit: 40
+      column2_body:
+        char_limit: 200
+    diagram_support: true
+    best_for:
+      - "Comparisons"
+      - "Before/after"
+      - "Pros/cons"
+      - "Embedded diagrams"
+  
+  "08_four_columns_enumerated":
+    name: "Four Columns (Numbered)"
+    description: "Four numbered columns for sequential content"
+    fields:
+      title:
+        char_limit: 50
+      column1_header:
+        char_limit: 30
+      column1_body:
+        char_limit: 150
+      column2_header:
+        char_limit: 30
+      column2_body:
+        char_limit: 150
+      column3_header:
+        char_limit: 30
+      column3_body:
+        char_limit: 150
+      column4_header:
+        char_limit: 30
+      column4_body:
+        char_limit: 150
+    diagram_support: false
+    best_for:
+      - "Step-by-step processes"
+      - "Sequential workflows"
+      - "Four-part frameworks"
+  
+  "09_grid_with_icons":
+    name: "Grid with Icon Placeholders"
+    description: "2x2 grid with statement and icon spaces"
+    fields:
+      title:
+        char_limit: 30
+        description: "Keep short - single line display"
+      statement:
+        char_limit: 200
+        description: "Key message above grid"
+      grid1_header:
+        char_limit: 22
+      grid1_body:
+        char_limit: 130
+      grid2_header:
+        char_limit: 22
+      grid2_body:
+        char_limit: 130
+      grid3_header:
+        char_limit: 22
+      grid3_body:
+        char_limit: 130
+      grid4_header:
+        char_limit: 22
+      grid4_body:
+        char_limit: 130
+    diagram_support: false
+    best_for:
+      - "Key capabilities"
+      - "Features overview"
+      - "Benefits summary"
+      - "Four-quadrant frameworks"
+    notes: "Header limit reduced to 22 chars and body to 130 chars to prevent overlap"
+  
+  "10_content_with_image":
+    name: "Title + Subtitle (1/2 Image on Right)"
+    description: "Text content with image placeholder on right"
+    fields:
+      title:
+        char_limit: 50
+      body:
+        char_limit: 300
+        description: "Main text content (left side has less room than full slide)"
+    diagram_support: true
+    image_placeholder: true
+    best_for:
+      - "Product showcases"
+      - "Screenshots"
+      - "Visual examples"
+      - "Architecture diagrams"
+  
+  "11_blank_end_slide":
+    name: "End Slide"
+    description: "Blank slide with logo (ideal for full diagrams)"
+    fields: {}
+    diagram_support: true
+    best_for:
+      - "Full-page diagrams"
+      - "Architecture views"
+      - "Complex Mermaid diagrams"
+      - "Programmatic visualizations"
+    notes: "No editable text fields - perfect canvas for diagrams"
+  
+  "12_final_slide":
+    name: "Logo End Slide (White)"
+    description: "Final slide with centered AT&T logo"
+    required: true
+    position: "last"
+    fields: {}
+    diagram_support: false
+    notes: "Mandatory closing slide"
+
+footer_fields:
+  title:
+    description: "Presentation title for footer"
+    char_limit: 100
+  month:
+    description: "Month name (e.g., 'November')"
+    char_limit: 20
+  day:
+    description: "Day number (e.g., '05')"
+    char_limit: 2
+  year:
+    description: "Four-digit year (e.g., '2025')"
+    char_limit: 4
+
+diagram_types:
+  image:
+    description: "External image files (Mermaid CLI, matplotlib, etc.)"
+    fields:
+      path:
+        description: "Relative or absolute path to image file"
+        required: true
+      position:
+        fields:
+          x: "Horizontal position in inches from left"
+          y: "Vertical position in inches from top"
+          width: "Image width in inches"
+          height: "Image height in inches"
+        required: true
+      validate_aspect_ratio:
+        description: "Enable 90-110% aspect ratio validation"
+        default: false
+    supported_formats:
+      - "PNG"
+      - "JPG"
+      - "JPEG"
+  
+  programmatic:
+    description: "Diagrams generated with python-pptx shapes"
+    fields:
+      style:
+        description: "Diagram style"
+        required: true
+        options:
+          - "flow"
+          - "timeline"
+      config:
+        description: "Style-specific configuration"
+        required: true
+    styles:
+      flow:
+        config_fields:
+          steps:
+            description: "List of flow steps"
+            fields:
+              text: "Step text (supports newlines)"
+              x: "X position in inches"
+              y: "Y position in inches"
+          connectors:
+            description: "List of connecting lines"
+            fields:
+              x1: "Start X position"
+              y1: "Start Y position"
+              x2: "End X position"
+              y2: "End Y position"
+      timeline:
+        config_fields:
+          timeline_bar:
+            description: "Horizontal timeline bar"
+            fields:
+              x: "Start X position"
+              y: "Y position"
+              width: "Bar width"
+              height: "Bar height (typically 0.15\")"
+          phases:
+            description: "Timeline phases/milestones"
+            fields:
+              name: "Phase name"
+              x: "X position"
+              y: "Y position (above timeline)"
+
+theme_colors:
+  primary_blue:
+    rgb: [0, 135, 224]
+    usage: "Primary brand color, milestone circles"
+  dark_blue:
+    rgb: [0, 87, 184]
+    usage: "Text, lines, borders"
+  light_blue:
+    rgb: [227, 242, 253]
+    usage: "Shape fills, backgrounds"
+  text_dark:
+    rgb: [0, 0, 0]
+    usage: "Black text"
+  text_light:
+    rgb: [255, 255, 255]
+    usage: "White text"
+  accent_yellow:
+    rgb: [255, 243, 205]
+    usage: "Accent color for highlights"
+  accent_border:
+    rgb: [133, 100, 4]
+    usage: "Accent border color"
+
+validation_rules:
+  text_length:
+    enabled: true
+    action: "reject"
+    message: "Field exceeds character limit"
+  
+  aspect_ratio:
+    enabled: true
+    tolerance: 0.10  # 90-110%
+    action: "warn_or_reject"
+    message: "Image aspect ratio outside tolerance"
+  
+  placeholder_text:
+    enabled: true
+    action: "reject"
+    patterns:
+      - "lorem ipsum"
+      - "[insert"
+      - "[add"
+      - "placeholder"
+      - "example text"
+  
+  required_slides:
+    title_slide: "01_title"
+    final_slide: "12_final_slide"
+    action: "reject"
+  
+  zip_integrity:
+    check_duplicates: true
+    action: "reject"
+  
+  diagram_sizing:
+    enabled: true
+    safe_area:
+      width_inches: 12.0
+      height_inches: 5.5
+      top_margin: 0.5
+      left_margin: 0.665  # Calculated: (13.33 - 12.0) / 2
+    scaling_threshold: 0.75  # Diagrams should use >= 75% of available space
+    coverage_threshold: 0.50  # Diagrams must cover >= 50% of available space
+    action: "reject"
+    applies_to:
+      - "11_blank_end_slide"
+    message: "Diagram undersized or poorly fitted"
+
+assets_management:
+  default_folder: "assets"
+  yaml_persistence: true
+  path_resolution: "relative_to_assets"
+  version_control_friendly: true
+
+usage_examples:
+  simple_presentation:
+    description: "Basic presentation without diagrams"
+    yaml_structure: |
+      title:
+        title: "Presentation Title"
+        subtitle: "Subtitle Here"
+        metadata: "November 2025"
+      footer:
+        title: "Short Title"
+        month: "November"
+        day: "05"
+        year: "2025"
+      slides:
+        - type: "05_content_single_column"
+          content:
+            title: "Slide Title"
+            subtitle: "Subtitle"
+            header: "Section Header"
+            body: "Complete content text..."
+  
+  with_mermaid_diagram:
+    description: "Presentation with Mermaid CLI diagram"
+    steps:
+      - "Create .mmd file in assets/"
+      - "Generate PNG with correct aspect ratio"
+      - "Reference in YAML with validate_aspect_ratio: true"
+    yaml_example: |
+      slides:
+        - type: "11_blank_end_slide"
+          diagram:
+            type: "image"
+            path: "architecture.png"
+            position: {x: 0.5, y: 0.5, width: 9.0, height: 6.5}
+            validate_aspect_ratio: true
+  
+  with_programmatic_diagram:
+    description: "Presentation with python-pptx diagram"
+    yaml_example: |
+      slides:
+        - type: "05_content_single_column"
+          content:
+            title: "Process Flow"
+            subtitle: "Step-by-step"
+            header: "Flow Diagram"
+            body: "See diagram below..."
+          diagram:
+            type: "programmatic"
+            style: "flow"
+            config:
+              steps:
+                - {text: "Input", x: 1.0, y: 4.5}
+                - {text: "Process", x: 3.5, y: 4.5}
+                - {text: "Output", x: 6.0, y: 4.5}
+              connectors:
+                - {x1: 2.0, y1: 4.85, x2: 3.5, y2: 4.85}
+                - {x1: 4.5, y1: 4.85, x2: 6.0, y2: 4.85}

@@ -1,0 +1,33 @@
+# Environment Configuration for performance tuner
+
+spark:
+  version: "3.4+"
+
+python:
+  version: "3.8+"
+
+libraries:
+  - pyspark: "3.4+"
+  - matplotlib: "3.x"
+  - pyyaml: "5.x"
+
+tools:
+  - jupyter: "1.x"
+  - pytest: "7.x"
+
+cluster:
+  default:
+    node_type: "Standard_D16s_v4"
+    driver_memory: "8G"
+    executor_memory: "8G"
+
+security:
+  tls_minimum_version: "1.2"
+
+ci:
+  performance_test_framework: "pytest"
+  coverage_threshold: "80%"
+
+variables:
+  baseline_runtime_secs: 300
+  target_improvement_pct: 20

@@ -1,0 +1,32 @@
+archetype:
+  name: knowledge-graph-nlp-engineer
+  display_name: Knowledge Graph NLP Engineer
+  description: |
+    Bridge natural language processing and knowledge graphs. Covers named entity recognition (NER), text-to-graph pipelines, semantic search, natural language querying of graphs, and the evolution toward knowledge lakes combining structured and unstructured data.
+  keywords:
+  - chatbot
+  - embeddings
+  - entity-extraction
+  - knowledge-graph
+  - knowledge-lake
+  - named-entity-recognition
+  - natural-language
+  - ner
+  - nlp
+  - question-answering
+  - semantic-search
+  - text-mining
+  - text-to-graph
+  - unstructured-data
+  constitution:
+    path: knowledge-graph-nlp-engineer-constitution.md
+  dependencies: 
+  - general-graph-ontology
+  - knowledge-graph-builder
+  workflows:
+    scaffold: scaffold-knowledge-graph-nlp-engineer
+    debug: debug-knowledge-graph-nlp-engineer
+    refactor: refactor-knowledge-graph-nlp-engineer
+    test: test-knowledge-graph-nlp-engineer
+    compare: compare-knowledge-graph-nlp-engineer
+    document: document-knowledge-graph-nlp-engineer

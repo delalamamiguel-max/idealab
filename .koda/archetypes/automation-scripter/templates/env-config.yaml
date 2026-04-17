@@ -1,0 +1,183 @@
+# Environment Configuration for Automation Scripter
+
+# Shell Configuration
+shell:
+  type: bash  # bash or powershell
+  bash:
+    version: "5.1+"
+    required_tools:
+      - name: rsync
+        version: "3.x"
+        check_command: "rsync --version"
+      - name: curl
+        version: "7.x"
+        check_command: "curl --version"
+      - name: jq
+        version: "1.6+"
+        check_command: "jq --version"
+      - name: az
+        version: "2.x"
+        check_command: "az --version"
+        optional: false  # Required for Azure ADLSg2
+      - name: azcopy
+        version: "10.x"
+        check_command: "azcopy --version"
+        optional: false  # Required for Azure storage operations
+      - name: aws
+        version: "2.x"
+        check_command: "aws --version"
+        optional: true
+      - name: gcloud
+        version: "latest"
+        check_command: "gcloud --version"
+        optional: true
+  powershell:
+    version: "7+"
+    required_modules:
+      - Az.Storage  # Azure storage operations
+      - Az.DataLakeStore  # Azure Data Lake operations
+      - Pester  # Testing framework
+      - AWSPowerShell.NetCore  # Optional: AWS operations
+
+# Operating System
+os:
+  linux:
+    distro: "Ubuntu 20.04+"
+    package_manager: apt
+  windows:
+    version: "Windows Server 2019+"
+  macos:
+    version: "11.0+"
+    package_manager: brew
+
+# Security Configuration
+security:
+  credentials_source:
+    - env_vars      # Preferred: Environment variables
+    - vault_cli     # Alternative: HashiCorp Vault CLI
+  network:
+    tls_minimum_version: "1.2"
+    verify_ssl: true
+  file_permissions:
+    scripts: "755"
+    configs: "600"
+    logs: "640"
+
+# Retry Configuration
+retry:
+  max_retries: 3
+  initial_delay_seconds: 2
+  backoff_multiplier: 2
+  max_delay_seconds: 60
+
+# Logging Configuration
+logging:
+  format: json
+  level: INFO  # DEBUG, INFO, WARN, ERROR
+  output: stdout
+  fields:
+    required:
+      - timestamp
+      - level
+      - message
+    optional:
+      - context
+      - script_name
+      - pid
+
+# Testing Configuration
+testing:
+  framework: bats  # bats for bash, pester for powershell
+  coverage_threshold: 80
+  test_directory: tests/
+  
+# CI/CD Configuration
+ci:
+  linting:
+    bash: shellcheck
+    powershell: PSScriptAnalyzer
+  fail_on_lint_errors: true
+
+# Script Templates
+templates:
+  bash:
+    shebang: "#!/bin/bash"
+    strict_mode: "set -euo pipefail"
+    encoding: "UTF-8"
+  powershell:
+    encoding: "UTF-8-BOM"
+    error_action: "Stop"
+
+# Performance Targets
+performance:
+  max_execution_time_minutes: 60
+  max_memory_mb: 500
+  cleanup_temp_files: true
+
+# Variable Placeholders
+# These are replaced in generated scripts with actual values
+variables:
+  # Azure Configuration (Primary)
+  azure_storage_account: "mystorageaccount"
+  azure_adls_filesystem: "data"  # ADLSg2 filesystem
+  azure_adls_path: "raw/backups/"
+  azure_container: "backups"
+  azure_resource_group: "rg-analytics-prod"
+  
+  # AWS Configuration (Optional)
+  aws_region: "us-east-1"
+  aws_s3_bucket: "my-backup-bucket"
+  aws_s3_prefix: "backups/"
+  
+  # GCP Configuration (Optional)
+  gcp_project: "my-project"
+  gcp_bucket: "my-backup-bucket"
+  
+  # Database Configuration
+  db_host: "localhost"
+  db_port: 5432
+  db_name: "production"
+  db_user: "backup_user"
+  
+  # File Paths
+  backup_dir: "/var/backups"
+  log_dir: "/var/log/scripts"
+  temp_dir: "/tmp"
+  lock_dir: "/var/run"
+  
+  # Retention
+  retention_days: 30
+  
+  # Notifications
+  alert_email: "ops-team@company.com"
+  slack_webhook_url: "${SLACK_WEBHOOK_URL}"
+
+# Validation Rules
+validation:
+  required_env_vars:
+    - PATH
+  optional_env_vars:
+    - AZURE_STORAGE_KEY  # Or use managed identity
+    - AZURE_CLIENT_ID
+    - AZURE_CLIENT_SECRET
+    - AZURE_TENANT_ID
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - GCP_SERVICE_ACCOUNT_KEY
+  
+  # Check these before script execution
+  pre_execution_checks:
+    - check: "shell_version"
+      description: "Verify shell version meets minimum requirement"
+    - check: "required_tools"
+      description: "Verify all required CLI tools are installed"
+    - check: "credentials"
+      description: "Verify credentials are available (not hardcoded)"
+    - check: "disk_space"
+      description: "Verify sufficient disk space for operations"
+      minimum_gb: 10
+
+# Example Usage
+# This configuration is loaded by workflows and scripts
+# Access variables in bash: ${var.aws_region}
+# Access variables in PowerShell: $config.variables.aws_region

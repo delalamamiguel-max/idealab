@@ -1,0 +1,35 @@
+archetype:
+  name: enterprise-microservice
+  display_name: Enterprise Microservice
+  description: 'Universal enterprise microservice archetype combining industry best
+    practices. Language-agnostic (Java/Python), framework-flexible (Spring Boot/FastAPI),
+    team-independent with cloud-native deployment patterns. Suitable for any team
+    building production-ready backend services.'
+  keywords:
+  - enterprise
+  - microservice
+  - universal
+  - java
+  - python
+  - spring-boot
+  - fastapi
+  - kubernetes
+  - helm
+  - azure
+  - keyvault
+  - observability
+  - rest-api
+  - cloud-native
+  - devops
+  - ci-cd
+  constitution:
+    path: enterprise-microservice-constitution.md
+  dependencies:
+    - backend-only
+  workflows:
+    debug: debug-enterprise-microservice
+    test: test-enterprise-microservice
+    scaffold: scaffold-enterprise-microservice
+    compare: compare-enterprise-microservice
+    refactor: refactor-enterprise-microservice
+    document: document-enterprise-microservice

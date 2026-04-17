@@ -1,0 +1,58 @@
+# Environment Configuration for Logistic Regression Specialist
+# Focus: governed logistic regression training with calibrated probabilities and Azure ML observability
+
+spark:
+  enabled: true
+  version: "3.5+"
+  unity_catalog: true
+
+python:
+  version: "3.10"
+
+libraries:
+  - mlflow: "2.11+"
+  - scikit-learn: "1.4+"
+  - statsmodels: "0.14+"
+  - imbalanced-learn: "0.12+"
+  - shap: "0.44+"
+  - numpy: "1.26+"
+  - pandas: "2.1+"
+  - matplotlib: "3.8+"
+  - azureml-mlflow: "1.54+"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/models/logistic_regression"
+  registry_uri: "databricks-uc"
+  model_name_prefix: "ent_logreg_"
+
+feature_store:
+  catalog: "main"
+  schema: "feature_store"
+  registry_table: "feature_registry"
+
+monitoring:
+  workspace: "azureml-enterprise"
+  endpoint_name: "logreg-serve"
+  metric_alerts:
+    - "roc_auc"
+    - "pr_auc"
+    - "calibration_error"
+
+ci:
+  system: "Azure DevOps"
+  pipeline: "logreg-train-validate"
+  tests:
+    framework: "pytest"
+    min_coverage: "85%"
+
+security:
+  secret_scope: "ml-secrets"
+  key_vault_name: "kv-mlops-prod"
+
+variables:
+  class_imbalance_threshold: 0.2
+  default_regularization_grid: "[0.001, 0.01, 0.1, 1.0, 10.0]"
+  calibration_method: "isotonic"
+  promotion_stage: "Staging"
+  retrain_cadence_days: 30

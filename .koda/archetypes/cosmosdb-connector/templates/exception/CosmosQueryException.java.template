@@ -1,0 +1,49 @@
+package {{PACKAGE_NAME}}.exception;
+
+/**
+ * Custom exception for Cosmos DB query operations.
+ * Wraps Cosmos SDK exceptions with additional context.
+ */
+public class CosmosQueryException extends Exception {
+
+    private int statusCode;
+
+    /**
+     * Constructs a new CosmosQueryException with the specified message.
+     *
+     * @param message the detail message
+     */
+    public CosmosQueryException(String message) {
+        super(message);
+        this.statusCode = 500;
+    }
+
+    /**
+     * Constructs a new CosmosQueryException with the specified message and status code.
+     *
+     * @param message the detail message
+     * @param statusCode the HTTP status code from Cosmos DB
+     */
+    public CosmosQueryException(String message, int statusCode) {
+        super(message);
+        this.statusCode = statusCode;
+    }
+
+    /**
+     * Gets the HTTP status code associated with this exception.
+     *
+     * @return the status code
+     */
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    /**
+     * Sets the HTTP status code.
+     *
+     * @param statusCode the status code
+     */
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+}

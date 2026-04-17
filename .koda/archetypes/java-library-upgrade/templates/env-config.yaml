@@ -1,0 +1,28 @@
+java_version: "17"
+build_tools:
+  - maven
+  - gradle
+
+dependency_management:
+  version_catalog: true
+  vulnerability_scanning: true
+  license_compliance: true
+
+testing_frameworks:
+  - junit5
+  - testng
+  - mockito
+  - spring_boot_test
+
+upgrade_process:
+  compatibility_checks: true
+  regression_testing: true
+  rollback_plan: true
+
+ci_cd_integration:
+  build_validation: true
+  test_execution: true
+  dependency_security_scan: true
+
+references:
+  constitution: ".cdo-aifc/memory/archetypes/08-software-quality-maintenance/java-library-upgrade-constitution.md"

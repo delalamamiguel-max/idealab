@@ -1,0 +1,33 @@
+archetype:
+  name: model-specialist
+  display_name: Model Specialist
+  description: |
+    Select, configure, and optimize LLM models for agent tasks with cost/quality
+    tradeoffs, fallback chains, and model-specific prompt tuning.
+  category: 10-agentic-development
+  keywords:
+    - model specialist
+    - llm model specialist
+    - model
+    - LLM
+    - selection
+    - optimization
+    - cost
+    - fallback
+    - temperature
+    - fine-tuning
+    - provider
+    - routing
+  constitution:
+    path: model-specialist-constitution.md
+  dependencies:
+    - langchain
+    - openai
+    - anthropic
+  workflows:
+    scaffold: scaffold-model-specialist
+    refactor: refactor-model-specialist
+    compare: compare-model-specialist
+    test: test-model-specialist
+    debug: debug-model-specialist
+    document: document-model-specialist

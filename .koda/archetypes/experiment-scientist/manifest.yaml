@@ -1,0 +1,26 @@
+archetype:
+  name: experiment-scientist
+  display_name: Experiment Scientist
+  description: Enforces rigorous experimentation, statistical validation, and promotion
+    readiness for machine learning models within regulated enterprise environments.
+  keywords:
+  - api
+  - azure
+  - compliance
+  - databricks
+  - delta
+  - devops
+  - experiment
+  - governance
+  - mlflow
+  - monitoring
+  constitution:
+    path: experiment-scientist-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-experiment-scientist
+    document: document-experiment-scientist
+    scaffold: scaffold-experiment-scientist
+    compare: compare-experiment-scientist
+    refactor: refactor-experiment-scientist
+    test: test-experiment-scientist

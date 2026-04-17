@@ -1,0 +1,32 @@
+# Agent Archetype: State Specialist
+# Version: 1.0.0
+
+performance:
+  max_messages: 50               # preserve from default_parameters.state.max_messages
+  max_tokens: 8000               # preserve from default_parameters.state.max_tokens
+  checkpoint_write_timeout_ms: 3000
+  state_cleanup_interval_seconds: 300
+
+variables:
+  checkpoint_enabled: true       # preserve from default_parameters.state.checkpoint_enabled
+  memory_type: "conversation"    # preserve from default_parameters.memory.type
+  memory_ttl_hours: 24           # preserve from default_parameters.memory.ttl_hours
+  python_version: "3.10"
+  available_libraries:
+    - langgraph>=0.0.20
+    - langchain>=0.1.0
+    - pydantic>=2.5.0
+  required_env_vars:
+    - AGENT_DATA    # root directory for agent state files (used by memory_patterns.yaml, checkpoint_strategy.md)
+  optional_env_vars:
+    - DATABASE_URL  # required when memory_type = "persistent"
+
+validation:
+  min_max_messages: 10
+  max_max_messages: 500
+  min_ttl_hours: 1
+  max_ttl_hours: 168
+  required_fields:
+    - state_schema
+    - checkpointer
+  schema_version: "1.0.0"

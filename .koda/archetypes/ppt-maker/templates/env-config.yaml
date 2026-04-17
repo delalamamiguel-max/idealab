@@ -1,0 +1,124 @@
+# Environment Configuration for PPT-Maker
+# Source: Developed from ppt_engine_focused.py implementation
+
+python_packages:
+  pyyaml: "6.0+"
+  python-pptx: "0.6.21+"
+  Pillow: "10.0+"
+
+npm_packages:
+  "@mermaid-js/mermaid-cli": "10.6+"
+
+system_requirements:
+  chromium_path: "/opt/homebrew/bin/chromium"  # or "/usr/bin/chromium"
+  description: "Chromium/Chrome browser required for Mermaid diagram generation"
+
+tools:
+  mmdc: "Mermaid CLI for diagram generation"
+  markdownlint: "v0.27+ for YAML/documentation linting"
+
+template:
+  file: "ppt-maker-template-library.pptx"
+  location: "CDO-AIFC/reference/templates/09-documentation-requirements/ppt-maker/"
+  slide_types: 12
+  brand: "AT&T"
+
+library:
+  file: "ppt_engine_focused.py"
+  location: "CDO-AIFC/reference/scripts/python/"
+  metadata_file: "ppt_engine_focused.yaml"
+
+assets:
+  default_folder: "assets"
+  yaml_specs: "Persisted YAML presentation specifications"
+  mermaid_sources: "Version-controlled .mmd diagram sources"
+  generated_images: "PNG diagrams generated from Mermaid CLI"
+
+diagram_defaults:
+  full_slide_diagrams:
+    position:
+      x: 0.5
+      y: 0.75
+      width: 9.0
+      height: 5.75
+    description: "Optimized for 11_blank_end_slide - fits safe zone, avoids footer"
+  
+  partial_slide_diagrams:
+    position:
+      x: 5.5
+      y: 1.5
+      width: 4.0
+      height: 4.0
+    description: "Optimized for 10_content_with_image - right side placement"
+  
+  aspect_ratio_tolerance: 0.10  # 10% = check source vs display distortion
+  auto_size_enabled: true  # Let engine calculate optimal dimensions
+
+recommended_source_dimensions:
+  flow_diagrams: "2400x1333 (landscape 1.8:1)"
+  mindmaps: "2400x1800 (squarish 1.33:1)"
+  gantt_charts: "2400x1200 (ultra-wide 2:1)"
+  sequence_diagrams: "2400x1800 (vertical-ish 1.33:1)"
+  network_diagrams: "2400x1333 (landscape 1.8:1)"
+
+slide_type_usage:
+  diagram_only: ["11_blank_end_slide"]
+  diagram_with_text: ["10_content_with_image"]
+  text_only: ["05_content_single_column", "06_large_text_three_columns", "07_two_columns", "08_four_columns_enumerated", "09_grid_with_icons"]
+  special: ["01_title", "12_final_slide"]
+
+validation:
+  # Content Length Validation (Pre-Generation)
+  enforce_character_limits: true  # Fail fast if text exceeds limits
+  allow_ellipses_truncation: false  # MUST be false - no silent truncation
+  
+  # Aspect Ratio Validation
+  aspect_ratio_tolerance: 0.10  # 10% distortion acceptable (source vs display)
+  validate_aspect_ratio_default: true  # Enable aspect ratio validation by default
+  
+  # Text Validation
+  max_text_length_enforcement: true
+  placeholder_text_rejection: true
+  detect_text_truncation: true  # Check for ellipses in rendered text
+  
+  # Overlap Detection
+  exclude_overlap_on_divider_slides: true  # Dividers have natural footer/slide# overlap
+  divider_slide_keywords:
+    - "Divider"
+    - "Cover w/ Subtitle"
+  ignore_placeholder_overlap:  # Exclude from content overlap checks
+    - "Footer Placeholder"
+    - "Slide Number Placeholder"
+  check_title_body_overlap: true  # Detect title extending into body region
+  title_body_overlap_tolerance: 0.1  # inches
+  
+  # Image Validation
+  check_actual_embedded_images: true  # Verify images actually embedded, not just YAML spec
+  zip_integrity_check: true
+  
+  # Diagram Positioning
+  blank_slide_max_diagram_area:
+    width: 9.5  # inches
+    height: 6.5  # inches
+    center: true  # Auto-center diagrams on blank slides
+  poor_diagram_fit_thresholds:
+    scaling_ratio: 0.80  # Warn if < 80% of available space
+    area_coverage: 0.50  # Warn if < 50% area coverage
+  
+  # Retry Configuration
+  max_retry_attempts: 3  # Maximum attempts for validation pass
+  enable_auto_correction: true  # Cascade applies fixes based on validation JSON
+
+ci:
+  yaml_validation: true
+  aspect_ratio_check: true
+  text_length_check: true
+  zip_integrity_check: true
+
+variables:
+  default_slide_width_inches: 10.0
+  default_slide_height_inches: 7.5
+  safe_margin_inches: 0.5
+  default_font_size_pt: 12
+  min_font_size_pt: 10
+  max_font_size_pt: 18

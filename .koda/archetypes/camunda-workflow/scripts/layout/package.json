@@ -1,0 +1,22 @@
+{
+  "name": "bpmn-layout-tool",
+  "version": "1.0.0",
+  "description": "Auto-layout tool for BPMN diagrams to fix overlapping flows",
+  "main": "layout-bpmn.js",
+  "scripts": {
+    "layout": "node layout-bpmn.js",
+    "layout:all": "node layout-all-bpmn.js",
+    "align": "node align-bpmn-js.js"
+  },
+  "dependencies": {
+    "bpmn-auto-layout": "^0.5.0",
+    "bpmn-js": "^17.0.0",
+    "bpmn-moddle": "^8.0.0",
+    "diagram-js": "^14.0.0",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.3.10"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

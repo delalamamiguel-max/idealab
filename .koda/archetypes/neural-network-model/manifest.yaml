@@ -1,0 +1,27 @@
+archetype:
+  name: neural-network-model
+  display_name: Neural Network Model
+  description: This constitution establishes the guardrails for the Neural Network
+    Model archetype. It governs how deep learning systems are designed, trained, evaluated,
+    and deployed in AT&T production environments
+  keywords:
+  - api
+  - governance
+  - mlflow
+  - model
+  - monitoring
+  - network
+  - neural
+  - numpy
+  - observability
+  - python
+  constitution:
+    path: neural-network-model-constitution.md
+  dependencies: []
+  workflows:
+    test: test-neural-network-model
+    document: document-neural-network-model
+    refactor: refactor-neural-network-model
+    scaffold: scaffold-neural-network-model
+    compare: compare-neural-network-model
+    debug: debug-neural-network-model

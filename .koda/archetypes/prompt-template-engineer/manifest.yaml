@@ -1,0 +1,30 @@
+archetype:
+  name: prompt-template-engineer
+  display_name: Prompt Template Engineer
+  description: Design and build structured prompt management systems with template engines,
+    type-safe loading, caching, input sanitization, prompt poisoning resistance, persona
+    file systems, prompt-as-files architecture, and prompt testing frameworks.
+  keywords:
+  - handlebars
+  - persona-system
+  - prompt-catalog
+  - prompt-engineering
+  - prompt-injection
+  - prompt-management
+  - prompt-template
+  - prompt-testing
+  - sanitization
+  - system-prompt
+  - template-caching
+  - template-engine
+  - type-safe-prompts
+  constitution:
+    path: prompt-template-engineer-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-prompt-template-engineer
+    debug: debug-prompt-template-engineer
+    refactor: refactor-prompt-template-engineer
+    document: document-prompt-template-engineer
+    test: test-prompt-template-engineer
+    compare: compare-prompt-template-engineer

@@ -1,0 +1,20 @@
+# Environment Configuration for Graph Pattern Detective
+
+python:
+  version: "3.10+"
+
+tools:
+  - name: "neo4j"
+    version: "5.x+"
+    purpose: "Graph database and pattern matching"
+  - name: "neo4j-gds"
+    version: "2.x+"
+    purpose: "Community/centrality for anomaly scoring"
+  - name: "apoc"
+    version: "5.x+"
+    purpose: "Triggers and periodic execution"
+
+performance:
+  expected_runtime_secs: 60
+  max_runtime_secs: 300
+

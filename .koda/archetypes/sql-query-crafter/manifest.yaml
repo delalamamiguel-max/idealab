@@ -1,0 +1,26 @@
+archetype:
+  name: sql-query-crafter
+  display_name: SQL Query Crafter
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the sql query crafter archetype.
+  keywords:
+  - crafter
+  - cte
+  - database
+  - governance
+  - join
+  - query
+  - select
+  - snowflake
+  - sql
+  - testing
+  constitution:
+    path: sql-query-crafter-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-sql-query-crafter
+    refactor: refactor-sql-query-crafter
+    test: test-sql-query-crafter
+    document: document-sql-query-crafter
+    compare: compare-sql-query-crafter
+    scaffold: scaffold-sql-query-crafter

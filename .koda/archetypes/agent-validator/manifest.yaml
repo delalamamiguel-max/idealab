@@ -1,0 +1,35 @@
+archetype:
+  name: agent-validator
+  display_name: Agent Validator
+  description: |
+    Create validation test cases and quality gates for agents. Implements trajectory
+    evaluation, adversarial testing, safety checks, and CI/CD promotion gates.
+  category: 10-agentic-development
+  keywords:
+    - agent validator
+    - agent validation
+    - trajectory evaluation
+    - validation
+    - testing
+    - quality gate
+    - adversarial
+    - red team
+    - safety
+    - trajectory
+    - regression
+    - CI/CD
+    - promotion
+    - benchmark
+  constitution:
+    path: agent-validator-constitution.md
+  dependencies:
+    - deepeval
+    - pytest
+    - langsmith
+  workflows:
+    scaffold: scaffold-agent-validator
+    refactor: refactor-agent-validator
+    compare: compare-agent-validator
+    test: test-agent-validator
+    debug: debug-agent-validator
+    document: document-agent-validator

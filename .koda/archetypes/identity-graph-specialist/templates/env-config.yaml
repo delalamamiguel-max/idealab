@@ -1,0 +1,23 @@
+# Environment Configuration for Identity Graph Specialist
+
+python:
+  version: "3.10+"
+
+tools:
+  - name: "neo4j"
+    version: "5.x+"
+    purpose: "Identity/metadata graph store"
+  - name: "dedupe"
+    version: "2.0+"
+    purpose: "Python entity resolution"
+  - name: "recordlinkage"
+    version: "0.15+"
+    purpose: "Record linkage toolkit"
+  - name: "splink"
+    version: "3.0+"
+    purpose: "Probabilistic record linkage at scale"
+
+performance:
+  expected_runtime_secs: 60
+  max_runtime_secs: 300
+

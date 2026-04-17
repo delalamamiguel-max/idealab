@@ -1,0 +1,58 @@
+# Environment Configuration for graph community detection
+# Focus: governed graph analytics and community detection pipelines
+
+python:
+  version: "3.10"
+
+spark:
+  version: "3.5+"
+  rapids_acceleration: true
+
+engines:
+  inmemory:
+    - name: "networkx"
+      version: "3.2+"
+    - name: "kuzu"
+      version: "0.8+"
+  distributed:
+    - name: "rapids-ai/cugraph"
+      version: "24.06+"
+    - name: "neo4j"
+      version: "5.x"
+    - name: "relationalai"
+      version: "cloud"
+
+data_access:
+  catalog: "enterprise_graph_catalog"
+  storage_accounts:
+    - "<graph-storage-account>"
+  consent_registry_table: "governance.consent_graph_sources"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/graph/community_detection"
+
+monitoring:
+  drift_threshold_psi: 0.15
+  community_instability_threshold: 0.1
+  alert_channels:
+    - "teams://graph-analytics-alerts"
+    - "pagerduty://graph-ops"
+
+security:
+  secret_scope: "graph-analytics-secrets"
+  approved_vnets:
+    - "<graph-vnet>"
+  pii_masking_minimum_k: 10
+
+ci:
+  azure_devops_project: "AI-Analytics"
+  pipeline_name: "Graph-Community-Detection"
+  validation_jobs:
+    - "graph-unit-tests"
+    - "graph-scale-benchmark"
+
+variables:
+  default_owner: "graph_center_of_excellence@att.com"
+  max_inmemory_nodes: 200000
+  max_inmemory_edges: 2000000

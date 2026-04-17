@@ -1,0 +1,31 @@
+archetype:
+  name: knowledge-graph-builder
+  display_name: Knowledge Graph Builder
+  description: |
+    Design, model, and build knowledge graphs using property graph and RDF paradigms. Covers graph database selection, schema design, Cypher/SPARQL query patterns, bulk data loading strategies, and integration with enterprise information systems.
+  keywords:
+  - cypher
+  - data-loading
+  - data-modeling
+  - etl
+  - graph-database
+  - integration
+  - knowledge-graph
+  - neo4j
+  - ontology
+  - property-graph
+  - rdf
+  - schema-design
+  - sparql
+  constitution:
+    path: knowledge-graph-builder-constitution.md
+  dependencies: 
+  - general-graph-ontology
+  - ontology-engineer
+  workflows:
+    scaffold: scaffold-knowledge-graph-builder
+    debug: debug-knowledge-graph-builder
+    refactor: refactor-knowledge-graph-builder
+    test: test-knowledge-graph-builder
+    compare: compare-knowledge-graph-builder
+    document: document-knowledge-graph-builder

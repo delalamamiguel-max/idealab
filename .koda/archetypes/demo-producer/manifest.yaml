@@ -1,0 +1,25 @@
+archetype:
+  name: demo-producer
+  display_name: Demo Producer
+  description: Establishes disciplined practices for automated product demo generation
+    using Playwright, ensuring professional quality, complete automation, modular
+    component storage, zoom effects, smooth animations
+  keywords:
+  - api
+  - demo
+  - producer
+  - python
+  - react
+  - rest
+  - testing
+  - validation
+  constitution:
+    path: demo-producer-constitution.md
+  dependencies: []
+  workflows:
+    test: test-demo-producer
+    compare: compare-demo-producer
+    debug: debug-demo-producer
+    scaffold: scaffold-demo-producer
+    refactor: refactor-demo-producer
+    document: document-demo-producer

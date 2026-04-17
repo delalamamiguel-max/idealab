@@ -1,0 +1,27 @@
+archetype:
+  name: eda-navigator
+  display_name: EDA Navigator
+  description: Guides exploratory data analysis with secure, reproducible Databricks
+    notebooks that enable collaborative insights without drifting from governance
+    standards.
+  keywords:
+  - api
+  - azure
+  - compliance
+  - databricks
+  - delta
+  - devops
+  - eda
+  - governance
+  - mlflow
+  - navigator
+  constitution:
+    path: eda-navigator-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-eda-navigator
+    document: document-eda-navigator
+    test: test-eda-navigator
+    compare: compare-eda-navigator
+    debug: debug-eda-navigator
+    scaffold: scaffold-eda-navigator

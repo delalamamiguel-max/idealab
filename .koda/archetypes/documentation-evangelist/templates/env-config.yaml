@@ -1,0 +1,22 @@
+# Environment Configuration for documentation evangelist
+
+formats:
+  - markdown: "GitHub-flavored Markdown, CommonMark compatibility"
+  - confluence: "Atlassian Confluence storage format"
+
+tools:
+  mermaid_linter: "0.9+"
+  markdown_linter: "markdownlint v0.27+"
+  asciidoc_linter: "asciidoctor-lint"
+
+ci:
+  markdown_lint: true
+  mermaid_validation: true
+  asciidoc_lint: false
+
+docs_folder: "documentation_evangelist/tutorial"
+template_folder: "documentation_evangelist/prompts/templates"
+
+variables:
+  max_line_length: 100
+  diagram_format: "mermaid"

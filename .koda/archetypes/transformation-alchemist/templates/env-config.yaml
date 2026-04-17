@@ -1,0 +1,25 @@
+# Environment Configuration for transformation alchemist
+
+databricks:
+  runtime: "13.2 (Spark 3.4)"
+  cluster:
+    node_type: "Standard_DS3_v2"
+    num_workers: 10
+
+python:
+  version: "3.10"
+  dependencies:
+    - pyspark>=3.4
+    - pandas
+    - great_expectations
+    - pytest
+
+performance:
+  max_runtime_minutes: 15
+  expected_records_per_partition: 1000000
+
+# Example parameter bindings ({{var}} syntax)
+variables:
+  input_path: "/raw/sales/{{processing_date}}"
+  output_table: "analytics.processed_sales"
+  processing_date: "2025-01-01"

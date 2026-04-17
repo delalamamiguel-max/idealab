@@ -1,0 +1,60 @@
+# Environment Configuration for collaborative filtering model
+# Focus: governed recommender experimentation, replay evaluation, and online personalization
+
+spark:
+  version: "3.5+"
+  unity_catalog: true
+
+python:
+  version: "3.10"
+
+libraries:
+  - mlflow: "2.11+"
+  - pyspark: "3.5+"
+  - implicit: "0.7+"
+  - lightfm: "1.17+"
+  - scikit-surprise: "1.1+"
+  - numpy: "1.26+"
+  - pandas: "2.1+"
+  - scipy: "1.11+"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/recsys/collaborative_filtering"
+  registry_uri: "databricks-uc"
+  model_name_prefix: "recsys_cf_"
+
+experimentation:
+  offline_replay_notebook: "/Repos/recsys/offline_replay"
+  online_test_pipeline: "Recsys-CF-ABTest"
+  seed_value: 20251023
+
+evaluation:
+  metrics:
+    - "precision_at_10"
+    - "recall_at_10"
+    - "ndcg_at_10"
+    - "map_at_10"
+    - "catalog_coverage"
+    - "diversity_score"
+  confidence_level: 0.95
+  min_sample_size: 10000
+
+serving:
+  endpoint_name: "recsys-cf"
+  fallback_strategy: "popularity_baseline"
+  cache_ttl_minutes: 15
+
+security:
+  secret_scope: "recsys-secrets"
+  pii_token_service: "privacy-tokenizer"
+
+governance:
+  azure_devops_project: "AI-Analytics"
+  pipeline_gate: "Recsys-Validation"
+  approval_group: "ml-recsys-board"
+
+variables:
+  retraining_interval_days: 14
+  bias_review_cadence_days: 30
+  max_recommendations_per_request: 20

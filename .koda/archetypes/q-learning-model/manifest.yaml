@@ -1,0 +1,25 @@
+archetype:
+  name: q-learning-model
+  display_name: Q Learning Model
+  description: This constitution sets the foundational guardrails for the Q-learning
+    model archetype, ensuring safe, reproducible, and auditable reinforcement learning
+    workflows.
+  keywords:
+  - governance
+  - learning
+  - model
+  - numpy
+  - observability
+  - python
+  - scala
+  - validation
+  constitution:
+    path: q-learning-model-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-q-learning-model
+    scaffold: scaffold-q-learning-model
+    compare: compare-q-learning-model
+    debug: debug-q-learning-model
+    test: test-q-learning-model
+    document: document-q-learning-model

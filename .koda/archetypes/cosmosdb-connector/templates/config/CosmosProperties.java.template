@@ -1,0 +1,101 @@
+package {{PACKAGE_NAME}}.config;
+
+/**
+ * Cosmos DB connection properties.
+ * Holds all configuration needed to establish a Cosmos DB connection.
+ */
+public class CosmosProperties {
+
+    private String hostName;
+    private String secretKey;
+    private String databaseName;
+    private String preferredRegion;
+    private String consistencyLevel = "BOUNDED_STALENESS";
+    private Long idleConnectionTimeout = 1000L;
+    private Integer maxConnectionPool = 50;
+    private Boolean directModeEnabled = true;
+    private String agentSuffix;
+    private Boolean contentResponseOnWriteEnabled = false;
+
+    // Getters and Setters
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
+    public String getPreferredRegion() {
+        return preferredRegion;
+    }
+
+    public void setPreferredRegion(String preferredRegion) {
+        this.preferredRegion = preferredRegion;
+    }
+
+    public String getConsistencyLevel() {
+        return consistencyLevel;
+    }
+
+    public void setConsistencyLevel(String consistencyLevel) {
+        this.consistencyLevel = consistencyLevel;
+    }
+
+    public Long getIdleConnectionTimeout() {
+        return idleConnectionTimeout;
+    }
+
+    public void setIdleConnectionTimeout(Long idleConnectionTimeout) {
+        this.idleConnectionTimeout = idleConnectionTimeout;
+    }
+
+    public Integer getMaxConnectionPool() {
+        return maxConnectionPool;
+    }
+
+    public void setMaxConnectionPool(Integer maxConnectionPool) {
+        this.maxConnectionPool = maxConnectionPool;
+    }
+
+    public Boolean getDirectModeEnabled() {
+        return directModeEnabled;
+    }
+
+    public void setDirectModeEnabled(Boolean directModeEnabled) {
+        this.directModeEnabled = directModeEnabled;
+    }
+
+    public String getAgentSuffix() {
+        return agentSuffix;
+    }
+
+    public void setAgentSuffix(String agentSuffix) {
+        this.agentSuffix = agentSuffix;
+    }
+
+    public Boolean getContentResponseOnWriteEnabled() {
+        return contentResponseOnWriteEnabled;
+    }
+
+    public void setContentResponseOnWriteEnabled(Boolean contentResponseOnWriteEnabled) {
+        this.contentResponseOnWriteEnabled = contentResponseOnWriteEnabled;
+    }
+}

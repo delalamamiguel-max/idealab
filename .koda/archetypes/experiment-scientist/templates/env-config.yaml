@@ -1,0 +1,49 @@
+# Environment Configuration for experiment scientist
+# Focus: controlled experimentation, validation, and governance of ML runs
+
+spark:
+  version: "3.5+"
+  unity_catalog: true
+
+python:
+  version: "3.10"
+
+libraries:
+  - mlflow: "2.11+"
+  - scipy: "1.11+"
+  - scikit-learn: "1.4+"
+  - statsmodels: "0.14+"
+  - pandas: "2.1+"
+  - numpy: "1.26+"
+  - great-expectations: "0.18+"
+  - evidently: "0.4+"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/models/experiments"
+  metric_tolerance_delta: 0.001
+
+validation:
+  required_tests:
+    - "cross_validation"
+    - "holdout_evaluation"
+    - "statistical_significance"
+  min_test_sample_size: 1000
+  bootstrap_iterations: 1000
+
+ci:
+  azure_devops_project: "AI-Analytics"
+  pipelines:
+    - name: "Model-Validation"
+      stage: "validate"
+    - name: "Model-Approval"
+      stage: "approve"
+
+compliance:
+  approval_board_group: "ml-approval-board"
+  documentation_repo: "ml-validation-reports"
+
+variables:
+  default_alpha: 0.05
+  max_experiments_per_day: 25
+  expected_uplift_threshold: 0.02

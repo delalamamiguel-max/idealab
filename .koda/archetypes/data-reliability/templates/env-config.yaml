@@ -1,0 +1,108 @@
+# Data Reliability Engineer Archetype Environment Configuration
+
+archetype: data_reliability_engineer
+name: "Data Reliability Engineer"
+description: "Defines SLOs, monitors freshness/completeness, detects schema & quality drift, supports incident readiness"
+
+# Core tooling expectations
+python:
+  min_version: "3.11"
+  command: "python --version"
+
+required_tools:
+  - name: "jq"
+    command: "jq --version"
+  - name: "curl"
+    command: "curl --version"
+  - name: "pytest"
+    command: "pytest --version"
+
+integrations:
+  observability_stack: "prometheus+grafana"
+  lineage_system: "openlineage"
+  catalog_system: "datahub"
+  incident_mgmt: "pagerduty"
+
+slo_defaults:
+  availability_pct: 99.9
+  freshness_max_lag_minutes: 15
+  latency_p95_seconds: 300
+  completeness_target_pct: 100.0
+  accuracy_tolerance_pct: 0.5
+
+error_budget:
+  window_days: 30
+  warn_consumption_pct: 60
+  freeze_consumption_pct: 85
+  halt_consumption_pct: 100
+  high_burn_rate_thresholds:
+    one_hour: 2.0
+    six_hour: 1.5
+
+quality_rules:
+  max_null_ratio_pct: 0.1
+  max_schema_drift_events_release: 0
+  max_distribution_ks_pvalue_drift: 0.01
+  distinctness_min_pct: 99.9
+  referential_integrity_broken_allowed: 0
+
+anomaly_detection:
+  enable_volume_anomaly: true
+  enable_freshness_anomaly: true
+  seasonal_adjustment: true
+  min_history_days: 14
+
+schema_contract:
+  enforcement: "strict"
+  versioning_strategy: "semver"
+  allow_field_additions: true
+  allow_field_removals: false
+  allow_type_widening: limited   # e.g., int -> bigint OK; int -> string NO
+
+probes:
+  enable_synthetic_delay_injection: true
+  enable_partition_skip_simulation: true
+  enable_null_injection: true
+  probe_schedule_cron: "*/30 * * * *"
+
+lineage:
+  capture_job_level: true
+  capture_column_level: true
+  impact_analysis_depth: 3
+
+alerting:
+  slack_channel: "#data-reliability-alerts"
+  pagerduty_service: "data-platform-tier1"
+  email_distribution: "data-reliability@att.com"
+  maintenance_window_cron: "0 3 * * 0"  # Weekly Sunday maintenance
+
+logging:
+  format: json_lines
+  include_lineage_ids: true
+  emit_probe_events: true
+
+risk_scoring:
+  weights:
+    freshness_violation: 5
+    completeness_gap: 7
+    schema_drift: 8
+    high_burn_rate: 9
+    anomaly_spike: 6
+
+runbook_links:
+  incident_primary: "runbooks/data_reliability_incident.md"
+
+extensions_placeholders:
+  cost_guardrails_enabled: false
+  streaming_queue_depth_threshold: 10000
+  backlog_spillover_threshold_pct: 120
+
+ownership:
+  team: "data-reliability"
+  slack: "#data-reliability"
+  escalation_chain:
+    - primary_oncall
+    - secondary_oncall
+    - manager
+
+# Future expansion: add config for multi-region failover, RPO/RTO declarations

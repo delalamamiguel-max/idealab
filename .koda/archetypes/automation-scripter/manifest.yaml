@@ -1,0 +1,27 @@
+archetype:
+  name: automation-scripter
+  display_name: Automation Scripter
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the Automation Scripter archetype. All workflows, scripts, and generated
+    code must adhere to these principles.
+  keywords:
+  - api
+  - automation
+  - ci-cd
+  - compliance
+  - governance
+  - monitoring
+  - rest
+  - scripter
+  - security
+  - testing
+  constitution:
+    path: automation-scripter-constitution.md
+  dependencies: []
+  workflows:
+    document: document-automation-scripter
+    scaffold: scaffold-automation-scripter
+    debug: debug-automation-scripter
+    compare: compare-automation-scripter
+    refactor: refactor-automation-scripter
+    test: test-automation-scripter

@@ -1,0 +1,35 @@
+python_version: "3.10"
+
+testing_frameworks:
+  python:
+    - pytest
+    - unittest
+    - coverage
+  java:
+    - junit5
+    - testng
+    - jacoco
+
+test_types:
+  - unit_tests
+  - integration_tests
+  - end_to_end_tests
+  - performance_tests
+
+coverage_targets:
+  line_coverage_percent: 80
+  branch_coverage_percent: 75
+  mutation_score_percent: 70
+
+regression_detection:
+  baseline_comparison: true
+  failure_tracking: true
+  trend_analysis: true
+
+ci_cd_integration:
+  automated_test_execution: true
+  coverage_reporting: true
+  quality_gates: true
+
+references:
+  constitution: ".cdo-aifc/memory/archetypes/08-software-quality-maintenance/regression-test-coverage-constitution.md"

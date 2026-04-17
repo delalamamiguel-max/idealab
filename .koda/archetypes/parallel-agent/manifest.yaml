@@ -1,0 +1,25 @@
+archetype:
+  name: parallel-agent
+  display_name: Parallel Agent
+  description: Archetype for Parallel Agent
+  keywords:
+  - agent
+  - api
+  - compliance
+  - docker
+  - parallel
+  - python
+  - scala
+  - security
+  - sql
+  - testing
+  constitution:
+    path: parallel-agent-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-parallel-agent
+    debug: debug-parallel-agent
+    refactor: refactor-parallel-agent
+    test: test-parallel-agent
+    compare: compare-parallel-agent
+    document: document-parallel-agent

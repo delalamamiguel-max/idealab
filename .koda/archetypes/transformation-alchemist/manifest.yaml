@@ -1,0 +1,31 @@
+archetype:
+  name: transformation-alchemist
+  display_name: Transformation Alchemist
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the transformation alchemist archetype.
+  keywords:
+  - alchemist
+  - api
+  - data-quality
+  - databricks
+  - dataframe
+  - delta
+  - etl
+  - governance
+  - monitoring
+  - notebook
+  - pyspark
+  - python
+  - scala
+  - spark
+  - sql
+  constitution:
+    path: transformation-alchemist-constitution.md
+  dependencies: []
+  workflows:
+    compare: compare-transformation-alchemist
+    scaffold: scaffold-transformation-alchemist
+    debug: debug-transformation-alchemist
+    document: document-transformation-alchemist
+    test: test-transformation-alchemist
+    refactor: refactor-transformation-alchemist

@@ -1,0 +1,37 @@
+archetype:
+  name: flywheel-frontend-architect
+  display_name: Flywheel Frontend Architect
+  description: |
+    Build Flywheel-compliant web application frontends using AT&T's enterprise
+    design system. Leverages 60+ themed components from the Forge registry,
+    @flywheel/react-icons, @forge/ui-tokens for multi-brand theming, and
+    @forge/mcp for AI-assisted development. Scaffolds Vite + React 19 +
+    Tailwind v4 + TypeScript projects with full AT&T brand compliance.
+  keywords:
+    - flywheel
+    - forge
+    - att
+    - design-system
+    - shadcn
+    - react
+    - vite
+    - tailwind
+    - ui-tokens
+    - react-icons
+    - components
+    - frontend
+    - brand
+    - mcp
+    - forge-registry
+  constitution:
+    path: flywheel-frontend-architect-constitution.md
+  dependencies: []
+  scripts:
+    validate-compliance: scripts/validate-compliance.py
+  workflows:
+    scaffold: scaffold-flywheel-frontend-architect
+    debug: debug-flywheel-frontend-architect
+    refactor: refactor-flywheel-frontend-architect
+    test: test-flywheel-frontend-architect
+    compare: compare-flywheel-frontend-architect
+    document: document-flywheel-frontend-architect

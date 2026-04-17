@@ -1,0 +1,25 @@
+archetype:
+  name: ai-ethics-advisor
+  display_name: AI Ethics Advisor
+  description: Establishes guardrails for assessing, documenting, and mitigating ethical
+    risks in AI systems across the model lifecycle, ensuring compliance with AT&T
+    responsible AI standards and regulatory expectat
+  keywords:
+  - advisor
+  - compliance
+  - ethics
+  - governance
+  - monitoring
+  - scala
+  - security
+  - testing
+  constitution:
+    path: ai-ethics-advisor-constitution.md
+  dependencies: []
+  workflows:
+    compare: compare-ai-ethics-advisor
+    scaffold: scaffold-ai-ethics-advisor
+    debug: debug-ai-ethics-advisor
+    refactor: refactor-ai-ethics-advisor
+    test: test-ai-ethics-advisor
+    document: document-ai-ethics-advisor

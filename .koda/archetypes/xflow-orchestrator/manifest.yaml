@@ -1,0 +1,42 @@
+archetype:
+  name: xflow-orchestrator
+  display_name: XFlow Orchestrator
+  description: XFlow JSON configuration generation, validation, and management.
+    Standardizes how teams create, debug, refactor, and document XFlow pipeline
+    configurations for JDBC, Kafka, File, and HTTP source ingestion into ADLS/Delta
+    targets.
+  keywords:
+  - adls
+  - azure
+  - config
+  - configuration
+  - data
+  - databricks
+  - delta
+  - file
+  - http
+  - ingestion
+  - jdbc
+  - json
+  - kafka
+  - oracle
+  - parquet
+  - pipeline
+  - schema
+  - snowflake
+  - source
+  - sql-server
+  - target
+  - transformation
+  - validation
+  - xflow
+  constitution:
+    path: xflow-orchestrator-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-xflow-orchestrator
+    debug: debug-xflow-orchestrator
+    refactor: refactor-xflow-orchestrator
+    compare: compare-xflow-orchestrator
+    document: document-xflow-orchestrator
+    test: test-xflow-orchestrator

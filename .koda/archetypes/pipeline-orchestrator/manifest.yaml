@@ -1,0 +1,29 @@
+archetype:
+  name: pipeline-orchestrator
+  display_name: Pipeline Orchestrator
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the pipeline orchestrator archetype.
+  keywords:
+  - airflow
+  - azure
+  - cron
+  - dag
+  - governance
+  - orchestration
+  - orchestrator
+  - pipeline
+  - scheduling
+  - task
+  - tws
+  - validation
+  - workflow
+  constitution:
+    path: pipeline-orchestrator-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-pipeline-orchestrator
+    scaffold: scaffold-pipeline-orchestrator
+    refactor: refactor-pipeline-orchestrator
+    compare: compare-pipeline-orchestrator
+    test: test-pipeline-orchestrator
+    document: document-pipeline-orchestrator

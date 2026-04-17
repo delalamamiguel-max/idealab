@@ -1,0 +1,22 @@
+archetype:
+  name: dbscan-model
+  display_name: DBSCAN Model
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the DBSCAN clustering archetype.
+  keywords:
+  - dbscan
+  - model
+  - monitoring
+  - notebook
+  - observability
+  - python
+  constitution:
+    path: dbscan-model-constitution.md
+  dependencies: []
+  workflows:
+    compare: compare-dbscan-model
+    scaffold: scaffold-dbscan-model
+    test: test-dbscan-model
+    debug: debug-dbscan-model
+    document: document-dbscan-model
+    refactor: refactor-dbscan-model

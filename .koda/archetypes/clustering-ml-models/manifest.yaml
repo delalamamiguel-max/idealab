@@ -1,0 +1,26 @@
+archetype:
+  name: clustering-ml-models
+  display_name: Clustering ML Models
+  description: Establishes disciplined practices for unsupervised clustering on Databricks,
+    ensuring responsible feature handling, reproducible workflows, and transparent
+    cluster interpretation.
+  keywords:
+  - clustering
+  - databricks
+  - delta
+  - governance
+  - mlflow
+  - models
+  - notebook
+  - scala
+  - validation
+  constitution:
+    path: clustering-ml-models-constitution.md
+  dependencies: []
+  workflows:
+    test: test-clustering-ml-models
+    debug: debug-clustering-ml-models
+    document: document-clustering-ml-models
+    refactor: refactor-clustering-ml-models
+    compare: compare-clustering-ml-models
+    scaffold: scaffold-clustering-ml-models

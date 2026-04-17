@@ -1,0 +1,27 @@
+archetype:
+  name: gradient-boosted-trees
+  display_name: Gradient Boosted Trees
+  description: Establishes guardrails and required practices for the gradient boosted
+    trees archetype when designing, tuning, and deploying gradient boosting models
+    in regulated enterprise analytics.
+  keywords:
+  - azure
+  - boosted
+  - governance
+  - gradient
+  - lightgbm
+  - mlflow
+  - monitoring
+  - trees
+  - validation
+  - xgboost
+  constitution:
+    path: gradient-boosted-trees-constitution.md
+  dependencies: []
+  workflows:
+    compare: compare-gradient-boosted-trees
+    scaffold: scaffold-gradient-boosted-trees
+    document: document-gradient-boosted-trees
+    debug: debug-gradient-boosted-trees
+    test: test-gradient-boosted-trees
+    refactor: refactor-gradient-boosted-trees

@@ -1,0 +1,32 @@
+archetype:
+  name: solution-intent
+  display_name: Solution Intent
+  description: Generate comprehensive Solution Intent documents covering application
+    impact analysis, interface mapping, context diagrams, and end-to-end solution
+    narratives with full traceability to ITAP, past SIs, and dependency graph evidence
+  keywords:
+  - application
+  - architecture
+  - bfs
+  - context-diagram
+  - dependency
+  - design
+  - epic
+  - impact-analysis
+  - interface
+  - itap
+  - loe
+  - mermaid
+  - mots
+  - solution
+  - solution-intent
+  constitution:
+    path: SI_Constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-solution-intent
+    debug: debug-solution-intent
+    refactor: refactor-solution-intent
+    test: test-solution-intent
+    compare: compare-solution-intent
+    document: document-solution-intent

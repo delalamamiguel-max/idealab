@@ -1,0 +1,49 @@
+# Environment Configuration for model ops steward
+# Focus: post-deployment monitoring, alerting, and lifecycle management
+
+monitoring:
+  platform: "Azure Monitor"
+  metrics_workspace: "law-mlops"
+  application_insights: "appi-mlprod"
+  grafana_workspace: "grafana-mlops"
+
+mlflow:
+  registry_uri: "databricks-uc"
+  production_stage: "Production"
+  audit_table: "governance.model_registry_audit"
+
+observability:
+  metrics_tables:
+    predictions: "analytics.prediction_log"
+    ground_truth: "analytics.outcome_log"
+    drift: "analytics.drift_metrics"
+  drift_threshold:
+    psi: 0.2
+    ks: 0.1
+  latency_slo_ms: 500
+  error_rate_slo: 0.02
+
+alerting:
+  pagerduty_service: "mlops"
+  ms_teams_channel: "ModelOps Alerts"
+  email_distribution:
+    - "mlops-core@company.com"
+    - "model-owners@company.com"
+
+ci:
+  azure_devops_project: "AI-Analytics"
+  pipeline: "Model-Ops-Governance"
+  IaC_repo: "mlops-infra"
+
+security:
+  secret_scope: "modelops-secrets"
+  rotation_frequency_days: 90
+
+maintenance:
+  retraining_interval_days: 30
+  decommission_policy_days: 365
+
+variables:
+  observation_window_hours: 24
+  max_incidents_per_month: 3
+  fallback_model_name: "fallback_model_v1"

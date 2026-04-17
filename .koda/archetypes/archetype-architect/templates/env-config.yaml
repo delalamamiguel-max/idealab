@@ -1,0 +1,228 @@
+# Environment Configuration for Archetype Builder
+# Purpose: Meta-archetype for creating new archetypes
+# Generated: 2024-12-27
+
+# Tool Configuration
+python:
+  version: "3.8+"
+  required_libs:
+    - name: pyyaml
+      version: "6.0+"
+      purpose: "Parse YAML metadata and config files"
+    - name: jinja2
+      version: "3.0+"
+      purpose: "Template generation (optional)"
+
+git:
+  version: "2.0+"
+  required: true
+  purpose: "Version control for new archetype files"
+
+# Performance Targets
+performance:
+  expected_runtime_secs: 30
+  max_runtime_secs: 120
+  max_files_created: 15
+  
+  # Complexity thresholds
+  thresholds:
+    min_keywords: 8  # 3 primary + 5 secondary
+    min_hard_stop_rules: 3
+    min_mandatory_patterns: 5
+    min_preferred_patterns: 2
+    min_workflow_files: 6
+
+# Variables (replaced in generated code)
+variables:
+  # Archetype metadata
+  archetype_slug: "new-archetype"
+  archetype_display_name: "New Archetype"
+  category_id: "00-core-orchestration"
+  category_name: "Core & Orchestration"
+  
+  # Paths
+  workflows_root: ".windsurf/workflows"
+  constitution_root: "${ARCHETYPES_BASEDIR}"
+  templates_root: "${ARCHETYPES_BASEDIR}/00-core-orchestration/templates"
+  scripts_root: "${ARCHETYPES_BASEDIR}/00-core-orchestration/scripts"
+  
+  # File patterns
+  workflow_pattern: "{action}-{archetype-slug}.md"
+  constitution_pattern: "{archetype-slug}-constitution.md"
+  env_config_pattern: "env-config.yaml"
+  
+  # Discovery
+  min_discovery_confidence: 80
+  test_query_template: "Create {primary_keyword} for {use_case}"
+
+# Archetype Creation Workflow
+workflow:
+  phases:
+    - name: "Planning"
+      duration_min: 30
+      tasks:
+        - "Define scope and use cases"
+        - "Choose category"
+        - "Identify patterns and keywords"
+    
+    - name: "Constitution"
+      duration_min: 60
+      tasks:
+        - "Define hard-stop rules"
+        - "Define mandatory patterns"
+        - "Define preferred patterns"
+    
+    - name: "Environment Config"
+      duration_min: 30
+      tasks:
+        - "Tool configuration"
+        - "Performance targets"
+        - "Variables and validation"
+    
+    - name: "Workflows"
+      duration_min: 180
+      tasks:
+        - "scaffold workflow (45 min)"
+        - "debug workflow (30 min)"
+        - "refactor workflow (30 min)"
+        - "test workflow (30 min)"
+        - "compare workflow (20 min)"
+        - "document workflow (20 min)"
+    
+    - name: "Metadata"
+      duration_min: 30
+      tasks:
+        - "Add to manifest.yaml"
+        - "Test discovery"
+    
+    - name: "Integration"
+      duration_min: 60
+      tasks:
+        - "Update INDEX files"
+        - "End-to-end testing"
+    
+    - name: "Documentation"
+      duration_min: 30
+      tasks:
+        - "Update README"
+        - "Add examples"
+
+# Validation Rules
+validation:
+  required_env_vars:
+    - VIBE_CDO_ROOT
+  
+  optional_env_vars:
+    - EDITOR
+    - GIT_USER_NAME
+    - GIT_USER_EMAIL
+  
+  pre_execution_checks:
+    - check: "git_installed"
+      description: "Verify git is available for version control"
+    - check: "python_installed"
+      description: "Verify Python 3.8+ is available"
+    - check: "yaml_parser_available"
+      description: "Verify PyYAML is installed"
+    - check: "workflows_directory_exists"
+      description: "Verify .windsurf/workflows/ exists"
+    - check: "constitution_directory_exists"
+      description: "Verify ${ARCHETYPES_BASEDIR}/ exists"
+  
+  post_creation_checks:
+    - check: "all_workflow_files_exist"
+      description: "Verify all 6 workflow files created"
+    - check: "constitution_file_exists"
+      description: "Verify constitution file created"
+    - check: "env_config_exists"
+      description: "Verify env-config.yaml created"
+    - check: "metadata_entry_exists"
+      description: "Verify manifest.yaml entry added"
+    - check: "discovery_test_passes"
+      description: "Verify discovery confidence ≥80%"
+    - check: "indexes_updated"
+      description: "Verify all INDEX.md files updated"
+
+# Code Quality Standards
+quality:
+  workflow_files:
+    min_lines: 50
+    max_lines: 500
+    require_frontmatter: true
+    require_examples: true
+    min_examples: 2
+  
+  constitution:
+    min_hard_stop_rules: 3
+    min_mandatory_patterns: 5
+    min_preferred_patterns: 2
+    require_version: true
+    require_last_updated: true
+  
+  metadata:
+    min_primary_keywords: 3
+    min_secondary_keywords: 5
+    min_file_patterns: 2
+    require_high_confidence_phrases: true
+
+# Templates
+templates:
+  workflow_frontmatter: |
+    ---
+    description: {description}
+    ---
+  
+  constitution_header: |
+    # {archetype_display_name} Constitution
+    
+    ## Purpose
+    
+    Define foundational principles and hard-stop rules for {archetype_slug}.
+  
+  metadata_entry: |
+    {archetype_slug}:
+      display_name: "{archetype_display_name}"
+      description: "{description}"
+      keywords:
+        primary: []
+        secondary: []
+      workflows:
+        compare: "/compare-{archetype_slug}"
+        debug: "/debug-{archetype_slug}"
+        document: "/document-{archetype_slug}"
+        refactor: "/refactor-{archetype_slug}"
+        scaffold: "/scaffold-{archetype_slug}"
+        test: "/test-{archetype_slug}"
+
+# Discovery Configuration
+discovery:
+  keyword_types:
+    primary:
+      weight: 0.20
+      description: "Strong indicators of archetype"
+      examples: ["Kubernetes", "operator", "CRD"]
+    
+    secondary:
+      weight: 0.10
+      description: "Supporting indicators"
+      examples: ["controller", "reconciliation", "custom resource"]
+    
+    high_confidence:
+      weight: 0.25
+      description: "Definitive phrases"
+      examples: ["Kubernetes operator", "CRD controller"]
+    
+    medium_confidence:
+      weight: 0.15
+      description: "Likely matches"
+      examples: ["K8s controller", "operator pattern"]
+  
+  confidence_thresholds:
+    high: 0.80
+    medium: 0.50
+    low: 0.30
+
+# Example Usage
+# This configuration is loaded by archetype-builder workflows
+# Access variables: {{var.archetype_slug}}
+# Access thresholds: {{performance.thresholds.min_keywords}}

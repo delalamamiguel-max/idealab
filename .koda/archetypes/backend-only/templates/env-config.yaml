@@ -1,0 +1,109 @@
+# Backend Only Archetype Environment Configuration
+
+archetype: backend_only
+name: "Backend Only"
+description: "Backend-only API service with FastAPI, Poetry, Docker, Helm, and Azure DevOps CI/CD"
+
+# Required environment variables (with APP_ACRONYM prefix)
+required_env_vars:
+  - "{APP_ACRONYM}_API_PORT"
+  - "{APP_ACRONYM}_API_ROOT_PATH"
+  - "{APP_ACRONYM}_NUM_API_WORKERS"
+
+# Optional environment variables
+optional_env_vars:
+  - "{APP_ACRONYM}_POSTGRESQL_CONNECTION_STRING"
+  - "{APP_ACRONYM}_REDIS_HOST"
+  - "{APP_ACRONYM}_REDIS_PORT"
+  - "{APP_ACRONYM}_REDIS_USE_SSL"
+  - "{APP_ACRONYM}_REDIS_PASSWORD"
+  - "{APP_ACRONYM}_CLIENT_ID"
+  - "{APP_ACRONYM}_INSIGHTS_CONNECTION_STRING"
+  - "{APP_ACRONYM}_TRACER_NAME"
+  - "OTEL_SERVICE_NAME"
+  - "OTEL_RESOURCE_ATTRIBUTES"
+
+# Tool requirements
+required_tools:
+  python:
+    min_version: "3.11.0"
+    max_version: "3.13.0"
+    command: "python --version"
+  poetry:
+    min_version: "1.7.0"
+    command: "poetry --version"
+  docker:
+    min_version: "24.0.0"
+    command: "docker --version"
+
+# Optional tools
+optional_tools:
+  helm:
+    min_version: "3.12.0"
+    command: "helm version --short"
+  kubectl:
+    min_version: "1.28.0"
+    command: "kubectl version --client --short"
+
+# Project structure (monorepo)
+project_structure:
+  api:
+    - "src/{package_prefix}_api/"
+    - "src/{package_prefix}_api/routers/"
+    - "test/"
+    - "docker/"
+  worker:
+    - "src/{package_prefix}_worker/"
+    - "test/"
+  jobs:
+    - "src/{package_prefix}_jobs/"
+    - "test/"
+  shared:
+    - "src/{package_prefix}_shared/"
+    - "src/{package_prefix}_shared/models/"
+    - "src/{package_prefix}_shared/schemas/"
+    - "src/{package_prefix}_shared/utils/"
+    - "alembic/"
+    - "test/"
+  helm:
+    - "helm/{app_name}/templates/api/"
+    - "helm/{app_name}/templates/worker/"
+    - "helm/{app_name}/templates/jobs/"
+    - "helm/{app_name}/templates/common/"
+    - "helm/{app_name}/values/"
+
+# DevOps standards
+devops_standards:
+  container_registry: "cerebroacr.azurecr.io"
+  base_image: "cerebroacr.azurecr.io/aaa/python-poetry:3.11"
+  slim_image: "cerebroacr.azurecr.io/aaa/python-poetry:3.11-slim"
+  jfrog_proxy: "https://artifact.it.att.com/artifactory/api/pypi/apm0013367-pyp-group/simple/"
+  jfrog_stage: "https://artifact.it.att.com/artifactory/api/pypi/apm0013367-pyp-stage/simple/"
+  proxy_url: "http://proxy.conexus.svc.local:3128"
+
+# Kubernetes configuration
+kubernetes:
+  workload_identity: true
+  istio_sidecar: true
+  secret_store_csi: true
+  ingress_class: "ingress-nginx"
+  
+# Testing requirements
+testing:
+  unit_coverage: 80
+  frameworks: ["pytest", "pytest-asyncio", "pytest-cov", "httpx"]
+  coverage_format: "xml"
+
+# Observability
+observability:
+  tracing: "opentelemetry"
+  metrics: "azure-monitor"
+  logging: "structured-json"
+
+# Security requirements
+security:
+  non_root_container: true
+  workload_identity: true
+  private_endpoints: true
+  key_vault_integration: true
+  jfrog_credential_cleanup: true

@@ -1,0 +1,99 @@
+# Environment Configuration for Databricks Workflow Creator
+# Focus: PySpark job orchestration, Unity Catalog governance, and workflow reliability
+
+databricks:
+  workspace_url: "https://adb-0000000000000000.0.azuredatabricks.net"
+  jobs_api_version: "2.1"
+  cluster_policy: "mlops-prod-serverless"
+  repo_path: "/Repos/ai-platform/pipelines"
+  job_tags:
+    owner: "data-platform"
+    environment: "prod"
+    runtime: "13.3"
+
+clusters:
+  default:
+    runtime_version: "13.3.x-scala2.12"
+    node_type_id: "Standard_DS3_v2"
+    autoscale:
+      min_workers: 2
+      max_workers: 8
+    enable_elastic_disk: true
+  validation:
+    runtime_version: "13.3.x-spark3.4"
+    node_type_id: "Standard_DS4_v2"
+    single_user_name: "svc-databricks-validator"
+
+quality_gates:
+  bronze_ingest:
+    expectations_path: "/Shared/expectations/bronze"
+    sla_minutes: 30
+  silver_transform:
+    expectations_path: "/Shared/expectations/silver"
+    sla_minutes: 45
+  gold_serving:
+    expectations_path: "/Shared/expectations/gold"
+    sla_minutes: 15
+  delta_live_tables:
+    run_as: "svc-dlt"
+    channel: "CURRENT"
+
+observability:
+  log_delivery:
+    storage_account: "synapse-logs"
+    container: "databricks-logs"
+    prefix: "jobs/production"
+  table_monitoring:
+    health_table: "governance.workflow_health"
+    incident_stream: "eventhub://databricks-incidents"
+  metrics:
+    success_rate_target_pct: 99.0
+    median_runtime_target_minutes: 20
+    failed_task_threshold_per_week: 3
+
+security:
+  unity_catalog:
+    catalog: "production"
+    schema: "delta_gold"
+    enable_column_lineage: true
+  secrets_scope: "databricks-platform"
+  secret_keys:
+    - "dlt-pipeline-token"
+    - "unity-client-secret"
+  ip_access_list: "prod-workflow-egress"
+
+variables:
+  notebook_path: "/Repos/ai-platform/pipelines/jobs/customer_revenue_pipeline.py"
+  deployment_branch: "release/2025.10"
+  retry_policy_max_triggers: 3
+  alert_channel: "#databricks-ops"
+  pagerduty_service: "databricks-workflows"
+
+validation:
+  required_cli_tools:
+    - name: "databricks"
+      min_version: "0.213.0"
+    - name: "python3"
+      min_version: "3.10"
+    - name: "jq"
+      min_version: "1.6"
+  required_env_vars:
+    - "DATABRICKS_HOST"
+    - "DATABRICKS_TOKEN"
+  optional_env_vars:
+    - "UNITY_CLIENT_ID"
+    - "UNITY_CLIENT_SECRET"
+    - "EVENTHUB_CONNECTION"
+  smoke_tests:
+    - "databricks clusters list --output JSON"
+    - "databricks jobs list --limit 5"
+    - "python3 -c 'import pyspark; print(pyspark.__version__)'"
+
+examples:
+  prompts:
+    - "Provision a Databricks workflow that runs bronze->silver->gold notebooks with data quality expectations."
+    - "Generate a deployment checklist ensuring Unity Catalog permissions, cluster policies, and alert routing are set for pipeline abc."
+  scripts:
+    - "snippets/job-definition.json"
+    - "snippets/register-expectations.sh"
+    - "../scripts/deploy_job.py"

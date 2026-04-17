@@ -1,0 +1,32 @@
+# Agent Archetype: Workflow Creator
+# Version: 1.0.0
+
+performance:
+  max_nodes: 50
+  max_edges: 200
+  graph_compilation_timeout_ms: 10000
+  max_iterations: 25
+
+variables:
+  default_entry_node: "__start__"
+  default_recursion_limit: 10
+  enable_human_in_loop: false
+  python_version: "3.10"
+  available_libraries:
+    - langgraph>=0.0.40
+    - langchain>=0.1.0
+    - pydantic>=2.5.0
+  required_env_vars: []
+  optional_env_vars:
+    - LANGSMITH_API_KEY
+
+validation:
+  min_nodes: 2
+  max_nodes: 100
+  required_nodes:
+    - entry_node
+    - END
+  required_fields:
+    - graph_name
+    - node_list
+  schema_version: "1.0.0"

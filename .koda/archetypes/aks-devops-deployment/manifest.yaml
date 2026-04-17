@@ -1,0 +1,31 @@
+archetype:
+  name: aks-devops-deployment
+  display_name: AKS DevOps Deployment
+  description: This constitution unifies CI/CD governance with AKS deployment excellence
+    for **multi-framework microservices** (Node.js, Python, Java, .NET). Every generated
+    pipeline, Helm chart, and deployment mani
+  keywords:
+  - aks
+  - api
+  - azure
+  - ci-cd
+  - compliance
+  - container
+  - deployment
+  - devops
+  - docker
+  - fastapi
+  - governance
+  - helm
+  - kubernetes
+  - microservice
+  constitution:
+    path: aks-devops-deployment-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-aks-devops-deployment
+    debug: debug-aks-devops-deployment
+    refactor: refactor-aks-devops-deployment
+    document: document-aks-devops-deployment
+    test: test-aks-devops-deployment
+    compare: compare-aks-devops-deployment

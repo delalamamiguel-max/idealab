@@ -1,0 +1,113 @@
+package {{PACKAGE_NAME}}.util;
+
+import com.azure.cosmos.CosmosDiagnostics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+
+/**
+ * Utility class for Cosmos DB operations.
+ * Provides common functionality like metrics printing and diagnostics.
+ */
+@Component
+public class CosmosServiceUtil {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CosmosServiceUtil.class);
+
+    @Value("${cosmos.print.metrics:false}")
+    private boolean printMetrics;
+
+    /**
+     * Prints Cosmos DB query metrics if enabled.
+     *
+     * @param diagnostics Cosmos diagnostics from operation
+     */
+    public void printMetrics(CosmosDiagnostics diagnostics) {
+        if (printMetrics && diagnostics != null) {
+            try {
+                Duration duration = diagnostics.getDuration();
+                LOG.info("Cosmos DB Metrics - Duration: {}ms", duration.toMillis());
+                LOG.debug("Cosmos DB Diagnostics: {}", diagnostics.toString());
+            } catch (Exception e) {
+                LOG.warn("Error printing Cosmos metrics", e);
+            }
+        }
+    }
+
+    /**
+     * Logs request unit (RU) consumption.
+     *
+     * @param requestCharge RU charge for the operation
+     * @param operation Operation name
+     */
+    public void logRequestCharge(double requestCharge, String operation) {
+        if (printMetrics) {
+            LOG.info("Cosmos DB RU Consumption - Operation: {}, RU: {}", operation, requestCharge);
+        }
+    }
+
+    /**
+     * Formats a partition key value for logging.
+     * Truncates long values to prevent log bloat.
+     *
+     * @param partitionKey Partition key value
+     * @return Formatted partition key string
+     */
+    public String formatPartitionKey(String partitionKey) {
+        if (partitionKey == null) {
+            return "null";
+        }
+        if (partitionKey.length() > 50) {
+            return partitionKey.substring(0, 47) + "...";
+        }
+        return partitionKey;
+    }
+
+    /**
+     * Validates that a container name is not null or empty.
+     *
+     * @param containerName Container name to validate
+     * @throws IllegalArgumentException if container name is invalid
+     */
+    public void validateContainerName(String containerName) {
+        if (containerName == null || containerName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Container name cannot be null or empty");
+        }
+    }
+
+    /**
+     * Validates that an ID is not null or empty.
+     *
+     * @param id ID to validate
+     * @throws IllegalArgumentException if ID is invalid
+     */
+    public void validateId(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID cannot be null or empty");
+        }
+    }
+
+    /**
+     * Validates that a partition key is not null or empty.
+     *
+     * @param partitionKey Partition key to validate
+     * @throws IllegalArgumentException if partition key is invalid
+     */
+    public void validatePartitionKey(String partitionKey) {
+        if (partitionKey == null || partitionKey.trim().isEmpty()) {
+            throw new IllegalArgumentException("Partition key cannot be null or empty");
+        }
+    }
+
+    /**
+     * Checks if metrics printing is enabled.
+     *
+     * @return true if metrics should be printed
+     */
+    public boolean isPrintMetricsEnabled() {
+        return printMetrics;
+    }
+}

@@ -1,0 +1,44 @@
+---
+description: Document workflow for Responsible Prompting archetype (Responsible Prompting)
+---
+
+User input: $ARGUMENTS
+
+## Execution Steps
+
+
+### 0. Context Note
+
+The archetype constitution and workflow have been pre-loaded by CodeForge. All hard-stop rules and mandatory patterns from the constitution are active. Proceed directly to the execution steps below.
+
+### 1. Environment Setup
+Run `python ${ARCHETYPES_BASEDIR}/00-core-orchestration/scripts/validate_env.py --archetype responsible-prompting --json ` and parse for ENV_VALID. Halt if ENV_VALID is false.
+
+### 2. Load Configuration
+- The constitution rules are already loaded in context above.
+- Load `${ARCHETYPES_BASEDIR}/responsible-prompting/templates/env-config.yaml` for configuration
+
+### 3. Parse Input
+Extract from $ARGUMENTS: relevant parameters for document operation. Request clarification if incomplete.
+
+### 4. Execute Document Operation
+Implement document logic following constitution requirements and best practices for Responsible Prompting.
+
+### 5. Generate Outputs
+Create necessary artifacts, reports, and configurations specific to document operation.
+
+### 6. Add Recommendations
+Include best practices and optimization suggestions for Responsible Prompting.
+
+### 7. Validate and Report
+Generate outputs and documentation. Report completion.
+
+## Error Handling
+**Common Issue**: Provide resolution guidance specific to document and Responsible Prompting.
+**Configuration Error**: Validate settings and provide corrections.
+
+## Examples
+**Example 1**: `/document-responsible-prompting Sample scenario` - Output: Expected result for document operation
+**Example 2**: `/document-responsible-prompting Complex case` - Output: Detailed outcome with recommendations
+
+## References

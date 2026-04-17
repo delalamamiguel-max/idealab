@@ -1,0 +1,25 @@
+archetype:
+  name: siamese-neural-network
+  display_name: Siamese Neural Network
+  description: Establishes guardrails for designing, training, and deploying Siamese
+    and twin-tower metric-learning models that power similarity search, deduplication,
+    and verification services.
+  keywords:
+  - mlflow
+  - network
+  - neural
+  - observability
+  - rest
+  - scala
+  - siamese
+  - validation
+  constitution:
+    path: siamese-neural-network-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-siamese-neural-network
+    test: test-siamese-neural-network
+    refactor: refactor-siamese-neural-network
+    compare: compare-siamese-neural-network
+    scaffold: scaffold-siamese-neural-network
+    document: document-siamese-neural-network

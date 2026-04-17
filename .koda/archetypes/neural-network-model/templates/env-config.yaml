@@ -1,0 +1,124 @@
+# Neural Network Model Archetype Environment Configuration
+
+archetype: neural_network_model
+name: "Neural Network Model"
+description: "Enterprise-grade deep learning pipelines with governed experimentation and deployment"
+
+# Required environment variables
+required_env_vars:
+  - MLFLOW_TRACKING_URI
+  - MODEL_REGISTRY_URI
+  - DATASET_MANIFEST_PATH
+  - KEY_VAULT_URI
+  - AZURE_TENANT_ID
+  - DATABRICKS_HOST
+  - DATABRICKS_TOKEN
+
+# Optional environment variables
+optional_env_vars:
+  - CUDA_VISIBLE_DEVICES
+  - TORCH_DISTRIBUTED_DEBUG
+  - WANDB_API_KEY
+  - HPO_BUDGET_MINUTES
+  - ALERTING_WEBHOOK_URL
+
+# Toolchain requirements
+required_tools:
+  python:
+    min_version: "3.11"
+    command: "python --version"
+  poetry:
+    min_version: "1.8"
+    command: "poetry --version"
+  databricks:
+    min_version: "0.229"
+    command: "databricks --version"
+  git:
+    min_version: "2.40"
+    command: "git --version"
+
+# Framework expectations
+frameworks:
+  pytorch:
+    version: "2.1+"
+    cuda: "11.8+"
+    distributed_backend: "nccl"
+  tensorflow:
+    version: "2.14+"
+    cuda: "11.8+"
+    xla: true
+  onnx_runtime:
+    version: "1.17+"
+
+# Data governance contracts
+data_governance:
+  manifest: "${DATASET_MANIFEST_PATH}"
+  pii_review_required: true
+  drift_checks:
+    enabled: true
+    schedule: "@daily"
+    thresholds:
+      psi: 0.2
+      ks: 0.1
+
+# Experiment tracking
+experiment_tracking:
+  provider: "mlflow"
+  run_tags:
+    - "archetype:neural_network_model"
+    - "governance:att_ml"
+  required_artifacts:
+    - "metrics.json"
+    - "params.yaml"
+    - "model_card.md"
+
+# Training defaults
+training:
+  mixed_precision: "bf16"
+  gradient_clipping:
+    enabled: true
+    max_norm: 1.0
+  default_batch_size: 256
+  checkpoint_interval_steps: 500
+  early_stopping:
+    metric: "val_loss"
+    patience: 10
+    min_delta: 0.002
+
+# Evaluation
+evaluation:
+  holdout_split: 0.2
+  fairness_metrics:
+    - "equal_opportunity"
+    - "demographic_parity"
+  calibration:
+    method: "temperature_scaling"
+    max_ece: 0.03
+
+# Deployment requirements
+deployment:
+  target_platforms:
+    - "onnx-runtime"
+    - "azureml-online"
+  latency_sla_ms: 50
+  throughput_sla_rps: 200
+  rollback_strategy: "shadow + canary"
+
+# Observability
+observability:
+  metrics:
+    - "latency_p99"
+    - "throughput_rps"
+    - "drift_psi"
+    - "error_rate"
+  traces: true
+  logs:
+    retention_days: 30
+
+# Compliance
+compliance:
+  model_card_required: true
+  ethics_review_contact: "ml-ethics@att.com"
+  security_scan:
+    tool: "snyk"
+    schedule: "@weekly"

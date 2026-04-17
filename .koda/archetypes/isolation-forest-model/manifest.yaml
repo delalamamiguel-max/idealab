@@ -1,0 +1,23 @@
+archetype:
+  name: isolation-forest-model
+  display_name: Isolation Forest Model
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the Isolation Forest anomaly detection archetype.
+  keywords:
+  - forest
+  - isolation
+  - model
+  - monitoring
+  - notebook
+  - python
+  - rest
+  constitution:
+    path: isolation-forest-model-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-isolation-forest-model
+    compare: compare-isolation-forest-model
+    document: document-isolation-forest-model
+    debug: debug-isolation-forest-model
+    refactor: refactor-isolation-forest-model
+    test: test-isolation-forest-model

@@ -1,0 +1,26 @@
+archetype:
+  name: frontend-only
+  display_name: Frontend Only
+  description: This constitution defines the non-negotiable rules for the **Frontend
+    Only** archetype.
+  keywords:
+  - api
+  - compliance
+  - frontend
+  - java
+  - only
+  - react
+  - security
+  - terraform
+  - testing
+  - validation
+  constitution:
+    path: frontend-only-constitution.md
+  dependencies: []
+  workflows:
+    test: test-frontend-only
+    compare: compare-frontend-only
+    debug: debug-frontend-only
+    scaffold: scaffold-frontend-only
+    refactor: refactor-frontend-only
+    document: document-frontend-only

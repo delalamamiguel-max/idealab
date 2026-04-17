@@ -1,0 +1,22 @@
+archetype:
+  name: security-guardian
+  display_name: Security Guardian
+  description: >-
+    Establishes cross-cutting security guardrails, SDLC gates, and verification
+    requirements for all archetypes.
+  keywords:
+    - security
+    - devsecops
+    - governance
+    - compliance
+    - risk
+  constitution:
+    path: security-guardian-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-security-guardian
+    debug: debug-security-guardian
+    compare: compare-security-guardian
+    test: test-security-guardian
+    document: document-security-guardian
+    refactor: refactor-security-guardian

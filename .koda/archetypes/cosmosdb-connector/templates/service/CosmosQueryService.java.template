@@ -1,0 +1,349 @@
+package {{PACKAGE_NAME}}.service;
+
+import com.azure.cosmos.CosmosContainer;
+import com.azure.cosmos.models.*;
+import com.azure.cosmos.util.CosmosPagedIterable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import {{PACKAGE_NAME}}.exception.CosmosQueryException;
+import {{PACKAGE_NAME}}.util.CosmosServiceUtil;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * Generic service for Cosmos DB query operations.
+ * Provides CRUD operations with retry logic and pagination support.
+ *
+ * @param <T> The type of objects to query
+ */
+@Service
+public class CosmosQueryService<T> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CosmosQueryService.class);
+
+    @Autowired
+    private CosmosServiceUtil cosmosServiceUtil;
+
+    @Value("${cosmos.retry.enabled:false}")
+    private boolean cosmosRetryEnabled;
+
+    @Value("${cosmos.retry.count:3}")
+    private int cosmosRetryCount;
+
+    @Value("${cosmos.retry.sleep.time:100}")
+    private Long cosmosRetryWaitTime;
+
+    @Value("${cosmos.sync.retry.enabled:false}")
+    private boolean cosmosSyncRetryEnabled;
+
+    @Value("${cosmos.sync.retry.count:3}")
+    private int cosmosSyncRetryCount;
+
+    @Value("#{'${cosmos.retryable.exceptions:}'.split(',')}")
+    private List<String> cosmosRetriableExceptions;
+
+    @Value("#{'${cosmos.retry.status.code:0}'.split(',')}")
+    private List<Integer> cosmosRetryStatusCode;
+
+    /**
+     * Creates a new item in the Cosmos container.
+     *
+     * @param container Cosmos container
+     * @param item Item to create
+     * @param <T> Item type
+     * @return true if creation was successful
+     */
+    public <T> boolean createItem(CosmosContainer container, T item) {
+        try {
+            CosmosItemResponse<T> response = container.createItem(item);
+            int statusCode = response.getStatusCode();
+            LOG.debug("Created item with status code: {}", statusCode);
+            cosmosServiceUtil.printMetrics(response.getDiagnostics());
+            return statusCode >= 200 && statusCode < 300;
+        } catch (Exception e) {
+            LOG.error("Error creating item in container: {}", container.getId(), e);
+            return false;
+        }
+    }
+
+    /**
+     * Reads all data from container using a query with parameters.
+     *
+     * @param container Cosmos container
+     * @param query SQL query string
+     * @param params Query parameters
+     * @param clazz Class type for deserialization
+     * @param pageSize Page size for pagination
+     * @param <T> Return type
+     * @return List of items
+     */
+    public <T> List<T> readAllDataUsingQueryParams(
+            CosmosContainer container,
+            String query,
+            Map<String, Object> params,
+            Class<T> clazz,
+            int pageSize) {
+        
+        List<T> results = new ArrayList<>();
+        
+        try {
+            // Build parameterized query
+            SqlQuerySpec querySpec = buildQuerySpec(query, params);
+            
+            CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
+            options.setMaxBufferedItemCount(pageSize);
+            
+            CosmosPagedIterable<T> pagedIterable = container.queryItems(querySpec, options, clazz);
+            
+            for (T item : pagedIterable) {
+                results.add(item);
+            }
+            
+            LOG.debug("Retrieved {} items from container: {}", results.size(), container.getId());
+            
+        } catch (Exception e) {
+            LOG.error("Error querying container: {}", container.getId(), e);
+        }
+        
+        return results;
+    }
+
+    /**
+     * Reads all data as objects without parameters.
+     *
+     * @param container Cosmos container
+     * @param query SQL query string
+     * @param clazz Class type for deserialization
+     * @param <T> Return type
+     * @return List of items
+     */
+    public <T> List<T> readAllDataObject(CosmosContainer container, String query, Class<T> clazz) {
+        List<T> results = new ArrayList<>();
+        
+        try {
+            CosmosPagedIterable<T> pagedIterable = container.queryItems(query, new CosmosQueryRequestOptions(), clazz);
+            
+            for (T item : pagedIterable) {
+                results.add(item);
+            }
+            
+            LOG.debug("Retrieved {} items from container: {}", results.size(), container.getId());
+            
+        } catch (Exception e) {
+            LOG.error("Error querying container: {}", container.getId(), e);
+        }
+        
+        return results;
+    }
+
+    /**
+     * Upserts an item with optional eTag for optimistic concurrency.
+     *
+     * @param container Cosmos container
+     * @param item Item to upsert
+     * @param eTag Optional eTag for optimistic concurrency
+     * @param <T> Item type
+     * @return true if upsert was successful
+     */
+    public <T> boolean upsertCosmosItem(CosmosContainer container, T item, String eTag) {
+        try {
+            CosmosItemRequestOptions options = new CosmosItemRequestOptions();
+            
+            if (eTag != null && !eTag.isEmpty()) {
+                options.setIfMatchETag(eTag);
+            }
+            
+            CosmosItemResponse<T> response = container.upsertItem(item, options);
+            int statusCode = response.getStatusCode();
+            LOG.debug("Upserted item with status code: {}", statusCode);
+            cosmosServiceUtil.printMetrics(response.getDiagnostics());
+            return statusCode >= 200 && statusCode < 300;
+        } catch (Exception e) {
+            LOG.error("Error upserting item in container: {}", container.getId(), e);
+            return false;
+        }
+    }
+
+    /**
+     * Performs a patch update on an item.
+     *
+     * @param container Cosmos container
+     * @param patchData Map of fields to update
+     * @param id Item ID
+     * @param partitionKey Partition key value
+     * @return true if patch was successful
+     */
+    public boolean patchUpdate(
+            CosmosContainer container,
+            Map<String, Object> patchData,
+            String id,
+            String partitionKey) {
+        
+        try {
+            CosmosPatchOperations patchOps = CosmosPatchOperations.create();
+            
+            for (Map.Entry<String, Object> entry : patchData.entrySet()) {
+                patchOps.set("/" + entry.getKey(), entry.getValue());
+            }
+            
+            CosmosItemResponse<Object> response = container.patchItem(
+                id,
+                new PartitionKey(partitionKey),
+                patchOps,
+                Object.class
+            );
+            
+            int statusCode = response.getStatusCode();
+            LOG.debug("Patched item {} with status code: {}", id, statusCode);
+            cosmosServiceUtil.printMetrics(response.getDiagnostics());
+            return statusCode >= 200 && statusCode < 300;
+        } catch (Exception e) {
+            LOG.error("Error patching item {} in container: {}", id, container.getId(), e);
+            return false;
+        }
+    }
+
+    /**
+     * Deletes an item from the container.
+     *
+     * @param container Cosmos container
+     * @param id Item ID
+     * @param partitionKey Partition key value
+     * @return true if deletion was successful
+     */
+    public boolean deleteItem(CosmosContainer container, String id, String partitionKey) {
+        try {
+            CosmosItemResponse<Object> response = container.deleteItem(
+                id,
+                new PartitionKey(partitionKey),
+                new CosmosItemRequestOptions()
+            );
+            
+            int statusCode = response.getStatusCode();
+            LOG.debug("Deleted item {} with status code: {}", id, statusCode);
+            return statusCode >= 200 && statusCode < 300;
+        } catch (Exception e) {
+            LOG.error("Error deleting item {} from container: {}", id, container.getId(), e);
+            return false;
+        }
+    }
+
+    /**
+     * Reads a single item by ID and partition key.
+     *
+     * @param container Cosmos container
+     * @param id Item ID
+     * @param partitionKey Partition key value
+     * @param clazz Class type for deserialization
+     * @param <T> Return type
+     * @return The item, or null if not found
+     */
+    public <T> T readItem(CosmosContainer container, String id, String partitionKey, Class<T> clazz) {
+        try {
+            CosmosItemResponse<T> response = container.readItem(
+                id,
+                new PartitionKey(partitionKey),
+                clazz
+            );
+            
+            cosmosServiceUtil.printMetrics(response.getDiagnostics());
+            return response.getItem();
+        } catch (Exception e) {
+            LOG.error("Error reading item {} from container: {}", id, container.getId(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Performs bulk patch updates.
+     *
+     * @param container Cosmos container
+     * @param updates List of update operations
+     * @return List of bulk operation responses
+     */
+    public List<CosmosBulkOperationResponse<Object>> bulkPatchUpdate(
+            CosmosContainer container,
+            List<Map<String, Object>> updates) {
+        
+        List<CosmosItemOperation> operations = new ArrayList<>();
+        
+        for (Map<String, Object> update : updates) {
+            String id = (String) update.get("id");
+            String partitionKey = (String) update.get("partitionKey");
+            
+            CosmosPatchOperations patchOps = CosmosPatchOperations.create();
+            
+            for (Map.Entry<String, Object> entry : update.entrySet()) {
+                if (!entry.getKey().equals("id") && !entry.getKey().equals("partitionKey")) {
+                    patchOps.set("/" + entry.getKey(), entry.getValue());
+                }
+            }
+            
+            operations.add(CosmosBulkOperations.getPatchItemOperation(
+                id,
+                new PartitionKey(partitionKey),
+                patchOps
+            ));
+        }
+        
+        try {
+            Iterable<CosmosBulkOperationResponse<Object>> responses = 
+                container.executeBulkOperations(operations);
+            
+            List<CosmosBulkOperationResponse<Object>> resultList = new ArrayList<>();
+            responses.forEach(resultList::add);
+            
+            long successCount = resultList.stream()
+                .filter(r -> r.getResponse() != null && r.getResponse().isSuccessStatusCode())
+                .count();
+            
+            LOG.info("Bulk patch completed: {}/{} successful", successCount, resultList.size());
+            
+            return resultList;
+        } catch (Exception e) {
+            LOG.error("Error performing bulk patch in container: {}", container.getId(), e);
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Builds a SqlQuerySpec from query string and parameters.
+     *
+     * @param query SQL query string with parameter placeholders
+     * @param params Parameter map
+     * @return SqlQuerySpec with bound parameters
+     */
+    private SqlQuerySpec buildQuerySpec(String query, Map<String, Object> params) {
+        SqlQuerySpec querySpec = new SqlQuerySpec(query);
+        
+        if (params != null && !params.isEmpty()) {
+            List<SqlParameter> sqlParameters = params.entrySet().stream()
+                .map(entry -> new SqlParameter("@" + entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+            
+            querySpec.setParameters(sqlParameters);
+        }
+        
+        return querySpec;
+    }
+
+    /**
+     * Checks if an exception is retriable based on configuration.
+     *
+     * @param exception Exception to check
+     * @return true if the exception is retriable
+     */
+    private boolean isRetriableException(Exception exception) {
+        if (cosmosRetriableExceptions == null || cosmosRetriableExceptions.isEmpty()) {
+            return false;
+        }
+        
+        String exceptionClassName = exception.getClass().getName();
+        return cosmosRetriableExceptions.stream()
+            .anyMatch(retriable -> exceptionClassName.contains(retriable));
+    }
+}

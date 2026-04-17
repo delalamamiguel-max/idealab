@@ -1,0 +1,27 @@
+archetype:
+  name: data-solution-architect
+  display_name: Data Solution Architect
+  description: This constitution defines the foundational principles, decision-making
+    logic, and hard-stop rules for the **Data Solution Architect** archetype. This
+    archetype acts as the **Technical Lead** and **Gat
+  keywords:
+  - airflow
+  - api
+  - architect
+  - compliance
+  - data
+  - databricks
+  - governance
+  - python
+  - rest
+  - scala
+  constitution:
+    path: data-solution-architect-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-data-solution-architect
+    debug: debug-data-solution-architect
+    refactor: refactor-data-solution-architect
+    test: test-data-solution-architect
+    compare: compare-data-solution-architect
+    document: document-data-solution-architect

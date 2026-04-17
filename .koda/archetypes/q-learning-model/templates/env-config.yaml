@@ -1,0 +1,104 @@
+# Environment Configuration for q-learning model
+# Focus: governed reinforcement learning training with deterministic reproducibility
+
+spark:
+  version: "3.5+"
+  unity_catalog: true
+
+python:
+  version: "3.10"
+
+libraries:
+  - gymnasium: "1.0+"
+  - numpy: "1.26+"
+  - pandas: "2.1+"
+  - mlflow: "2.11+"
+  - great-expectations: "0.18+"
+  - prometheus-client: "0.18+"
+  - azure-storage-blob: "12.19+"
+
+rl_environment:
+  name: "CartPole-v1"
+  provider: "gymnasium"
+  enforce_determinism: true
+  action_space_contract:
+    type: "discrete"
+    cardinality: 2
+  observation_space_contract:
+    type: "box"
+    shape: [4]
+  reset_seed: 1234
+
+seeds:
+  python: 1234
+  numpy: 1234
+  random: 1234
+
+training:
+  max_episodes: 2000
+  max_steps_per_episode: 500
+  learning_rate: 0.05
+  discount_factor: 0.99
+  reward_clip_range: [-10, 10]
+  epsilon_schedule:
+    type: "exponential_decay"
+    start: 1.0
+    min: 0.05
+    decay_rate: 0.995
+  evaluation:
+    frequency_episodes: 50
+    rollout_episodes: 10
+    min_avg_return: 190
+  stopping_criteria:
+    window_size: 100
+    min_avg_return: 180
+
+checkpoints:
+  base_path: "abfss://rl-checkpoints@<storage-account>.dfs.core.windows.net/${lineage_id}/q_tables/"
+  frequency_episodes: 25
+  retention_versions: 10
+  encryption_key_scope: "rlml-secrets"
+
+telemetry:
+  metrics_sink: "prometheus"
+  namespace: "rl.q_learning"
+  log_fields:
+    - "episode"
+    - "cumulative_reward"
+    - "epsilon"
+    - "max_abs_delta_q"
+    - "rolling_avg_reward"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/rl/q-learning"
+  model_name_prefix: "rl_q_learning_"
+
+quality_gates:
+  expectation_suite: "s3://<governed-bucket>/great_expectations/rl_suite.json"
+  metric_thresholds:
+    max_nan_q_values: 0
+    max_inf_q_values: 0
+    max_q_abs_value: 1.0e6
+
+compute:
+  training_cluster:
+    node_type: "Standard_NC6s_v3"
+    min_workers: 1
+    max_workers: 4
+    autotermination_minutes: 60
+
+security:
+  secret_scope: "rlml-secrets"
+  approved_storage_accounts:
+    - "<storage-account>"
+  artifact_encryption_required: true
+
+notifications:
+  slack_channel: "#rl-alerts"
+  on_failures_only: true
+
+variables:
+  lineage_id: "${lineage_id}"
+  runtime_uuid: "${runtime_uuid}"
+  default_retry_attempts: 3

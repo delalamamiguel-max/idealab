@@ -1,0 +1,101 @@
+# Environment Configuration for Microservice CI/CD Architect
+# Focus: continuous delivery pipelines, service SLOs, and release automation
+
+cicd:
+  orchestrator: "GitHub Actions"
+  default_branch: "main"
+  artifact_repository: "ghcr.io/<ORG>/services"
+  pipeline_templates:
+    - path: ".github/workflows/service-ci.yaml"
+      purpose: "Unit tests, security scans, build"
+    - path: ".github/workflows/service-cd.yaml"
+      purpose: "Canary deploy and progressive rollout"
+    - path: ".github/workflows/service-ci.yaml"
+      purpose: "Unit tests, security scans, build"
+    - path: ".github/workflows/service-cd.yaml"
+  approvals:
+    production: true
+    emergency_bypass_minutes: 60
+
+observability:
+  metrics_endpoint: "<GRAFANA_URL>"
+  deployment_dashboard: "dashboards/microservice_cicd_scorecard.json"
+  slo_targets:
+    deployment_frequency_per_week: 10
+    lead_time_minutes: 30
+    change_failure_rate_pct: 5
+    mttr_minutes: 45
+  release_logging_topic: "<RELEASE_LOGGING_TOPIC>"
+
+security:
+  container_scanning: "trivy"
+  policy_as_code: "opa"
+  sbom_generator: "syft"
+  secret_scanning: "gitleaks"
+  required_checks:
+    - "license-compliance"
+    - "vulnerability-audit"
+    - "infra-drift"
+
+platforms:
+  kubernetes_clusters:
+    - name: "prod-east"
+      kube_context: "prod-east"
+      canary_namespace: "service-canary"
+      prod_namespace: "service-prod"
+    - name: "prod-west"
+      kube_context: "prod-west"
+      canary_namespace: "service-canary"
+      prod_namespace: "service-prod"
+  service_mesh: "istio"
+  traffic_policy:
+    progressive_steps:
+      - percent: 10
+        hold_minutes: 15
+      - percent: 50
+        hold_minutes: 30
+      - percent: 100
+        hold_minutes: 0
+
+compliance:
+  audit_log_bucket: "s3://<AUDIT_LOG_BUCKET>"
+  change_ticket_system: "jira"
+  change_ticket_project: "DEVOPS"
+  release_checklist_path: "runbooks/microservice_release_incident.md"
+
+variables:
+  service_name: "sample-service"
+  pagerduty_service: "<PAGERDUTY_SERVICE>"
+  rollout_channel: "#deployments"
+  default_canary_duration_minutes: 45
+    post_deploy_validation_script: "../scripts/smoke_tests.sh"
+
+validation:
+  required_cli_tools:
+    - name: "kubectl"
+      min_version: "<KUBECTL_MIN_VERSION>"
+    - name: "helm"
+      min_version: "<HELM_MIN_VERSION>"
+    - name: "gh"
+      min_version: "<GH_MIN_VERSION>"
+    - name: "opa"
+      min_version: "<OPA_MIN_VERSION>"
+  required_env_vars:
+    - "GITHUB_TOKEN"
+    - "PAGERDUTY_TOKEN"
+    - "KUBECONFIG"
+  optional_env_vars:
+    - "SLACK_WEBHOOK_URL"
+    - "SNYK_TOKEN"
+  preflight_checks:
+    - "git status --short"
+    - "helm version"
+    - "kubectl config current-context"
+
+examples:
+  prompts:
+    - "Generate a release plan for service scoped to prod-east with 30 minute SLOs"
+    - "Draft GitHub Actions workflow enforcing SBOM upload and canary gates"
+  scripts:
+    - "snippets/canary-rollout.sh"
+    - "snippets/service-healthcheck.sh"

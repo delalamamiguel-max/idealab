@@ -1,0 +1,27 @@
+archetype:
+  name: pull-review-risk
+  display_name: Pull Review Risk
+  description: Ensure comprehensive identification and remediation of production risks
+    and security vulnerabilities in pull requests, safeguarding system reliability,
+    data integrity, and user trust through structure
+  keywords:
+  - aks
+  - api
+  - ci-cd
+  - compliance
+  - governance
+  - monitoring
+  - pull
+  - review
+  - risk
+  - security
+  constitution:
+    path: pull-review-risk-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-pull-review-risk
+    debug: debug-pull-review-risk
+    refactor: refactor-pull-review-risk
+    test: test-pull-review-risk
+    compare: compare-pull-review-risk
+    document: document-pull-review-risk

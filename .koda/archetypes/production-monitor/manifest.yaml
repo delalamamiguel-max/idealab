@@ -1,0 +1,32 @@
+archetype:
+  name: production-monitor
+  display_name: Production Monitor
+  description: |
+    Set up production monitoring for agents with Arize Phoenix, drift detection,
+    SLO tracking, alerting, and SOX-compliant dashboards.
+  category: 10-agentic-development
+  keywords:
+    - production monitor
+    - agent production monitoring
+    - monitoring
+    - observability
+    - phoenix
+    - arize
+    - drift
+    - SLO
+    - alerting
+    - dashboard
+    - SOX
+    - tracing
+  constitution:
+    path: production-monitor-constitution.md
+  dependencies:
+    - arize-phoenix
+    - prometheus-client
+  workflows:
+    scaffold: scaffold-production-monitor
+    refactor: refactor-production-monitor
+    compare: compare-production-monitor
+    test: test-production-monitor
+    debug: debug-production-monitor
+    document: document-production-monitor

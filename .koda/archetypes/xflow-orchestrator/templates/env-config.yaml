@@ -1,0 +1,156 @@
+# Environment Configuration for XFlow Orchestrator
+
+# Databricks workspace
+workspace_name: "analytics-prod-dbx"
+
+# Secret management
+secret_scope: "dl-eastus2-dev-sec-kv-scope"
+encryption_identity: "DL_IDENTITY@ATT.COM"
+
+# Source defaults
+source_type: "JDBC"                    # JDBC | Kafka | File | HTTP
+connection_type: "ORACLE"             # ORACLE | SQL_SERVER | MY_SQL | POSTGRESQL | SNOWFLAKE | VERTICA | TERADATA | TRINO | GENERIC
+fetch_size: 20000
+
+# JDBC driver defaults (auto-populated by connectionType)
+jdbc_driver_defaults:
+  ORACLE:
+    driverLocation: "/Volumes/30636_azuredl_prd/adl/adlcontainer-stl/3rd-party/ojdbc8.jar"
+    driverClassName: "oracle.jdbc.OracleDriver"
+  SQL_SERVER:
+    driverLocation: "/Volumes/30636_azuredl_prd/adl/adlcontainer-stl/3rd-party/mssql-jdbc-8.2.2.jre8.jar"
+    driverClassName: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+  MY_SQL:
+    driverLocation: "/Volumes/30636_azuredl_prd/adl/adlcontainer-stl/3rd-party/mssql-jdbc-8.2.2.jre8.jar"
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+  VERTICA:
+    driverLocation: "/Volumes/30636_azuredl_prd/adl/adlcontainer-stl/3rd-party/vertica-jdbc-9.2.1-0.jar"
+    driverClassName: "com.vertica.jdbc.Driver"
+  TERADATA:
+    driverLocation: "/Volumes/30636_azuredl_prd/adl/adlcontainer-stl/3rd-party/terajdbc4.jar"
+    driverClassName: "com.ncr.teradata.TeraDriver"
+
+# Kafka source defaults
+kafka_defaults:
+  sasl_mechanism: "PLAIN"
+  security_protocol: "SASL_SSL"
+  max_offsets_per_trigger: 100000
+  max_bytes_per_trigger: 1000000000
+  poll_timeout_ms: 120000
+  starting_offsets: "LATEST"
+
+# Delta autoloader configuration default
+delta_autoloader_configuration: []     # Populate with [{key, stream, value}] entries if needed
+
+# File retention defaults
+files_retention_days:
+  ING: 7                               # Ingestion feeds: 7 days retention
+  MGR: -1                              # Migration feeds: no auto-cleanup
+
+# Target defaults
+storage_account: "datalakeeastus2prd"
+target_format: "delta"                # delta | parquet | csv | database
+write_mode: "append"                  # append | overwrite | overwritePartition | upsert
+vacuum_days_old: 7
+write_one_file_ind: false             # true for file-based targets (better parallelism) where source is a database, Not applicable for all other scenarios
+
+# ADLS paths (abfss:// protocol)
+variables:
+  source_path: "abfss://raw@<storage_account>.dfs.core.windows.net/data"
+  target_path: "abfss://processed@<storage_account>.dfs.core.windows.net/data"
+  reject_path: "abfss://rejected@<storage_account>.dfs.core.windows.net/data"
+
+# Global transformation defaults
+global_transformation:
+  trim_spaces_ind: false
+  replace_values:
+    - existing_values: ["", "NA", "NULL", "reserved:NULL"]
+      new_value: "Null"
+
+# Control columns
+control_columns:
+  file_name_column_ind: true
+  creation_timestamp_column_ind: true
+
+# Error handling defaults
+error_handling:
+  file_failure_threshold_percentage: 0
+  skip_malformed_recs_ind: true
+  on_failure:
+    move_to_reject_ind: false
+    bad_file_ind: true
+    retry_file_ind: false
+
+# Partition defaults
+default_partition_columns: []
+
+# CSV source properties (optional, for advanced CSV parsing)
+csv_source_properties:
+  delimiter: ","
+  sep: ","
+  quote: '"'
+  escape: "\\"
+  escapeQuotes: true
+  header: false
+  multiLine: false
+  lineSep: "\n"
+  emptyValue: ""
+
+# CSV target properties (optional, for CSV target output)
+csv_target_properties:
+  sep: ","
+  quote: '"'
+  escape: "\\"
+  escapeQuotes: true
+  emptyValue: ""
+  nullValue: ""
+  lineSep: "\n"
+  ignoreLeadingWhiteSpace: false
+  ignoreTrailingWhiteSpace: false
+  multiline: false
+
+# Job configuration defaults
+job_configuration:
+  schedule:
+    type: "databricks"
+    cron_schedule: "0 0 1/1 * * ?"     # Default: every hour
+    time_zone: "UTC"
+  continuous_processing:
+    active_ind: false
+    check_time_pattern: ""
+  cluster_configuration:
+    num_workers: 4                      # Default: low cluster
+    kafka_init_script: "/init-scripts/common/kafka_init.sh"
+
+# Validation defaults
+validation:
+  default_validations:
+    - type: "schema"
+      parameters:
+        validate_data_types: true
+      failure_action: "fail"
+  failure_actions:
+    - "fail"                           # Reject record/file on violation
+    - "warn"                           # Log warning, continue processing
+    - "skip"                           # Silently skip invalid record
+  duplicate_file_check_days_back: 30   # Default lookback for duplicate file detection
+  not_null_failure_action: "fail"      # Default action for notNull violations
+  primary_key_failure_action: "fail"   # Default action for PK violations
+
+# Performance defaults
+performance:
+  jdbc:
+    fetch_size: 20000                  # Rows per JDBC fetch
+    num_partitions: 1                  # Parallel extraction partitions (increase for large tables)
+  cluster_sizing:
+    low: 4                             # Workers for small tables (<1M rows)
+    medium: 15                         # Workers for standard tables (1M-100M rows)
+    high: 50                           # Workers for large tables (>100M rows)
+  write_one_file_ind:
+    jdbc_to_file: true                 # true when source is JDBC (database) and target is file-based (parquet/csv)
+    other_sources: null                # not applicable for non-JDBC sources (Kafka, File, DataRouter, Azure Files)
+  vacuum_days_old: 7                   # Delta table vacuum retention
+
+# Feed metadata
+feed_type: "ING"                      # ING (Ingestion) | MGR (Migration)
+support_team: "datalake"

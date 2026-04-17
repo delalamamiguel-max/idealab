@@ -1,0 +1,27 @@
+archetype:
+  name: random-forest-model
+  display_name: Random Forest Model
+  description: This constitution defines the foundational principles, hard-stop rules,
+    and mandatory governance patterns for the Random Forest model archetype. It ensures
+    models built under this archetype are reprod
+  keywords:
+  - compliance
+  - delta
+  - forest
+  - governance
+  - mlflow
+  - model
+  - monitoring
+  - python
+  - random
+  - rest
+  constitution:
+    path: random-forest-model-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-random-forest-model
+    scaffold: scaffold-random-forest-model
+    document: document-random-forest-model
+    test: test-random-forest-model
+    refactor: refactor-random-forest-model
+    compare: compare-random-forest-model

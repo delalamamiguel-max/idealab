@@ -1,0 +1,75 @@
+# Environment Configuration for data solution architect
+# Focus: end-to-end data platform design, delegation, and governance readiness
+
+solution:
+  program_name: "Project Atlas"
+  request_id: "HALO-000000"
+  sponsor: "VP Data Platforms"
+  business_unit: "Enterprise Analytics"
+
+scope:
+  source_systems:
+    - name: "erp_core"
+      type: "Oracle"
+      cadence: "hourly"
+      avg_volume_gb: 120
+    - name: "iot_stream"
+      type: "EventHub"
+      cadence: "continuous"
+      avg_volume_gb: 250
+  target_layers:
+    bronze: "abfss://raw@<storage-account>.dfs.core.windows.net/atlas"
+    silver: "abfss://curated@<storage-account>.dfs.core.windows.net/atlas"
+    gold: "SNOWFLAKE.PROD.ATLAS_GOLD"
+  consumers:
+    - "Finance Insights Portal"
+    - "Supply Chain Digital Twin"
+
+controls:
+  classification: "Restricted"
+  contains_pii: true
+  retention_days: 365
+  compliance_tickets:
+    - "UPSTART-12345"
+    - "HALO-45678"
+  lineage_system: "Purview"
+
+non_functional:
+  sla: "Available by 06:00 ET"
+  failure_strategy: "fail-fast-with-DLQ"
+  pagerduty_service: "data-platform"
+  cost_t_shirt_size: "Medium"
+  est_compute_hours: 140
+  est_storage_tb: 8
+
+delegations:
+  ingestion:
+    archetype: "pipeline-builder"
+    workflow: "/scaffold-pipeline"
+  transformation:
+    archetype: "transformation-alchemist"
+    workflow: "/refactor-spark"
+  quality:
+    archetype: "quality-guardian"
+    workflow: "/test-quality"
+  orchestration:
+    archetype: "pipeline-orchestrator"
+    workflow: "/scaffold-pipeline"
+  documentation:
+    archetype: "documentation-evangelist"
+    workflow: "/document"
+
+operations:
+  observability_stack: "Azure Monitor + Datadog"
+  access_audit_topic: "eventhub://data-audit"
+  feature_flags:
+    - "enable_backfill_guardrails"
+    - "enforce_config_template"
+
+notes:
+  risks:
+    - "ERP schema churn may break mappings"
+    - "IOT payload spikes require autoscaling"
+  follow_up_actions:
+    - "Schedule impact-analyzer run"
+    - "Confirm IAM model with security"

@@ -1,0 +1,41 @@
+# Environment Configuration for integration specialist
+
+api:
+  type: "REST or GraphQL"
+  spec_versions:
+    - OpenAPI: "3.0+"
+    - GraphQL: "AST v14+"
+
+authentication:
+  oauth2:
+    flows: [authorization_code, client_credentials]
+  api_key:
+    in: [header, query]
+    name: "X-API-Key"
+
+client:
+  languages:
+    - python: "3.8+"
+    - javascript: "ES2020+"
+    - java: "11+ (Spring Boot)"
+  frameworks:
+    - pytest
+    - axios
+    - okhttp3
+
+tools:
+  openapi_validator: ">=0.14"
+  graphql_cli: ">=2.0"
+
+ci:
+  contract_test_framework: "pytest"
+  coverage_threshold: "90%"
+
+os:
+  linux: "Ubuntu 20.04+"
+  macos: "11+"
+
+variables:
+  default_version: "v1"
+  default_limit: 100
+  default_offset: 0

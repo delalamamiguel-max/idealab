@@ -1,0 +1,24 @@
+archetype:
+  name: elasticsearch-stream
+  display_name: Elasticsearch Stream
+  description: Establish standard, secure, and efficient practices for Python scripts,
+    applications, or Jupyter notebooks that read, transform, or write to ElasticSearch
+    indices via EventHub topics.
+  keywords:
+  - azure
+  - databricks
+  - elasticsearch
+  - jupyter
+  - notebook
+  - python
+  - stream
+  constitution:
+    path: elasticsearch-stream-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-elasticsearch-stream
+    compare: compare-elasticsearch-stream
+    scaffold: scaffold-elasticsearch-stream
+    refactor: refactor-elasticsearch-stream
+    document: document-elasticsearch-stream
+    test: test-elasticsearch-stream

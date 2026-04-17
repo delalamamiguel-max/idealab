@@ -1,0 +1,32 @@
+archetype:
+  name: identity-graph-specialist
+  display_name: Identity Graph Specialist
+  description: |
+    Build identity and metadata knowledge graphs for entity resolution, master data management, and data governance. Covers record linkage, fuzzy matching, metadata cataloging, data lineage, and identity confidence scoring.
+  keywords:
+  - confidence-scoring
+  - data-catalog
+  - data-governance
+  - data-lineage
+  - data-quality
+  - deduplication
+  - entity-resolution
+  - fuzzy-matching
+  - identity-graph
+  - knowledge-graph
+  - master-data
+  - mdm
+  - metadata
+  - record-linkage
+  constitution:
+    path: identity-graph-specialist-constitution.md
+  dependencies: 
+  - data-security
+  - knowledge-graph-builder
+  workflows:
+    scaffold: scaffold-identity-graph-specialist
+    debug: debug-identity-graph-specialist
+    refactor: refactor-identity-graph-specialist
+    test: test-identity-graph-specialist
+    compare: compare-identity-graph-specialist
+    document: document-identity-graph-specialist

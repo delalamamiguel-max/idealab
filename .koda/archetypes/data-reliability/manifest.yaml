@@ -1,0 +1,25 @@
+archetype:
+  name: data-reliability
+  display_name: Data Reliability
+  description: 'Ensure trustworthy, timely, and resilient data delivery by defining
+    enforceable standards for availability, freshness, quality, latency, lineage integrity,
+    and rapid incident recovery across all data '
+  keywords:
+  - api
+  - data
+  - governance
+  - monitoring
+  - observability
+  - reliability
+  - scala
+  - validation
+  constitution:
+    path: data-reliability-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-data-reliability
+    debug: debug-data-reliability
+    compare: compare-data-reliability
+    test: test-data-reliability
+    document: document-data-reliability
+    refactor: refactor-data-reliability

@@ -1,0 +1,10 @@
+---
+# Automation Scripter env-config placeholder
+# Replace placeholders with environment-specific values
+shell: bash
+security:
+  use_vault: false
+  credential_placeholder: "<SET_IN_ENV>"
+retry:
+  max_retries: 3
+  backoff_seconds: 2

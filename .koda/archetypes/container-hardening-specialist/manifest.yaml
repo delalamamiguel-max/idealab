@@ -1,0 +1,30 @@
+archetype:
+  name: container-hardening-specialist
+  display_name: Container Hardening Specialist
+  description: Apply defense-in-depth security hardening to containers including privilege
+    separation with multi-UID, read-only rootfs, capability dropping, compiled credential
+    injection, setuid stripping, seccomp profiles, and the file-then-closure secret pattern.
+  keywords:
+  - cap-drop
+  - capability-dropping
+  - compiled-credentials
+  - container-hardening
+  - container-security
+  - defense-in-depth
+  - no-new-privileges
+  - privilege-separation
+  - read-only-rootfs
+  - seccomp
+  - security-context
+  - setuid-stripping
+  - tmpfs-mounts
+  constitution:
+    path: container-hardening-specialist-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-container-hardening-specialist
+    debug: debug-container-hardening-specialist
+    refactor: refactor-container-hardening-specialist
+    document: document-container-hardening-specialist
+    test: test-container-hardening-specialist
+    compare: compare-container-hardening-specialist

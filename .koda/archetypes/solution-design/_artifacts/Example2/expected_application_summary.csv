@@ -1,0 +1,40 @@
+Parent Package	Impact Type	MOTS	ID	Application	IT App Owner	LoE
+1371708	Development	Enhance	30420	Analytics Microservice	sh4695	Easy
+1371708	Development	Enhance	31692	BSSe-BB	ah6941	Easy
+1371708	Development	Enhance	30911	BSSe-C1	mr6640	Easy
+1371708	Development	Enhance	31697	BSSe-MMap	el2596	Easy
+1371708	Development	Enhance	30909	BSSe-OC	dj8303	Easy
+1371708	Development	Enhance	30914	BSSe-RTB	ab7451	Easy
+1371708	Development	Enhance	31452	BSSe-SkyFM	rs1624	Easy
+1371708	Development	Enhance	30687	BWSFMC	rk6538	Easy
+1371708	Development	Enhance	32255	CCDL	ss5477	Easy
+1371708	Development	Enhance	33686	CCMule-CLM	rk6538	Easy
+1371708	Development	Enhance	33688	CCMule-Service	pm426r	Moderate
+1371708	Development	Enhance	30685	CCSF	pp5960	Easy
+1371708	Development	Enhance	13287	CFM	tr2858	Easy
+1371708	Development	Enhance	17744	DLC	ss7841	Easy
+1371708	Development	Enhance	31204	DPG - Billing	lt1046	Easy
+1371708	Development	Enhance	31478	DPG - Customer & Accounts	lt1046	Easy
+1371708	Development	Enhance	29670	DPG - EDM Omnichannel Analytics	rb9777	Easy
+1371708	Development	Enhance	31618	DPG - Finance	mh3242	Easy
+1371708	Development	Enhance	31510	DPG - Orders & Supply Chain	lt1046	Easy
+1371708	Development	Enhance	31479	DPG - Sales & Sunrise	lc7559	Moderate
+1371708	Development	Enhance	33825	IDP-Commerce-Cart & Pricing	ms565h	Easy
+1371708	Development	Enhance	33824	IDP-Commerce-P&O Discovery	ra839d	Easy
+1371708	Development	Enhance	33932	IDP-CTX-Event-HUB	jb5042	Easy
+1371708	Development	Enhance	31468	IDP-Customer Graph Cloud	aw5338	Easy
+1371708	Development	Enhance	32166	IDP-OMNI-ODS	sk2099	Moderate
+1371708	Development	Enhance	31543	IDP-Order Graph Cloud	sk2099	Easy
+1371708	Development	Enhance	31372	ILS	rb5385	Moderate
+1371708	Development	Configure	31292	ISBUS	ph2755	Easy
+1371708	Development	Configure	25316	MSGRTR	jm0939	Easy
+1371708	Development	Enhance	23488	OCE	hv2868	Moderate
+1371708	Development	Enhance	27503	ORBIT	rb9594	Easy
+1371708	No Impact	Test	30910	BSSe-OH	dj8303	TestSupport
+1371708	No Impact	Enhance	32768	IDP-WebAcctMgmt	rk699u	Easy
+1371708	Non Development	Test	31710	BSSe-NEO	pn4720	TestSupport
+1371708	Non Development	Test	29882	CorpFin	pr4873	Test
+1371708	Non Development	Test	32417	DPG - Network & Usage	lt1046	TestSupport
+Epic#1279500	No Impact	Enhance	30558	myATT Mobile App	ds104v	Easy
+Epic#1279500	No Impact	Enhance	27835	OMHUB	rk699u	Easy
+ 

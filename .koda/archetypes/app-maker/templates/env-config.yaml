@@ -1,0 +1,75 @@
+# App Maker Archetype Environment Configuration
+
+archetype: app_maker
+name: "App Maker"
+description: "Web application development with React/FastAPI"
+
+# Required environment variables
+required_env_vars:
+  - NODE_ENV
+  - VITE_API_URL
+  - DATABASE_URL
+  - SECRET_KEY
+  - AZURE_CLIENT_ID
+  - AZURE_TENANT_ID
+
+# Optional environment variables
+optional_env_vars:
+  - AZURE_SUBSCRIPTION_ID
+  - APPLICATIONINSIGHTS_CONNECTION_STRING
+  - SENTRY_DSN
+  - LOG_LEVEL
+
+# Tool requirements
+required_tools:
+  node:
+    min_version: "18.0.0"
+    command: "node --version"
+  pnpm:
+    min_version: "8.0.0"
+    command: "pnpm --version"
+  python:
+    min_version: "3.11.0"
+    command: "python --version"
+
+# AT&T Brand Guidelines
+brand_guidelines:
+  colors:
+    primary: "#009FDB"  # AT&T Blue
+    cta: "#00388F"      # Cobalt
+    text: "#212121"     # Dark Gray
+    background: "#FFFFFF"
+  typography:
+    family: "ATT Aleck Sans"
+    weights: [400, 700]
+  accessibility:
+    standard: "WCAG 2.1 AA"
+    contrast_ratio: 4.5
+
+# Project structure
+project_structure:
+  frontend:
+    - "src/app"
+    - "src/components"
+    - "src/lib"
+    - "src/styles"
+    - "tests"
+  backend:
+    - "app/api"
+    - "app/core"
+    - "app/models"
+    - "app/schemas"
+    - "tests"
+
+# Testing requirements
+testing:
+  frontend:
+    unit_coverage: 80
+    frameworks: ["vitest", "react-testing-library"]
+  backend:
+    unit_coverage: 80
+    frameworks: ["pytest", "pytest-cov"]
+  e2e:
+    frameworks: ["playwright"]
+  accessibility:
+    frameworks: ["axe-core/playwright"]

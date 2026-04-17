@@ -1,0 +1,338 @@
+# Demo Producer Environment Configuration
+# Purpose: Define environment requirements and validation rules for demo generation
+# Last Updated: 2025-12-17
+# Version: 2.0.0 - Added zoom effects, transitions, natural voiceovers
+
+archetype: demo-producer
+category: 09-documentation-requirements
+
+# Required environment variables
+environment:
+  required:
+    - name: NODE_VERSION
+      min_version: "18.0.0"
+      description: "Node.js runtime for Playwright"
+      validation: "node --version"
+      
+    - name: PLAYWRIGHT_INSTALLED
+      description: "Playwright test framework"
+      validation: "npx playwright --version"
+      install_command: "npm install -D @playwright/test && npx playwright install chromium"
+      
+  optional:
+    - name: PYTHON_VERSION
+      min_version: "3.9.0"
+      description: "Python runtime for voiceover and video processing"
+      validation: "python --version"
+      
+    - name: PYTTSX3_INSTALLED
+      description: "Offline text-to-speech (works in corporate environments)"
+      validation: "python -c 'import pyttsx3'"
+      install_command: "pip install pyttsx3"
+      
+    - name: MOVIEPY_INSTALLED
+      description: "Video editing library for audio merge and transitions"
+      validation: "python -c 'import moviepy'"
+      install_command: "pip install moviepy"
+      
+    # Note: edge-tts is NOT used - it requires external network access
+    # which is blocked in corporate environments (AT&T). Use pyttsx3 instead.
+
+# Application requirements
+application:
+  frontend:
+    default_url: "http://localhost:5173"
+    env_var: "DEMO_FRONTEND_URL"
+    health_check: "curl -s -o /dev/null -w '%{http_code}' {url}/"
+    expected_status: 200
+    
+  backend:
+    default_url: "http://localhost:8000"
+    env_var: "DEMO_BACKEND_URL"
+    health_check: "curl -s -o /dev/null -w '%{http_code}' {url}/health"
+    expected_status: 200
+
+# Authentication configuration
+authentication:
+  method: "form"
+  login_url: "/login"
+  credentials:
+    email:
+      env_var: "DEMO_EMAIL"
+      default: "test@att.com"
+      selector: 'input[type="text"], input[type="email"]'
+    password:
+      env_var: "DEMO_PASSWORD"
+      default: "password"
+      selector: 'input[type="password"]'
+  submit:
+    selector: 'button:has-text("Sign In")'
+    wait_after: 2000
+
+# Video capture settings
+capture:
+  viewport:
+    width: 1920
+    height: 1080
+  video:
+    mode: "on"
+    format: "webm"
+  timeout: 120000  # 2 minutes max per test
+
+# Voiceover settings
+voiceover:
+  engine: "pyttsx3"  # Offline TTS - works in corporate environments without internet
+  voice:
+    preference: "male"
+    # Windows SAPI voices (pyttsx3)
+    name_patterns:
+      - "david"    # Microsoft David Desktop
+      - "mark"     # Microsoft Mark
+      - "zira"     # Microsoft Zira (female)
+  rate: 145  # Words per minute (slower for clarity)
+  output_format: "mp3"
+  
+  # Note: edge-tts (neural AI voices) is NOT recommended for AT&T corporate environments
+  # It requires external network access to Microsoft Edge TTS services which is blocked
+  # by corporate firewalls. Use pyttsx3 which works entirely offline.
+  
+  # Natural script guidelines
+  script_guidelines:
+    use_contractions: true
+    add_pauses: true  # "..." for natural breathing
+    conversational_phrases:
+      - "Now let's"
+      - "Here's where"
+      - "Notice how"
+      - "See how"
+      - "Pretty cool, right?"
+    avoid:
+      - "formal sentences"
+      - "passive voice"
+      - "unexplained acronyms"
+
+# Zoom effects settings
+zoom:
+  enabled: true
+  defaults:
+    factor: 1.3           # 30% zoom
+    duration: 3           # seconds to zoom in
+    hold: 2               # seconds to stay zoomed
+    zoom_out_duration: 2  # seconds to zoom out
+    ease: "ease-in-out"   # smooth easing
+  modes:
+    element:
+      description: "Zoom to specific DOM element"
+      padding: 20         # pixels around element
+    coordinates:
+      description: "Zoom to screen position"
+      format: "[x, y]"    # normalized 0-1
+    auto:
+      description: "AI detects important elements"
+      prefer_interactive: true
+      prefer_data_viz: true
+  auto_detect_targets:
+    high_priority:
+      - "button.primary"
+      - "[data-action]"
+      - ".stat-card"
+      - "[data-new]"
+    medium_priority:
+      - "canvas"
+      - "svg.chart"
+      - "table"
+
+# Transition settings
+transitions:
+  default: "crossfade"
+  default_duration: 0.5
+  types:
+    crossfade:
+      description: "Smooth opacity blend"
+      duration_range: [0.3, 1.0]
+      best_for: "Default, professional look"
+    slide-left:
+      description: "Content slides in from right"
+      duration_range: [0.5, 1.0]
+      best_for: "Sequential workflows"
+    slide-up:
+      description: "Content slides up from bottom"
+      duration_range: [0.5, 1.0]
+      best_for: "Revealing details"
+    zoom-in:
+      description: "Zoom into next scene"
+      duration_range: [0.5, 1.0]
+      best_for: "Drilling down"
+    zoom-out:
+      description: "Zoom out to big picture"
+      duration_range: [0.5, 1.0]
+      best_for: "Returning to overview"
+    fade-black:
+      description: "Fade through black"
+      duration_range: [0.5, 1.0]
+      best_for: "Section changes"
+    cut:
+      description: "Instant transition"
+      duration_range: [0, 0]
+      best_for: "Fast-paced demos"
+
+# Subtitle settings
+subtitles:
+  style:
+    background: "rgba(0, 0, 0, 0.75)"
+    color: "white"
+    font_size: "22px"
+    font_family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    position: "bottom"
+    bottom_offset: "60px"
+    max_width: "80%"
+    border_radius: "8px"
+    padding: "12px 24px"
+  formats:
+    - "srt"
+    - "vtt"
+
+# Output configuration (Modular Structure)
+output:
+  base_directory: "demo"
+  subdirectories:
+    # Video assets
+    - "assets/video/raw"        # Raw scene captures
+    - "assets/video/processed"  # After zoom/effects
+    - "assets/video/final"      # Final demos (MAIN OUTPUT)
+    # Audio assets
+    - "assets/audio/voiceover"  # Generated voiceovers
+    - "assets/audio/music"      # Background music (optional)
+    # Screenshots
+    - "assets/screenshots/annotated"
+    - "assets/screenshots/clean"
+    # Subtitles
+    - "assets/subtitles"
+    # Modular frames
+    - "frames"                  # Scene-specific configs
+    # Scripts and captures
+    - "captures"
+    - "scripts"
+    # Documentation
+    - "docs"
+  final_video:
+    format: "mp4"
+    codec: "libx264"
+    audio_codec: "aac"
+    fps: 30
+    path: "assets/video/final"
+    naming: "{product}-demo-final.mp4"
+  variants:
+    - name: "executive"
+      suffix: "-executive-demo.mp4"
+    - name: "no-audio"
+      suffix: "-demo-no-audio.mp4"
+
+# Audience presets
+audiences:
+  executive:
+    max_duration: 120  # seconds
+    max_scenes: 4
+    pace: "fast"
+    focus:
+      - "dashboard"
+      - "metrics"
+      - "roi"
+    skip:
+      - "settings"
+      - "technical"
+      
+  technical:
+    max_duration: 300  # seconds
+    max_scenes: 10
+    pace: "moderate"
+    focus:
+      - "all"
+    skip: []
+    
+  business:
+    max_duration: 180  # seconds
+    max_scenes: 6
+    pace: "moderate"
+    focus:
+      - "workflows"
+      - "traceability"
+      - "reporting"
+    skip:
+      - "settings"
+      
+  general:
+    max_duration: 180  # seconds
+    max_scenes: 8
+    pace: "moderate"
+    focus:
+      - "high_priority"
+    skip:
+      - "settings"
+
+# Data discovery settings
+data_discovery:
+  enabled: true
+  api_endpoints:
+    projects: "/api/v1/projects"
+    requirements: "/api/v1/requirements"
+    process_flows: "/api/v1/process-flows"
+  empty_state_indicators:
+    - 'text="No data"'
+    - 'text="No results"'
+    - 'text="No items"'
+    - 'text="Nothing to show"'
+    - 'text="Get started"'
+    - 'text="Create your first"'
+    - '[data-testid="empty-state"]'
+    - '.empty-state'
+  content_indicators:
+    - 'table tbody tr'
+    - '[data-testid="card"]'
+    - '.grid > div'
+    - 'ul li'
+
+# Feature discovery settings
+feature_discovery:
+  enabled: true
+  common_routes:
+    - route: "/dashboard"
+      name: "Dashboard"
+      category: "dashboard"
+      priority: "high"
+    - route: "/projects"
+      name: "Projects"
+      category: "crud"
+      priority: "high"
+    - route: "/requirements"
+      name: "Requirements"
+      category: "crud"
+      priority: "high"
+    - route: "/process-flows"
+      name: "Process Flows"
+      category: "workflow"
+      priority: "high"
+    - route: "/documents"
+      name: "Documents"
+      category: "crud"
+      priority: "medium"
+    - route: "/reports"
+      name: "Reports"
+      category: "report"
+      priority: "medium"
+    - route: "/matrices"
+      name: "Matrices"
+      category: "report"
+      priority: "medium"
+    - route: "/settings"
+      name: "Settings"
+      category: "settings"
+      priority: "low"
+
+# Branding (AT&T)
+branding:
+  highlight_color: "#009FDB"  # AT&T Blue
+  secondary_color: "#00388F"  # AT&T Cobalt
+  accent_color: "#91DC00"     # AT&T Lime
+  font_family: "ATT Aleck Sans"
+  annotation_style: "rounded"

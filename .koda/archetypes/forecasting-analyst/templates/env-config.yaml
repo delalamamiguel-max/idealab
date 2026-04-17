@@ -1,0 +1,105 @@
+# Environment Configuration for forecasting analyst
+# Focus: governed time series modeling across Databricks, Azure ML, and MLflow
+
+python:
+  version: "3.10"
+
+r:
+  version: "4.3"  # optional for advanced forecasting notebooks
+
+libraries:
+  - mlflow: "2.11+"
+  - statsmodels: "0.14+"
+  - prophet: "1.1+"
+  - pmdarima: "2.0+"
+  - darts: "0.29+"
+  - kats: "0.3+"
+  - neuralprophet: "0.6+"
+  - scikit-learn: "1.4+"
+  - xgboost: "2.0+"
+  - azure-ai-forecasting: "1.3+"
+  - holidays: "0.35+"
+  - great-expectations: "0.18+"
+
+spark:
+  version: "3.5+"
+  runtime: "13.3 LTS ML"
+  enable_delta: true
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/forecasting/experiments"
+  registry_uri: "databricks-uc"
+  model_name_prefix: "fcst_"
+
+azure_devops:
+  project: "AI-Analytics"
+  repo: "forecasting-models"
+  pipelines:
+    training: "Forecast-Train"
+    validation: "Forecast-Validate"
+    deployment: "Forecast-Deploy"
+
+compute:
+  training_cluster:
+    node_type: "Standard_E8s_v5"
+    min_workers: 2
+    max_workers: 10
+    autotermination_minutes: 30
+  batch_scoring_cluster:
+    node_type: "Standard_F4s_v2"
+    min_workers: 1
+    max_workers: 4
+
+feature_store:
+  catalog: "main"
+  schema: "forecast_features"
+  time_travel_days: 730
+
+forecasting:
+  horizon_steps: 56
+  frequency: "D"
+  rolling_window_days: 730
+  holdout_periods: 4
+  backtest_strategy: "expanding_window"
+  confidence_levels:
+    - 0.80
+    - 0.95
+  baseline_methods:
+    - "seasonal_naive"
+    - "moving_average_28d"
+    - "prophet_additive"
+
+monitoring:
+  metric_store_table: "governance.forecasting_model_metrics"
+  alert_channel: "teams://Forecasting-Squad"
+  drift_detection:
+    window_days: 28
+    thresholds:
+      mape_delta_pct: 10
+      bias_shift_pct: 5
+  retraining_policy:
+    cadence_days: 30
+    trigger_on_alerts: true
+
+data_sources:
+  telemetry_table: "gold.sales_orders_daily"
+  exogenous_tables:
+    - "gold.promotions_calendar"
+    - "gold.holiday_calendar"
+    - "gold.supply_chain_events"
+  secure_scope: "fcst-secrets"
+
+security:
+  key_vault: "kv-forecasting-prod"
+  service_principal: "sp-forecasting"
+  secrets:
+    mlflow_pat: "MLFLOW_TOKEN"
+    databricks_pat: "DATABRICKS_TOKEN"
+
+variables:
+  default_timezone: "America/New_York"
+  fiscal_calendar_id: "FIN_FY25"
+  max_forecast_latency_minutes: 45
+  executive_summary_length: 5
+  rolling_window_days: 730

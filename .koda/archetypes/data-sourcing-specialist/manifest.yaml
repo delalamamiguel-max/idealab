@@ -1,0 +1,27 @@
+archetype:
+  name: data-sourcing-specialist
+  display_name: Data Sourcing Specialist
+  description: Ensures the archetype acquires governed data for exploratory analysis
+    while honoring catalog policies, lineage requirements, and approved sampling limits
+    across Databricks Unity Catalog.
+  keywords:
+  - aks
+  - api
+  - azure
+  - data
+  - databricks
+  - delta
+  - governance
+  - notebook
+  - python
+  - sourcing
+  constitution:
+    path: data-sourcing-specialist-constitution.md
+  dependencies: []
+  workflows:
+    test: test-data-sourcing-specialist
+    refactor: refactor-data-sourcing-specialist
+    compare: compare-data-sourcing-specialist
+    scaffold: scaffold-data-sourcing-specialist
+    debug: debug-data-sourcing-specialist
+    document: document-data-sourcing-specialist

@@ -1,0 +1,436 @@
+# Environment Configuration for Databricks Developer Workflow
+# Focus: Local IDE to Databricks CLI operations, notebook deployment, job execution monitoring
+
+databricks_cli:
+  min_version: "0.213.0"
+  config_file: "~/.databrickscfg"
+  profiles:
+    dev:
+      description: "Development workspace for testing and iteration"
+      workspace_url: "https://adb-dev-workspace.azuredatabricks.net"
+      auth_method: "oauth"  # or "token", "azure-cli"
+    staging:
+      description: "Staging workspace for pre-production validation"
+      workspace_url: "https://adb-staging-workspace.azuredatabricks.net"
+      auth_method: "oauth"
+    prod:
+      description: "Production workspace (requires approval)"
+      workspace_url: "https://adb-prod-workspace.azuredatabricks.net"
+      auth_method: "service-principal"
+
+workspace_paths:
+  # Git-based paths (Approach 1 - Recommended for production)
+  repos_root: "/Repos/{team}/{project}"
+  repos_dev: "/Repos/{team}/{project}/dev"
+  repos_staging: "/Repos/{team}/{project}/staging"
+  repos_prod: "/Repos/{team}/{project}/prod"
+  
+  # Workspace-based paths (Approach 2 - Rapid development/testing)
+  user_workspace: "/Users/${USER}@att.com"  # Dynamic: uses $USER env var (e.g., eh163e@att.com)
+  user_workspace_static_example: "/Users/eh163e@att.com"  # Static example for reference
+  shared_workspace: "/Shared/{team}"
+  
+  # Path conventions
+  naming_convention: "{environment}/{module}/{notebook_name}"
+  
+  # Dynamic ATTUID resolution
+  attuid_resolution:
+    bash: "$(whoami)"  # Returns 'eh163e'
+    env_var: "$USER"   # Also returns 'eh163e'
+    email_pattern: "${USER}@att.com"  # Constructs 'eh163e@att.com'
+    example_usage: |
+      ATTUID=$(whoami)
+      databricks workspace import ./notebook.py /Users/${ATTUID}@att.com/demos/notebook --profile dev
+  
+  # Usage guidance
+  notes: |
+    - Use /Users/${USER}@att.com/ for personal development (dynamic from env)
+    - Use /Repos/ paths managed via Git for production and team collaboration
+    - Avoid /Shared/ except for specific team shared resources
+    - Promote notebooks from /Users/ to Git repos when moving to production
+    - ATTUID is pulled from $USER or $(whoami) environment variable
+
+local_development:
+  python_version: "3.10"
+  spark_version: "3.4.1"
+  venv_path: "./.venv"
+  requirements_file: "./requirements.txt"
+  notebook_extensions:
+    - ".py"
+    - ".scala"
+    - ".sql"
+    - ".r"
+  linting_tools:
+    python:
+      - tool: "pylint"
+        config: ".pylintrc"
+      - tool: "black"
+        line_length: 100
+      - tool: "isort"
+        profile: "black"
+    scala:
+      - tool: "scalafmt"
+        config: ".scalafmt.conf"
+
+deployment_workflow:
+  # Two approaches supported
+  approach_1_git_based:
+    description: "Recommended for production - notebook in Git, job references repo"
+    steps:
+      - name: "validate_syntax"
+        description: "Lint and syntax check notebook locally"
+        required: true
+        tools:
+          - "python -m py_compile {notebook}"
+          - "pylint {notebook}"
+      - name: "scan_secrets"
+        description: "Check for hardcoded credentials or PII"
+        required: true
+        tools:
+          - "detect-secrets scan {notebook}"
+      - name: "git_commit_push"
+        description: "Commit and push to Git repository"
+        required: true
+        commands:
+          - "git add {notebook}"
+          - "git commit -m 'Update notebook'"
+          - "git push origin {branch}"
+      - name: "create_or_update_job"
+        description: "Create/update job with git_source configuration"
+        required: true
+        command: "databricks jobs create --json-file {job_config_git} --profile {profile}"
+        notes: "Job config must include git_source block with git_url, git_branch, and notebook_task.source='GIT'"
+      - name: "run_job"
+        description: "Execute job and monitor"
+        required: true
+        command: "databricks jobs run-now --job-id {job_id} --profile {profile}"
+      - name: "monitor_run"
+        description: "Poll run status until completion"
+        required: true
+        polling_interval_seconds: 10
+        max_timeout_seconds: 3600
+      - name: "collect_logs"
+        description: "Retrieve logs on failure"
+        required: true
+        command: "databricks runs get-output --run-id {run_id} --profile {profile}"
+  
+  approach_2_workspace_based:
+    description: "Rapid development - notebook pushed to workspace, job references workspace path"
+    steps:
+      - name: "validate_syntax"
+        description: "Lint and syntax check notebook locally"
+        required: true
+        tools:
+          - "python -m py_compile {notebook}"
+          - "pylint {notebook}"
+      - name: "scan_secrets"
+        description: "Check for hardcoded credentials or PII"
+        required: true
+        tools:
+          - "detect-secrets scan {notebook}"
+      - name: "push_notebook"
+        description: "Upload notebook to user workspace"
+        required: true
+        command: "databricks workspace import {local} /Users/${USER}@att.com/{path} --language {lang} --format SOURCE --overwrite --profile {profile}"
+        example_dynamic: "ATTUID=$(whoami); databricks workspace import ./titanic_ingestion.py /Users/${ATTUID}@att.com/demos/titanic_ingestion --format SOURCE --language PYTHON --overwrite --profile dev"
+        example_static: "databricks workspace import ./titanic_ingestion.py /Users/eh163e@att.com/demos/titanic_ingestion --format SOURCE --language PYTHON --overwrite --profile dev"
+      - name: "verify_push"
+        description: "Verify notebook exists in workspace"
+        required: true
+        command: "databricks workspace list /Users/${USER}@att.com --profile {profile}"
+      - name: "create_or_update_job"
+        description: "Create/update job with workspace path"
+        required: true
+        command: "databricks jobs create --json-file {job_config_workspace} --profile {profile}"
+        notes: "Job config must have notebook_task.notebook_path='/Users/${USER}@att.com/path' and source='WORKSPACE'"
+      - name: "run_job"
+        description: "Execute job and monitor"
+        required: true
+        command: "databricks jobs run-now --job-id {job_id} --profile {profile}"
+      - name: "monitor_run"
+        description: "Poll run status until completion"
+        required: true
+        polling_interval_seconds: 10
+        max_timeout_seconds: 3600
+      - name: "collect_logs"
+        description: "Retrieve logs on failure"
+        required: true
+        command: "databricks runs get-output --run-id {run_id} --profile {profile}"
+
+job_defaults:
+  max_concurrent_runs: 1
+  timeout_seconds: 3600
+  max_retries: 2
+  retry_on_timeout: true
+  notification_settings:
+    on_failure:
+      - "dev-team@company.com"
+    no_alert_for_skipped_runs: true
+  run_as:
+    service_principal: "svc-databricks-dev@company.com"
+  tags:
+    created_by: "databricks-developer-workflow"
+    environment: "dev"
+    managed_via: "cli"
+
+monitoring:
+  run_polling:
+    initial_delay_seconds: 5
+    interval_seconds: 10
+    backoff_multiplier: 1.2
+    max_interval_seconds: 60
+    max_duration_seconds: 3600
+  terminal_states:
+    - "TERMINATED"
+    - "INTERNAL_ERROR"
+    - "SKIPPED"
+  success_states:
+    - "SUCCESS"
+  failure_states:
+    - "FAILED"
+    - "TIMED_OUT"
+    - "CANCELED"
+  log_collection:
+    auto_collect_on_failure: true
+    save_to_local: true
+    local_log_dir: "./logs/databricks"
+
+security:
+  credential_management:
+    enforce_profile_auth: true
+    disallow_inline_tokens: true
+    scan_for_secrets: true
+    secret_patterns:
+      - "dapi[a-z0-9]{32}"
+      - "Bearer [A-Za-z0-9-._~+/]+"
+      - "(password|token|secret|api_key)\\s*[=:]\\s*['\"][^'\"]+['\"]"
+  workspace_protection:
+    require_backup_before_delete: true
+    confirm_prod_operations: true
+    disallow_bulk_delete: true
+  pii_scanning:
+    enabled: true
+    scan_patterns:
+      - "SSN|social.security"
+      - "credit.card|cc.number"
+      - "email.*@.*\\.com"
+
+validation:
+  required_cli_tools:
+    - name: "databricks"
+      min_version: "0.213.0"
+      install_url: "https://docs.databricks.com/dev-tools/cli/index.html"
+      check_command: "databricks --version"
+    - name: "python3"
+      min_version: "3.10"
+      check_command: "python3 --version"
+    - name: "jq"
+      min_version: "1.6"
+      install_url: "https://stedolan.github.io/jq/download/"
+      check_command: "jq --version"
+    - name: "git"
+      min_version: "2.0"
+      check_command: "git --version"
+  required_env_vars:
+    - name: "DATABRICKS_PROFILE"
+      description: "Active CLI profile name"
+      default: "dev"
+    - name: "DATABRICKS_HOST"
+      description: "Workspace URL (optional if using profiles)"
+      required: false
+    - name: "DATABRICKS_TOKEN"
+      description: "Auth token (optional if using profiles)"
+      required: false
+      security_warning: "Prefer profiles over environment tokens"
+  optional_env_vars:
+    - name: "DATABRICKS_CONFIG_FILE"
+      description: "Custom location for .databrickscfg"
+      default: "~/.databrickscfg"
+    - name: "DATABRICKS_WORKSPACE_PATH"
+      description: "Default workspace path for deployments"
+    - name: "DATABRICKS_JOB_ID"
+      description: "Default job ID for run operations"
+  connectivity_tests:
+    - name: "test_auth"
+      command: "databricks auth profiles"
+      expected_output_pattern: ".*{profile}.*"
+    - name: "test_workspace_access"
+      command: "databricks workspace list / --profile {profile} --output JSON"
+      expected_exit_code: 0
+    - name: "test_jobs_access"
+      command: "databricks jobs list --limit 1 --profile {profile}"
+      expected_exit_code: 0
+
+scripts:
+  deploy_notebook:
+    description: "Deploy single notebook to workspace"
+    usage: "./scripts/deploy_notebook.sh <notebook_path> <workspace_path> [profile]"
+    example: "./scripts/deploy_notebook.sh ./notebooks/etl.py /Repos/team/project/etl dev"
+  run_job:
+    description: "Run job and monitor to completion"
+    usage: "./scripts/run_job.sh <job_id> [profile]"
+    example: "./scripts/run_job.sh 12345 dev"
+  deploy_and_run:
+    description: "Combined: deploy notebook, create/update job, run and monitor"
+    usage: "./scripts/deploy_and_run.py <notebook> <workspace_path> <job_id> [profile]"
+    example: "./scripts/deploy_and_run.py ./etl.py /Repos/team/etl 12345 dev"
+  validate_env:
+    description: "Validate CLI tools, connectivity, and permissions"
+    usage: "./scripts/validate_env.sh [profile]"
+    example: "./scripts/validate_env.sh dev"
+
+makefile_targets:
+  setup:
+    description: "Install CLI tools and configure authentication"
+    commands:
+      - "pip install databricks-cli"
+      - "databricks configure --token --profile dev"
+  validate:
+    description: "Run all validation checks"
+    depends_on:
+      - "lint"
+      - "scan-secrets"
+      - "check-env"
+  lint:
+    description: "Lint all notebooks"
+    commands:
+      - "find notebooks/ -name '*.py' -exec pylint {} +"
+      - "black --check notebooks/"
+  scan-secrets:
+    description: "Scan for hardcoded secrets"
+    commands:
+      - "detect-secrets scan notebooks/"
+  check-env:
+    description: "Validate environment and connectivity"
+    commands:
+      - "./scripts/validate_env.sh"
+  deploy:
+    description: "Deploy notebooks to workspace"
+    depends_on:
+      - "validate"
+    commands:
+      - "./scripts/deploy_notebook.sh ${NOTEBOOK} ${WORKSPACE_PATH} ${PROFILE}"
+  run:
+    description: "Run job and monitor"
+    commands:
+      - "./scripts/run_job.sh ${JOB_ID} ${PROFILE}"
+
+examples:
+  prompts:
+    - "Deploy my notebook to Databricks dev workspace and run the associated job"
+    - "Push all notebooks in ./notebooks to /Repos/team/project and validate deployment"
+    - "Create a job for my ETL notebook with proper retry and notification settings"
+    - "Monitor the running job and collect logs if it fails"
+    - "Set up my local environment to deploy notebooks to Databricks from Windsurf"
+  use_cases:
+    - name: "Interactive Development Cycle"
+      description: "Rapid iteration: edit locally, push, test on cluster"
+      workflow:
+        - "Edit notebook in Windsurf with local linting and intellisense"
+        - "Push to dev workspace: databricks workspace import"
+        - "Run on dev cluster and monitor output"
+        - "Iterate based on results"
+    - name: "Automated Testing Pipeline"
+      description: "CI/CD integration for notebook testing"
+      workflow:
+        - "Commit notebook changes to Git"
+        - "CI pipeline lints and scans for secrets"
+        - "Deploy to staging workspace"
+        - "Run test job and validate output"
+        - "Promote to prod on success"
+    - name: "Production Deployment"
+      description: "Controlled deployment with approvals"
+      workflow:
+        - "Validate in staging environment"
+        - "Request change management approval"
+        - "Deploy to prod workspace using service principal"
+        - "Update production job definition"
+        - "Monitor first production run closely"
+
+troubleshooting:
+  common_issues:
+    - error: "Error: Could not find profile 'dev'"
+      solution: "Run 'databricks configure --token --profile dev' to set up profile"
+      documentation: "https://docs.databricks.com/dev-tools/cli/index.html#authentication"
+    - error: "Error: notebook not found"
+      solution: "Check workspace path syntax and verify profile has read access"
+      command: "databricks workspace list /path/to/parent --profile dev"
+    - error: "Error: RESOURCE_DOES_NOT_EXIST: Job 12345 not found"
+      solution: "Verify job ID and ensure it exists in the target workspace"
+      command: "databricks jobs list --profile dev | grep 12345"
+    - error: "Job run timed out"
+      solution: "Increase timeout_seconds in job config or monitoring max_duration"
+      check: "Review job cluster size and query optimization"
+    - error: "Authentication failed"
+      solution: "Refresh token: databricks auth token --profile dev --refresh"
+      alternative: "Switch to OAuth: databricks auth login --host https://... --profile dev"
+
+integration:
+  related_archetypes:
+    - name: "databricks-workflow-creator"
+      relationship: "Job configs must conform to workflow-creator standards"
+      cross_reference: "Job JSON structure, retry policies, notification settings"
+    - name: "notebook-collaboration-coach"
+      relationship: "Notebooks follow collaboration and version control standards"
+      cross_reference: "Git integration, review process, reproducibility"
+    - name: "automation-scripter"
+      relationship: "Deployment scripts follow automation best practices"
+      cross_reference: "Error handling, idempotency, logging patterns"
+  complementary_tools:
+    - name: "databricks-connect"
+      description: "Run Spark code locally against remote cluster"
+      use_when: "Developing complex PySpark transformations"
+    - name: "databricks sync"
+      description: "Bidirectional sync between local and workspace"
+      use_when: "Continuous development with frequent changes"
+    - name: "Terraform Databricks Provider"
+      description: "Infrastructure as Code for jobs and resources"
+      use_when: "Managing multiple jobs and resources declaratively"
+
+# Quick Reference: Which Approach to Use?
+decision_guide:
+  approach_1_git_based:
+    when_to_use:
+      - "Production deployments"
+      - "Team collaboration required"
+      - "Version control and code review needed"
+      - "CI/CD pipeline integration"
+      - "Compliance and audit requirements"
+    workflow_summary: "Commit → Push to Git → Job references repo → Run"
+    path_example: "git_source.git_url + notebook_path (relative)"
+    advantages:
+      - "Version controlled"
+      - "Automated deployments"
+      - "Code review enforced"
+      - "Audit trail in Git"
+    
+  approach_2_workspace_based:
+    when_to_use:
+      - "Rapid prototyping and testing"
+      - "Personal development workspace"
+      - "Ad-hoc debugging"
+      - "Quick experimentation"
+      - "Notebook development iteration"
+    workflow_summary: "databricks workspace import → Job references /Users/ path → Run"
+    path_example: "/Users/${USER}@att.com/demos/titanic_ingestion (dynamic)"
+    path_example_static: "/Users/eh163e@att.com/demos/titanic_ingestion"
+    advantages:
+      - "Faster iteration"
+      - "No Git commit needed"
+      - "Immediate testing"
+      - "Personal workspace isolation"
+  
+  typical_progression:
+    - stage: "Development"
+      approach: "Approach 2 (Workspace-based)"
+      path: "/Users/${USER}@att.com/"
+      path_example: "/Users/eh163e@att.com/"
+    - stage: "Code Review"
+      approach: "Transition to Git"
+      path: "Commit to feature branch"
+    - stage: "Staging"
+      approach: "Approach 1 (Git-based)"
+      path: "git_source.git_branch: staging"
+    - stage: "Production"
+      approach: "Approach 1 (Git-based)"
+      path: "git_source.git_branch: main"

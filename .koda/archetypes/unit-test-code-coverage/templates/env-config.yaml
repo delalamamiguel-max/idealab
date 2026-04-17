@@ -1,0 +1,38 @@
+python_version: "3.10"
+
+testing_frameworks:
+  python:
+    - pytest
+    - unittest
+    - coverage
+    - hypothesis
+  java:
+    - junit5
+    - mockito
+    - jacoco
+
+coverage_tools:
+  - coverage_py
+  - jacoco
+  - istanbul
+  - cobertura
+
+coverage_metrics:
+  line_coverage: true
+  branch_coverage: true
+  function_coverage: true
+  mutation_coverage: false
+
+quality_gates:
+  minimum_line_coverage_percent: 80
+  minimum_branch_coverage_percent: 75
+  block_merge_below_threshold: true
+
+reporting:
+  html_report: true
+  xml_report: true
+  badge_generation: true
+
+references:
+  constitution: ".cdo-aifc/memory/archetypes/08-software-quality-maintenance/unit-test-code-coverage-constitution.md"
+  implementation_guide: ".cdo-aifc/templates/08-software-quality-maintenance/unit-test-coverage-implementation.md"

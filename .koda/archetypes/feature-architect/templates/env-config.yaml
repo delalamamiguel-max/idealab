@@ -1,0 +1,49 @@
+# Environment Configuration for feature architect
+# Focus: governed feature engineering and feature store publishing
+
+spark:
+  version: "3.5+"
+  unity_catalog: true
+
+python:
+  version: "3.10"
+
+libraries:
+  - pyspark: "3.5+"
+  - databricks-feature-store: "0.18+"
+  - pandas: "2.1+"
+  - scikit-learn: "1.4+"
+  - category-encoders: "2.6+"
+  - statsmodels: "0.14+"
+  - feast: "0.41+"
+
+feature_store:
+  catalog: "enterprise_feature_store"
+  warehouse_schema: "production"
+  offline_store_table_prefix: "fs_"
+  online_store:
+    type: "cosmosdb"
+    database: "feature_online"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/features/engineering"
+
+ci:
+  azure_devops_project: "AI-Analytics"
+  pipeline_name: "Feature-Store-CI"
+  lint_job: "feature-quality-gate"
+
+quality:
+  min_training_data_ts: "2022-01-01"
+  drift_threshold_psi: 0.2
+  skew_threshold: 0.15
+
+security:
+  secret_scope: "feature-store-secrets"
+  approved_storage_accounts:
+    - "<storage-account>"
+
+variables:
+  default_feature_owner: "feature_governance@company.com"
+  feature_table_ttl_days: 60

@@ -1,0 +1,64 @@
+# Language Model Evaluation Environment Configuration
+# Last Updated: 2025-12-01
+
+environment:
+  python_version: "3.10"
+  required_packages:
+    - pandas>=1.5.0
+    - aiohttp>=3.8.0
+    - openai>=1.0.0  # or custom LLM client
+    - mlflow>=2.8.0
+    - pyyaml>=6.0
+    - numpy>=1.24.0
+
+credentials:
+  llm_api_key_source: "key_vault"  # key_vault | env_var
+  key_vault_scope: "llm-evaluation"
+  key_vault_key_name: "openai-api-key"
+  # For env_var approach: export LLM_API_KEY=your_key
+
+runtime:
+  max_concurrency: 5
+  timeout_seconds: 30
+  retry_on_error: true
+  max_retries: 3
+  async_backend: "asyncio"
+
+mlflow:
+  tracking_enabled: true
+  experiment_name_pattern: "{business_unit}/llm-evaluation/{use_case}"
+  artifact_location: "dbfs:/mlflow/llm-evaluation/"
+  log_grader_configs: true
+  log_raw_results: true
+  log_aggregated_metrics: true
+
+output:
+  default_format: "csv"
+  results_path_pattern: "results/{evaluation_name}_{timestamp}.csv"
+  report_path_pattern: "results/{evaluation_name}_{timestamp}_report.md"
+  plots_path_pattern: "results/plots/{evaluation_name}_{timestamp}/"
+
+graders:
+  default_heuristics:
+    - length_check
+    - format_validator
+  default_llm_judges:
+    - correctness_judge
+    - safety_judge
+  custom_graders_path: "graders/"
+
+validation:
+  required_columns:
+    - response  # mandatory
+  optional_columns:
+    - prompt
+    - system_prompt
+    - context
+  min_samples: 10
+  max_samples: 10000
+
+security:
+  scan_for_pii: true
+  mask_sensitive_data: true
+  encrypt_at_rest: true
+  audit_logging: true

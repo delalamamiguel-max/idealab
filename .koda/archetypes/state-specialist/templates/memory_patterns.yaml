@@ -1,0 +1,315 @@
+# Memory Patterns for LangGraph Agents
+# Reference this from state-specialist workflows
+
+version: "1.0.0"
+last_updated: "2026-03-20"
+
+# Standard storage locations
+storage_locations:
+  agent_data_root: "${AGENT_DATA}"
+  history_log: "${AGENT_DATA}/${agent_name}/history.log"
+  config_file: "${AGENT_DATA}/${agent_name}/config.json"
+  checkpoints_dir: "${AGENT_DATA}/${agent_name}/checkpoints/"
+  session_state: "${AGENT_DATA}/${agent_name}/sessions/${session_id}.json"
+
+# Memory pattern types
+memory_patterns:
+  
+  append_only_log:
+    description: "Immutable event log for audit trail"
+    use_cases:
+      - "Agent action history"
+      - "Tool invocation log"
+      - "Decision audit trail"
+    format: "timestamp | event_type | metadata | result"
+    example: |
+      2026-03-20T10:30:45Z | tool_call | {"tool": "search", "query": "..."} | success
+    implementation: |
+      import logging
+      from datetime import datetime
+      
+      def log_event(agent_name: str, event_type: str, metadata: dict, result: str):
+          log_path = f"${{AGENT_DATA}}/{agent_name}/history.log"
+          with open(log_path, "a") as f:
+              timestamp = datetime.now().isoformat()
+              f.write(f"{timestamp} | {event_type} | {json.dumps(metadata)} | {result}\n")
+    
+  checkpoint_store:
+    description: "State snapshots for resumability"
+    use_cases:
+      - "Long-running workflows"
+      - "Human-in-the-loop agents"
+      - "Crash recovery"
+    format: "JSON files with timestamp"
+    example: |
+      checkpoints/
+        ├── checkpoint_20260320_103045.json
+        ├── checkpoint_20260320_103145.json
+        └── latest.json  (copy of most recent checkpoint)
+    implementation: |
+      import json
+      from datetime import datetime
+      from pathlib import Path
+      import shutil
+      
+      def save_checkpoint(agent_name: str, state: dict):
+          checkpoint_dir = Path(f"${{AGENT_DATA}}/{agent_name}/checkpoints")
+          checkpoint_dir.mkdir(parents=True, exist_ok=True)
+          
+          timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+          checkpoint_file = checkpoint_dir / f"checkpoint_{timestamp}.json"
+          
+          with open(checkpoint_file, "w") as f:
+              json.dump(state, f, indent=2)
+          
+          # Update latest checkpoint (cross-platform: copy instead of symlink)
+          latest = checkpoint_dir / "latest.json"
+          shutil.copy2(checkpoint_file, latest)
+  
+  config_persistence:
+    description: "User preferences and setup configuration"
+    use_cases:
+      - "User preferences"
+      - "Agent configuration"
+      - "Setup state"
+    format: "JSON configuration file"
+    example: |
+      {
+        "user_id": "user123",
+        "preferences": {
+          "language": "en",
+          "timezone": "America/New_York"
+        },
+        "setup_completed": true,
+        "last_updated": "2026-03-20T10:30:45Z"
+      }
+    implementation: |
+      import json
+      from pathlib import Path
+      
+      def load_config(agent_name: str) -> dict:
+          config_path = Path(f"${{AGENT_DATA}}/{agent_name}/config.json")
+          if config_path.exists():
+              with open(config_path) as f:
+                  return json.load(f)
+          return {}
+      
+      def save_config(agent_name: str, config: dict):
+          config_path = Path(f"${{AGENT_DATA}}/{agent_name}/config.json")
+          config_path.parent.mkdir(parents=True, exist_ok=True)
+          with open(config_path, "w") as f:
+              json.dump(config, f, indent=2)
+  
+  conversation_history:
+    description: "Multi-turn conversation context"
+    use_cases:
+      - "Conversational agents"
+      - "Context retention"
+      - "Conversation replay"
+    format: "JSON array of messages"
+    example: |
+      {
+        "session_id": "sess_123",
+        "messages": [
+          {"role": "user", "content": "...", "timestamp": "..."},
+          {"role": "assistant", "content": "...", "timestamp": "..."}
+        ],
+        "metadata": {
+          "started_at": "2026-03-20T10:30:00Z",
+          "last_activity": "2026-03-20T10:35:00Z"
+        }
+      }
+    implementation: |
+      import json
+      from datetime import datetime
+      from pathlib import Path
+      
+      def append_message(agent_name: str, session_id: str, role: str, content: str):
+          session_file = Path(f"${{AGENT_DATA}}/{agent_name}/sessions/{session_id}.json")
+          session_file.parent.mkdir(parents=True, exist_ok=True)
+          
+          if session_file.exists():
+              with open(session_file) as f:
+                  session = json.load(f)
+          else:
+              session = {
+                  "session_id": session_id,
+                  "messages": [],
+                  "metadata": {"started_at": datetime.now().isoformat()}
+              }
+          
+          session["messages"].append({
+              "role": role,
+              "content": content,
+              "timestamp": datetime.now().isoformat()
+          })
+          session["metadata"]["last_activity"] = datetime.now().isoformat()
+          
+          with open(session_file, "w") as f:
+              json.dump(session, f, indent=2)
+  
+  semantic_cache:
+    description: "Cache with semantic similarity lookup"
+    use_cases:
+      - "RAG query caching"
+      - "Similar question detection"
+      - "Response reuse"
+    format: "Vector database or embeddings file"
+    example: |
+      {
+        "query_hash": "abc123",
+        "query_text": "What is the weather?",
+        "embedding": [0.1, 0.2, ...],
+        "response": "The weather is...",
+        "timestamp": "2026-03-20T10:30:45Z",
+        "ttl_hours": 24
+      }
+    implementation: |
+      # Requires vector database (e.g., ChromaDB, FAISS)
+      from langchain.embeddings import OpenAIEmbeddings
+      from langchain.vectorstores import Chroma
+      
+      def setup_semantic_cache(agent_name: str):
+          persist_dir = f"${{AGENT_DATA}}/{agent_name}/semantic_cache"
+          embeddings = OpenAIEmbeddings()
+          return Chroma(
+              persist_directory=persist_dir,
+              embedding_function=embeddings
+          )
+
+# Memory management strategies
+memory_management:
+  
+  message_trimming:
+    description: "Keep only recent N messages to prevent unbounded growth"
+    strategy: "sliding_window"
+    implementation: |
+      def trim_messages(messages: list, max_messages: int = 50) -> list:
+          """Keep only the most recent N messages."""
+          if len(messages) <= max_messages:
+              return messages
+          
+          # Always keep system message if present
+          system_messages = [m for m in messages if m.get("role") == "system"]
+          other_messages = [m for m in messages if m.get("role") != "system"]
+          
+          # Keep most recent messages
+          trimmed = other_messages[-max_messages:]
+          
+          return system_messages + trimmed
+  
+  checkpoint_cleanup:
+    description: "Remove old checkpoints to save disk space"
+    strategy: "time_based_retention"
+    implementation: |
+      from pathlib import Path
+      from datetime import datetime, timedelta
+      
+      def cleanup_old_checkpoints(agent_name: str, retention_days: int = 7):
+          """Remove checkpoints older than retention period."""
+          checkpoint_dir = Path(f"${{AGENT_DATA}}/{agent_name}/checkpoints")
+          cutoff = datetime.now() - timedelta(days=retention_days)
+          
+          for checkpoint_file in checkpoint_dir.glob("checkpoint_*.json"):
+              if checkpoint_file.stat().st_mtime < cutoff.timestamp():
+                  checkpoint_file.unlink()
+                  print(f"Deleted old checkpoint: {checkpoint_file.name}")
+  
+  session_expiration:
+    description: "Expire inactive sessions"
+    strategy: "ttl_based"
+    implementation: |
+      from pathlib import Path
+      from datetime import datetime, timedelta
+      import json
+      
+      def expire_inactive_sessions(agent_name: str, inactivity_hours: int = 24):
+          """Remove sessions inactive for more than threshold."""
+          sessions_dir = Path(f"${{AGENT_DATA}}/{agent_name}/sessions")
+          cutoff = datetime.now() - timedelta(hours=inactivity_hours)
+          
+          for session_file in sessions_dir.glob("*.json"):
+              with open(session_file) as f:
+                  session = json.load(f)
+              
+              last_activity = datetime.fromisoformat(
+                  session["metadata"]["last_activity"]
+              )
+              
+              if last_activity < cutoff:
+                  session_file.unlink()
+                  print(f"Expired session: {session_file.name}")
+
+# Integration with LangGraph
+langgraph_integration:
+  
+  memory_saver:
+    description: "Use LangGraph MemorySaver for checkpointing"
+    example: |
+      from langgraph.checkpoint.memory import MemorySaver
+      from langgraph.graph import StateGraph
+      
+      # Create graph with memory
+      workflow = StateGraph(AgentState)
+      # ... add nodes and edges ...
+      
+      # Compile with checkpointer
+      memory = MemorySaver()
+      app = workflow.compile(checkpointer=memory)
+      
+      # Run with thread_id for session persistence
+      result = app.invoke(
+          {"messages": [user_message]},
+          config={"configurable": {"thread_id": "session_123"}}
+      )
+  
+  sqlite_checkpointer:
+    description: "Use SQLite for persistent checkpointing"
+    example: |
+      from langgraph.checkpoint.sqlite import SqliteSaver
+      
+      # Create SQLite checkpointer
+      db_path = f"${{AGENT_DATA}}/{agent_name}/checkpoints.db"
+      checkpointer = SqliteSaver.from_conn_string(db_path)
+      
+      # Compile with checkpointer
+      app = workflow.compile(checkpointer=checkpointer)
+  
+  custom_state_persistence:
+    description: "Custom state persistence logic"
+    example: |
+      from typing import TypedDict, Annotated
+      from langgraph.graph.message import add_messages
+      
+      class AgentState(TypedDict):
+          messages: Annotated[list, add_messages]
+          user_context: dict  # Persisted user context
+          session_metadata: dict  # Session tracking
+      
+      def load_user_context(user_id: str) -> dict:
+          """Load user context from persistent storage."""
+          config_path = f"${{AGENT_DATA}}/user_contexts/{user_id}.json"
+          if Path(config_path).exists():
+              with open(config_path) as f:
+                  return json.load(f)
+          return {}
+      
+      def save_user_context(user_id: str, context: dict):
+          """Save user context to persistent storage."""
+          config_path = f"${{AGENT_DATA}}/user_contexts/{user_id}.json"
+          Path(config_path).parent.mkdir(parents=True, exist_ok=True)
+          with open(config_path, "w") as f:
+              json.dump(context, f, indent=2)
+
+# Best practices
+best_practices:
+  - "Always use ${AGENT_DATA} environment variable for storage paths"
+  - "Implement cleanup policies to prevent unbounded growth"
+  - "Use structured formats (JSON, YAML) for easy parsing"
+  - "Include timestamps in all log entries"
+  - "Encrypt sensitive data at rest"
+  - "Set appropriate file permissions (0600 for sensitive files)"
+  - "Use atomic writes (write to temp file, then rename)"
+  - "Implement backup strategies for critical state"
+  - "Monitor disk usage and alert on thresholds"
+  - "Document retention policies for compliance"

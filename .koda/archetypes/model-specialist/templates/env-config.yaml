@@ -1,0 +1,46 @@
+# Agent Archetype: Model Specialist
+# Category: 10-agentic-development
+
+python_version: "3.10"
+
+performance:
+  profile: "balanced"
+  timeout_seconds: 60
+  max_tokens: 4096
+  cost_tracking_enabled: true
+
+variables:
+  required:
+    - OPENAI_API_KEY
+  optional:
+    - ANTHROPIC_API_KEY
+
+validation:
+  fallback_chain_required: true
+  max_cost_per_request: 1.0
+  configurable_models_required: true
+
+available_libraries:
+  - langchain>=0.1.0
+  - openai>=1.10.0
+  - anthropic>=0.8.0
+  - tiktoken>=0.5.2
+
+default_parameters:
+  models:
+    primary: "gpt-4-turbo-preview"
+    fallback: "gpt-3.5-turbo"
+    embedding: "text-embedding-3-small"
+  settings:
+    temperature: 0.0
+    max_tokens: 4096
+    timeout_seconds: 60
+  cost:
+    track_usage: true
+    max_cost_per_request: 1.0
+
+required_env_vars:
+  - OPENAI_API_KEY
+
+optional_env_vars:
+  - ANTHROPIC_API_KEY

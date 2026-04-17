@@ -1,0 +1,192 @@
+# Environment Configuration for SQL Query Crafter
+# Source: vibe_cdo/sql_query_crafter/prompts/env_prompt.yaml
+
+# Snowflake Configuration
+snowflake:
+  version: "5.XX"
+  default_warehouse: "COMPUTE_WH"
+  default_role: "ANALYST"
+  default_database: "ANALYTICS"
+  default_schema: "PUBLIC"
+  
+  # Connection settings
+  connection:
+    account: "{{var.snowflake_account}}"
+    user: "{{var.snowflake_user}}"
+    authenticator: "externalbrowser"  # or snowflake, oauth
+    
+  # Query settings
+  query:
+    statement_timeout_in_seconds: 3600
+    query_tag: "sql_query_crafter"
+    
+# Python Configuration (for testing)
+python:
+  version: "3.9+"
+  required_libs:
+    - name: snowflake-snowpark-python
+      version: "latest"
+    - name: pytest
+      version: "7.x"
+    - name: pandas
+      version: "1.x"
+    - name: sqlparse
+      version: "latest"
+
+# Performance Targets
+performance:
+  expected_runtime_secs: 5
+  max_runtime_secs: 300
+  cost_per_tb_scanned_usd: 0.05
+  max_cost_per_query_usd: 10.0
+  
+  # Data volume thresholds
+  thresholds:
+    small_table_rows: 1000000      # 1M rows
+    medium_table_rows: 10000000    # 10M rows
+    large_table_rows: 100000000    # 100M rows
+
+# Query Patterns
+patterns:
+  cte_naming: "snake_case"
+  column_naming: "snake_case"
+  table_naming: "fully_qualified"  # database.schema.table
+  
+  # CTE structure
+  cte_structure:
+    - extract    # Raw data extraction
+    - transform  # Business logic transformations
+    - aggregate  # Aggregations and grouping
+    - final      # Final output formatting
+
+# Parameterization
+parameters:
+  syntax: "{{var.parameter_name}}"
+  required_params:
+    - date_start
+    - date_end
+  
+  # Example parameter values
+  examples:
+    date_start: "2025-01-01"
+    date_end: "2025-01-31"
+    customer_table: "analytics.dim_customer"
+    orders_table: "analytics.fact_orders"
+    warehouse: "COMPUTE_WH"
+    role: "ANALYST"
+
+# Data Security
+security:
+  pii_fields:
+    - email
+    - ssn
+    - phone
+    - credit_card
+  masking_required: true
+  masking_function: "MASK_PII"
+
+# Testing Configuration
+testing:
+  framework: "pytest"  # or snowpark
+  coverage_threshold: 80
+  test_data_size: 1000  # rows for test datasets
+  
+  # Test scenarios
+  scenarios:
+    - empty_result_set
+    - single_row
+    - multiple_rows
+    - null_values
+    - edge_cases
+
+# Optimization Hints
+optimization:
+  clustering_keys:
+    enabled: true
+    recommend_for_tables_gb: 10
+  
+  caching:
+    enabled: true
+    ttl_hours: 24
+  
+  partition_pruning:
+    enabled: true
+    partition_column: "event_date"
+
+# Query Tags and Instrumentation
+instrumentation:
+  query_tag_prefix: "sql_query_crafter"
+  include_metadata:
+    - script_name
+    - user
+    - timestamp
+    - cost_estimate
+  
+  # Logging
+  logging:
+    level: INFO
+    format: "structured"
+    output: "snowflake_query_history"
+
+# Variable Placeholders
+# These are replaced in generated queries
+variables:
+  # Date ranges
+  date_start: "2025-01-01"
+  date_end: "2025-01-31"
+  lookback_days: 30
+  
+  # Tables
+  customer_table: "analytics.dim_customer"
+  orders_table: "analytics.fact_orders"
+  products_table: "analytics.dim_product"
+  
+  # Warehouse and role
+  warehouse: "COMPUTE_WH"
+  role: "ANALYST"
+  database: "ANALYTICS"
+  schema: "PUBLIC"
+  
+  # Thresholds
+  min_order_amount: 10.00
+  max_order_amount: 10000.00
+  top_n: 100
+  
+  # Performance
+  max_runtime_secs: 300
+  result_limit: 10000
+
+# Validation Rules
+validation:
+  required_env_vars:
+    - SNOWFLAKE_ACCOUNT
+    - SNOWFLAKE_USER
+  
+  optional_env_vars:
+    - SNOWFLAKE_PASSWORD
+    - SNOWFLAKE_WAREHOUSE
+    - SNOWFLAKE_ROLE
+  
+  # Pre-execution checks
+  pre_execution_checks:
+    - check: "snowsql_installed"
+      description: "Verify snowsql CLI is installed"
+    - check: "connection_valid"
+      description: "Verify Snowflake connection works"
+    - check: "warehouse_running"
+      description: "Verify warehouse is running"
+    - check: "role_granted"
+      description: "Verify role has necessary grants"
+
+# Code Quality Standards
+quality:
+  max_query_lines: 500
+  max_cte_depth: 5
+  max_join_count: 10
+  require_comments: true
+  require_explanation: true
+
+# Example Usage
+# This configuration is loaded by workflows
+# Access variables in SQL: {{var.date_start}}
+# Access in Python: config['variables']['date_start']

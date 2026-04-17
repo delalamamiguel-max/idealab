@@ -1,0 +1,45 @@
+# Environment Configuration for ai ethics advisor
+# Aligns with AT&T Responsible AI governance tooling
+
+python:
+  version: "3.9+"
+
+libraries:
+  - fairlearn: "0.9+"
+  - aif360: "0.6+"
+  - shap: "0.43+"
+  - lime: "0.2+"
+  - pandas: "2.1+"
+  - mlflow: "2.9+"
+
+notebooks:
+  platform: "Databricks"
+  runtime_policy: "Secure-ML-13.x"
+
+compliance_tools:
+  - name: "responsibleai-dashboard"
+    version: "0.28+"
+  - name: "privacy-assessment-cli"
+    version: "1.4+"
+  - name: "model-card-tool"
+    version: "0.5+"
+
+data_requirements:
+  consent_registry_path: "abfss://governance@att.ai/consent/"
+  lineage_system: "Purview"
+
+approvals:
+  required_roles:
+    - legal_compliance
+    - business_owner
+    - responsible_ai_chair
+  sla_days: 5
+
+monitoring:
+  drift_threshold_pct: 10
+  fairness_alert_delta: 0.05
+  audit_log_storage: "abfss://audits@att.ai/ethics"
+
+communication:
+  disclosure_template: "templates/user_disclosure.md"
+  appeal_contact: "mailto:responsibleai@att.com"

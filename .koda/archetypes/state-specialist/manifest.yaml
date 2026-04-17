@@ -1,0 +1,33 @@
+archetype:
+  name: state-specialist
+  display_name: State Specialist
+  description: |
+    Design and implement state schemas for LangGraph agents with proper typing,
+    checkpointing, memory management, and multi-turn conversation support.
+  category: 10-agentic-development
+  keywords:
+    - state specialist
+    - agent state specialist
+    - state
+    - StateGraph
+    - TypedDict
+    - memory
+    - checkpointing
+    - conversation
+    - multi-turn
+    - persistence
+    - context
+    - session
+  constitution:
+    path: state-specialist-constitution.md
+  dependencies:
+    - langgraph
+    - langchain
+    - pydantic
+  workflows:
+    scaffold: scaffold-state-specialist
+    refactor: refactor-state-specialist
+    compare: compare-state-specialist
+    test: test-state-specialist
+    debug: debug-state-specialist
+    document: document-state-specialist

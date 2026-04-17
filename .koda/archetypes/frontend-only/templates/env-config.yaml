@@ -1,0 +1,87 @@
+# Frontend Only Archetype Environment Configuration
+
+archetype: frontend_only
+name: "Frontend Only"
+description: "Frontend-only UI development without backend/infra changes"
+
+# Required environment variables
+required_env_vars:
+  - NODE_ENV
+
+# Optional environment variables
+optional_env_vars:
+  - VITE_API_URL
+  - NEXT_PUBLIC_API_URL
+  - VITE_AUTHORITY
+  - VITE_CLIENT_ID
+  - NEXT_PUBLIC_AUTHORITY
+  - NEXT_PUBLIC_CLIENT_ID
+  - LOG_LEVEL
+
+# Tool requirements
+required_tools:
+  node:
+    min_version: "18.0.0"
+    command: "node --version"
+  pnpm:
+    min_version: "8.0.0"
+    command: "pnpm --version"
+
+# Frontend standards
+standards:
+  accessibility:
+    standard: "WCAG 2.1 AA"
+    contrast_ratio: 4.5
+    min_touch_target: "44x44px"
+  typescript:
+    strict: true
+
+# AT&T Brand Guidelines (when applicable)
+brand_guidelines:
+  colors:
+    att_blue_primary: "#009FDB"      # Primary actions, links, loaders
+    att_cobalt_cta: "#00388F"        # Call-to-action buttons, emphasis
+    att_lime: "#91DC00"              # Success states, positive indicators
+    att_mint: "#49EEDC"              # Accents, highlights
+    neutral_background: "#F5F5F5"    # Page backgrounds
+  ui_patterns:
+    loader: "AT&T blue spinner or 3-dot animation"
+    fab: "Circular with shadow, hover/focus rings"
+    chat_input: "Enter to send, Shift+Enter for newline"
+
+# Project structure
+project_structure:
+  root: "frontend/"
+  directories:
+    - "src/app/"                     # Routes/pages
+    - "src/components/layouts/"      # Page layouts, headers, footers
+    - "src/components/features/"     # Feature-specific components
+    - "src/components/ui/"           # Reusable UI primitives
+    - "src/lib/api/"                 # Fetch/axios wrappers, typed clients
+    - "src/lib/hooks/"               # Custom React hooks
+    - "src/lib/utils/"               # Utility functions
+    - "src/styles/"                  # Global styles, Tailwind imports
+    - "src/types/"                   # TypeScript type definitions
+    - "tests/unit/"                  # Unit tests
+    - "tests/integration/"           # Integration tests
+    - "tests/e2e/"                   # Playwright E2E tests
+  required_files:
+    - "package.json"
+    - "tsconfig.json"
+    - "tailwind.config.*"
+    - "postcss.config.*"
+    - ".env.example"
+
+# Testing requirements
+testing:
+  frameworks:
+    unit: "Vitest or Jest"
+    component: "React Testing Library"
+    e2e: "Playwright (optional)"
+    accessibility: "axe-core"
+  minimum_tests:
+    - "Component renders correctly"
+    - "User interactions work as expected"
+    - "Error states display properly"
+    - "File validation rejects invalid types"
+  coverage_target: 70

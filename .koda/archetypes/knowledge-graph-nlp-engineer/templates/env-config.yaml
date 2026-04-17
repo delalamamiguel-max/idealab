@@ -1,0 +1,26 @@
+# Environment Configuration for Knowledge Graph NLP Engineer
+
+python:
+  version: "3.10+"
+
+tools:
+  - name: "neo4j"
+    version: "5.x+"
+    purpose: "Graph database"
+  - name: "neosemantics (n10s)"
+    version: "5.x+"
+    purpose: "RDF/text integration"
+  - name: "spacy"
+    version: "3.0+"
+    purpose: "NER and NLP pipeline"
+  - name: "sentence-transformers"
+    version: "2.0+"
+    purpose: "Text embeddings"
+  - name: "langchain"
+    version: "0.1+"
+    purpose: "LLM + graph RAG orchestration"
+
+performance:
+  expected_runtime_secs: 60
+  max_runtime_secs: 300
+

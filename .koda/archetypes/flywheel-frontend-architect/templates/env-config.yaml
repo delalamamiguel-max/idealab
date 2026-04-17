@@ -1,0 +1,145 @@
+# Environment Configuration for Flywheel Frontend Architect
+# Purpose: Build Flywheel-compliant web application frontends
+# Generated: 2026-03-17
+
+# Tool Configuration
+node:
+  version: "22+"
+  required: true
+  purpose: "JavaScript runtime for Vite, React, and build tooling"
+
+pnpm:
+  version: "10+"
+  required: true
+  purpose: "Package manager (workspace protocol support)"
+
+npx:
+  required: true
+  purpose: "Run shadcn CLI for component installation"
+
+# Forge Ecosystem
+forge_dx:
+  package: "@forge/dx"
+  required: false
+  purpose: "Environment validation and project scaffolding CLI"
+
+forge_mcp:
+  package: "@forge/mcp"
+  required: false
+  purpose: "MCP server for AI-assisted Flywheel development"
+
+jfrog:
+  required: true
+  purpose: "npm registry for @forge/* and @flywheel/* packages"
+  validation: "npm view @forge/ui-tokens version"
+
+# Performance Targets
+performance:
+  expected_runtime_secs: 60
+  max_runtime_secs: 300
+  max_files_created: 80
+
+  # Quality thresholds
+  thresholds:
+    min_keywords: 10
+    min_hard_stop_rules: 5
+    min_mandatory_patterns: 8
+    min_preferred_patterns: 5
+    min_workflow_files: 6
+    zero_lucide_imports: true
+    zero_hardcoded_colors: true
+
+# Variables (replaced in generated code)
+variables:
+  # Project metadata
+  project_name: "my-flywheel-app"
+  project_description: "Flywheel-compliant web application"
+  default_theme: "theme-business"
+
+  # Paths
+  source_root: "src"
+  components_dir: "src/components"
+  ui_dir: "src/components/ui"
+  blocks_dir: "src/components/blocks"
+  features_dir: "src/components/features"
+  styles_dir: "src/styles"
+  lib_dir: "src/lib"
+  hooks_dir: "src/lib/hooks"
+  api_dir: "src/lib/api"
+
+  # Registry
+  forge_registry_url: "https://forge.dev.att.com/r/{name}.json"
+  forge_docs_url: "https://forge.dev.att.com"
+
+  # Dependencies (core)
+  core_deps:
+    - "@base-ui/react@^1.2.0"
+    - "@flywheel/react-icons@^0.0.5"
+    - "@forge/ui-tokens@^0.0.2"
+    - "class-variance-authority@^0.7.1"
+    - "clsx@^2.1.1"
+    - "react@^19.0.0"
+    - "react-dom@^19.0.0"
+    - "tailwind-merge@^3.5.0"
+    - "tw-animate-css@^1.4.0"
+
+  # Dependencies (dev)
+  dev_deps:
+    - "@tailwindcss/vite@^4.2.1"
+    - "@vitejs/plugin-react@^4.4.1"
+    - "tailwindcss@^4.2.1"
+    - "typescript@^5.8.0"
+    - "vite@^6.0.0"
+
+  # Optional dependencies by feature
+  form_deps:
+    - "react-hook-form"
+    - "@hookform/resolvers"
+    - "zod"
+
+  carousel_deps:
+    - "embla-carousel-react@^8.6.0"
+
+  calendar_deps:
+    - "react-day-picker@^9.14.0"
+
+  drawer_deps:
+    - "vaul@^1.1.2"
+
+  command_deps:
+    - "cmdk@^1.1.1"
+
+  query_deps:
+    - "@tanstack/react-query"
+
+  # Themes
+  available_themes:
+    - class: "theme-consumer"
+      name: "Consumer"
+      description: "AT&T Consumer brand"
+    - class: "theme-business"
+      name: "Business"
+      description: "AT&T Business brand (darker blue)"
+    - class: "theme-firstnet"
+      name: "FirstNet"
+      description: "FirstNet brand (neutral/gray)"
+
+# Validation checks
+validation:
+  pre_scaffold:
+    - command: "node --version"
+      expected: "v22"
+      message: "Node.js 22+ required"
+    - command: "pnpm --version"
+      expected: "10"
+      message: "pnpm 10+ required"
+
+  post_scaffold:
+    - command: "grep -q '@forge/ui-tokens' package.json"
+      message: "@forge/ui-tokens must be in dependencies"
+    - command: "grep -q '@flywheel/react-icons' package.json"
+      message: "@flywheel/react-icons must be in dependencies"
+    - command: "grep -q 'forge.dev.att.com' components.json"
+      message: "Forge registry must be configured"
+    - command: "grep -rq 'lucide-react' src/ && exit 1 || exit 0"
+      message: "No lucide-react imports allowed"

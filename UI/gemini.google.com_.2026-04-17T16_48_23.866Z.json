@@ -1,0 +1,261 @@
+{
+  "data": {
+    "branding": {
+      "colorScheme": "light",
+      "fonts": [
+        {
+          "family": "Google Sans Flex",
+          "role": "body"
+        },
+        {
+          "family": "Google Sans",
+          "role": "heading"
+        },
+        {
+          "family": "Google Sans Text",
+          "role": "body"
+        },
+        {
+          "family": "Roboto",
+          "role": "body"
+        },
+        {
+          "family": "Helvetica Neue",
+          "role": "body"
+        }
+      ],
+      "colors": {
+        "primary": "#0B57D0",
+        "secondary": "#C5221F",
+        "accent": "#0B57D0",
+        "background": "#F0F4F8",
+        "textPrimary": "#444746",
+        "link": "#4D90FE"
+      },
+      "typography": {
+        "fontFamilies": {
+          "primary": "Google Sans Flex",
+          "heading": "Google Sans"
+        },
+        "fontStacks": {
+          "heading": [
+            "Google Sans Flex",
+            "Google Sans",
+            "Helvetica Neue",
+            "sans-serif"
+          ],
+          "body": [
+            "Times New Roman"
+          ],
+          "paragraph": [
+            "Google Sans Flex",
+            "Google Sans",
+            "Helvetica Neue",
+            "sans-serif"
+          ]
+        },
+        "fontSizes": {
+          "h1": "14px",
+          "h2": "14px",
+          "body": "16px"
+        }
+      },
+      "spacing": {
+        "baseUnit": 4,
+        "borderRadius": "8px"
+      },
+      "components": {
+        "buttonPrimary": {
+          "background": "#0B57D0",
+          "textColor": "#FFFFFF",
+          "borderRadius": "100px",
+          "borderRadiusCorners": {
+            "topLeft": "100px",
+            "topRight": "100px",
+            "bottomRight": "100px",
+            "bottomLeft": "100px"
+          },
+          "shadow": "none"
+        },
+        "buttonSecondary": {
+          "background": "#FFFFFF",
+          "textColor": "#444746",
+          "borderRadius": "9999px",
+          "borderRadiusCorners": {
+            "topLeft": "9999px",
+            "topRight": "9999px",
+            "bottomRight": "9999px",
+            "bottomLeft": "9999px"
+          },
+          "shadow": "none"
+        }
+      },
+      "images": {
+        "logo": null,
+        "favicon": "https://www.gstatic.com/lamda/images/gemini_sparkle_aurora_33f86dc0c0257da337c63.svg",
+        "ogImage": "https://www.gstatic.com/lamda/images/gemini_aurora_thumbnail_4g_e74822ff0ca4259beb718.png"
+      },
+      "__llm_button_reasoning": {
+        "primary": {
+          "index": 1,
+          "text": "Sign in",
+          "reasoning": "Button #1 has a vibrant blue background (#0B57D0), which is a strong indicator of a primary CTA. The text 'Sign in' is action-oriented, making it the most likely primary button."
+        },
+        "secondary": {
+          "index": 2,
+          "text": "Research",
+          "reasoning": "Button #2 has a different background color (#FFFFFF) from the primary button and is less prominent, making it suitable as a secondary button."
+        },
+        "confidence": 0.95
+      },
+      "personality": {
+        "tone": "professional",
+        "energy": "medium",
+        "targetAudience": "tech-savvy users"
+      },
+      "designSystem": {
+        "framework": "material",
+        "componentLibrary": ""
+      },
+      "confidence": {
+        "buttons": 0.95,
+        "colors": 0.9,
+        "overall": 0.925
+      },
+      "__llm_metadata": {
+        "logoSelection": {
+          "llmCalled": false,
+          "llmSucceeded": false,
+          "finalSource": "none"
+        },
+        "buttonClassification": {
+          "llmCalled": true,
+          "llmSucceeded": true
+        }
+      }
+    },
+    "metadata": {
+      "referrer": "origin",
+      "title": "Google Gemini",
+      "og:image": "https://www.gstatic.com/lamda/images/gemini_aurora_thumbnail_4g_e74822ff0ca4259beb718.png",
+      "google-site-verification": "NDfDvTdbFxsd1TbRRZVQZULBTRT2-fatyuQ1TT8gack",
+      "apple-itunes-app": "app-id=6477489729",
+      "og:image:secure_url": "https://www.gstatic.com/lamda/images/gemini_aurora_thumbnail_4g_e74822ff0ca4259beb718.png",
+      "og:site_name": "Gemini",
+      "description": "Meet Gemini, Google’s AI assistant. Get help with writing, planning, brainstorming, and more. Experience the power of generative AI.",
+      "og:title": "‎Google Gemini",
+      "ogUrl": "https://gemini.google.com",
+      "og:url": "https://gemini.google.com",
+      "twitter:title": "‎Google Gemini",
+      "og:description": "Meet Gemini, Google’s AI assistant. Get help with writing, planning, brainstorming, and more. Experience the power of generative AI.",
+      "twitter:image": "https://www.gstatic.com/lamda/images/gemini_aurora_thumbnail_4g_e74822ff0ca4259beb718.png",
+      "og:type": "website",
+      "ogTitle": "‎Google Gemini",
+      "viewport": "initial-scale=1,minimum-scale=1,width=device-width,interactive-widget=resizes-content,viewport-fit=cover",
+      "color-scheme": "only",
+      "twitter:card": "summary_large_image",
+      "og:logo": "https://www.gstatic.com/lamda/images/gemini_sparkle_aurora_33f86dc0c0257da337c63.svg",
+      "ogImage": "https://www.gstatic.com/lamda/images/gemini_aurora_thumbnail_4g_e74822ff0ca4259beb718.png",
+      "language": "en-US",
+      "ogSiteName": "Gemini",
+      "ogDescription": "Meet Gemini, Google’s AI assistant. Get help with writing, planning, brainstorming, and more. Experience the power of generative AI.",
+      "favicon": "https://www.gstatic.com/lamda/images/gemini_sparkle_aurora_33f86dc0c0257da337c63.svg",
+      "scrapeId": "019d9c57-fa03-72ff-9298-cda19cea8dbd",
+      "sourceURL": "https://gemini.google.com/",
+      "url": "https://gemini.google.com/app",
+      "statusCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "timezone": "America/New_York",
+      "proxyUsed": "basic",
+      "indexId": "555a81ac-2b93-448d-a491-9f70372ead3e",
+      "creditsUsed": 5,
+      "concurrencyLimited": false
+    },
+    "html": "<!DOCTYPE html><html lang=\"en-US\" dir=\"ltr\"><body class=\"theme-host light-theme zero-state-theme google-sans-context chrome-context-v39\" ngcm=\"\" jslog=\"283462;track:impression;BardVeMetadataKey:[[null,null,null,null,null,null,null,1]]\"><div style=\"display: none\"></div><div class=\"boqOnegoogleliteOgbOneGoogleBar\"><div class=\"gb_Ia gb_Ed gb_Ab gb_e gb_4a gb_ed\" id=\"gb\" style=\"background-color: transparent;\"><div class=\"gb_3d gb_xb gb_Td\" ng-non-bindable=\"\" data-ogsr-up=\"\" style=\"padding:0\"><div class=\"gb_Dd\" style=\"display:block\"><div class=\"gb_kd\"></div><a class=\"gb_Va gb_Xd gb_Pd gb_Fd\" aria-label=\"Sign in\" href=\"https://accounts.google.com/ServiceLogin?passive=1209600&amp;continue=https://gemini.google.com/&amp;followup=https://gemini.google.com/&amp;ec=GAZAkgU\" target=\"_top\"><span class=\"gb_de\">Sign in</span></a></div><div style=\"overflow: hidden; position: absolute; top: 0px; visibility: hidden; width: 420px; z-index: 991; height: 280px; margin-top: 70px; right: 0px; margin-right: 25px;\"></div></div></div></div><!-- Google Tag Manager (noscript) --><!-- End Google Tag Manager (noscript) --><div style=\"display: none\"></div><chat-app id=\"app-root\" ng-version=\"0.0.0-PLACEHOLDER\" _nghost-ng-c2617788653=\"\" style=\"--internal-bar-offset: 0px; --announcement-banner-padding-top: 0px;\" class=\"ng-tns-c2617788653-0\"><!----><main _ngcontent-ng-c2617788653=\"\" class=\"chat-app\"><div _ngcontent-ng-c2617788653=\"\" data-test-id=\"chat-app\" class=\"side-nav-menu-button with-pill-ui\"><!----><!----><side-nav-menu-button _ngcontent-ng-c2617788653=\"\" _nghost-ng-c681600711=\"\" class=\"ng-tns-c2617788653-0 ng-star-inserted\"><button _ngcontent-ng-c681600711=\"\" mat-icon-button=\"\" aria-label=\"Main menu\" data-test-id=\"side-nav-menu-button\" class=\"mdc-icon-button mat-mdc-icon-button mat-mdc-button-base mat-mdc-tooltip-trigger main-menu-button mat-unthemed\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" mat-ripple-loader-centered=\"\" jslog=\"204298;track:generic_click,impression\" aria-describedby=\"cdk-describedby-message-ng-1-2\" cdk-describedby-host=\"ng-1\"><span class=\"mat-mdc-button-persistent-ripple mdc-icon-button__ripple\"></span><mat-icon _ngcontent-ng-c681600711=\"\" role=\"img\" fonticon=\"menu\" class=\"mat-icon notranslate gds-icon-l google-symbols mat-ligature-font mat-icon-no-color\" aria-hidden=\"true\" data-mat-icon-type=\"font\" data-mat-icon-name=\"menu\"></mat-icon><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></button><!----></side-nav-menu-button><!----><!----><!----><!----><!----><!----><bard-mode-switcher _ngcontent-ng-c2617788653=\"\" data-test-id=\"bard-mode-switcher\" _nghost-ng-c3106001208=\"\" class=\"ng-tns-c2617788653-0 ng-trigger ng-trigger-modeSwitcherOpenAnimation ng-star-inserted\" style=\"transform: translateX(0px);\"><!----><a _ngcontent-ng-c3106001208=\"\" tooltipanchorposition=\"below\" role=\"button\" tabindex=\"0\" aria-label=\"New chat\" class=\"bard-logo-container disabled logo-only ng-star-inserted\" href=\"https://gemini.google.com/app\" aria-disabled=\"true\" style=\"\"><bard-logo _ngcontent-ng-c3106001208=\"\" _nghost-ng-c1291545120=\"\" data-test-id=\"bard-logo-only\"><div _ngcontent-ng-c1291545120=\"\" data-test-id=\"logo\" class=\"logo\"><span _ngcontent-ng-c1291545120=\"\" data-test-id=\"bard-text\" class=\"bard-text enable-aurora ng-star-inserted\"> Gemini </span><!----><!----></div></bard-logo></a><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></bard-mode-switcher><!----><!----><!----><!----><!----></div><!----><!----><!----><top-bar-actions _ngcontent-ng-c2617788653=\"\" _nghost-ng-c1057495426=\"\" class=\"ng-tns-c2617788653-0 ng-star-inserted\" style=\"--ogb-width: 111px;\"><div _ngcontent-ng-c1057495426=\"\" class=\"top-bar-actions\"><div _ngcontent-ng-c1057495426=\"\" class=\"left-section\"></div><div _ngcontent-ng-c1057495426=\"\" class=\"center-section\"><!----><!----></div><div _ngcontent-ng-c1057495426=\"\" class=\"right-section\"><div _ngcontent-ng-c1057495426=\"\" class=\"buttons-container ng-star-inserted\"><!----></div><!----><!----><!----><!----><!----><!----><!----><div _ngcontent-ng-c1057495426=\"\" class=\"buttons-container\"><!----><!----><!----><!----><!----><!----><!----><!----><a _ngcontent-ng-c1057495426=\"\" target=\"_blank\" rel=\"noopener\" externallink=\"\" href=\"https://gemini.google/about/?utm_source=gemini&amp;utm_medium=web&amp;utm_campaign=gemini_zero_state_link_to_marketing_microsite\" class=\"gds-label-l microsite ng-star-inserted\" _nghost-ng-c1859802561=\"\"><!----><span _ngcontent-ng-c1859802561=\"\" data-test-id=\"content\" class=\"link-content ng-star-inserted\">About Gemini</span><span _ngcontent-ng-c1859802561=\"\" class=\"cdk-visually-hidden ng-star-inserted\"> Opens in a new window </span><!----><!----><!----></a><a _ngcontent-ng-c1057495426=\"\" target=\"_blank\" rel=\"noopener\" externallink=\"\" href=\"https://gemini.google.com/app/download\" class=\"gds-label-l microsite ng-star-inserted\" _nghost-ng-c1859802561=\"\"><!----><span _ngcontent-ng-c1859802561=\"\" data-test-id=\"content\" class=\"link-content ng-star-inserted\">Gemini App</span><span _ngcontent-ng-c1859802561=\"\" class=\"cdk-visually-hidden ng-star-inserted\"> Opens in a new window </span><!----><!----><!----></a><a _ngcontent-ng-c1057495426=\"\" target=\"_blank\" rel=\"noopener\" externallink=\"\" href=\"https://one.google.com/ai\" class=\"gds-label-l microsite ng-star-inserted\" _nghost-ng-c1859802561=\"\"><!----><span _ngcontent-ng-c1859802561=\"\" data-test-id=\"content\" class=\"link-content ng-star-inserted\">Subscriptions</span><span _ngcontent-ng-c1859802561=\"\" class=\"cdk-visually-hidden ng-star-inserted\"> Opens in a new window </span><!----><!----><!----></a><a _ngcontent-ng-c1057495426=\"\" target=\"_blank\" rel=\"noopener\" externallink=\"\" href=\"https://workspace.google.com/solutions/ai/?utm_source=geminiforbusiness&amp;utm_medium=et&amp;utm_campaign=gemini-page-crosslink&amp;utm_term=-&amp;utm_content=forbusiness-2025Q3\" class=\"gds-label-l microsite ng-star-inserted\" _nghost-ng-c1859802561=\"\"><!----><span _ngcontent-ng-c1859802561=\"\" data-test-id=\"content\" class=\"link-content ng-star-inserted\">For Business</span><span _ngcontent-ng-c1859802561=\"\" class=\"cdk-visually-hidden ng-star-inserted\"> Opens in a new window </span><!----><!----><!----></a><!----><!----><!----><!----><!----><!----><!----><!----></div></div></div><!----><!----><!----><mat-menu _ngcontent-ng-c1057495426=\"\" panelclass=\"mobile-project-menu\"><!----></mat-menu></top-bar-actions><!----><side-navigation-v2 _ngcontent-ng-c2617788653=\"\" class=\"content\" _nghost-ng-c3332273266=\"\"><chat-notifications _ngcontent-ng-c3332273266=\"\" _nghost-ng-c3596905940=\"\"><!----><!----><!----><!----></chat-notifications><!----><!----><bard-sidenav-container _ngcontent-ng-c3332273266=\"\" data-test-id=\"bard-sidenav-container\" _nghost-ng-c3522183994=\"\"><bard-sidenav _ngcontent-ng-c3332273266=\"\" role=\"navigation\" _nghost-ng-c1604973533=\"\" class=\"ng-tns-c1604973533-3 ng-trigger ng-trigger-widthTransition mystuff-side-nav-update disable-onload-animations ng-star-inserted\" jslog=\"173918;track:impression,attention\" style=\"width: var(--bard-sidenav-closed-width);\" data-hveid=\"0\" decode-data-ved=\"1\" data-ved=\"0CAAQ3s4KahcKEwj4mc_Bq_WTAxUAAAAAHQAAAAAQBQ\"><!----><side-navigation-content _ngcontent-ng-c3332273266=\"\" class=\"ia-redesign ng-star-inserted\" _nghost-ng-c154186304=\"\" style=\"--side-nav-transition-duration: 300ms; --side-nav-open-close-animation-curve: cubic-bezier(0.2, 0, 0, 1); --side-nav-open-item-opacity-duration: 150ms; --side-nav-open-item-opacity-delay: 100ms; --side-nav-close-item-opacity-duration: 100ms; --side-nav-open-close-opacity-animation-curve: cubic-bezier(0, 0, 0, 0);\"><div _ngcontent-ng-c154186304=\"\" class=\"sidenav-with-history-container disable-onload-animations collapsed side-nav-mystuff-update ng-star-inserted content-loaded\" jslog=\"314045\"><!----><!----><!----><!----><div _ngcontent-ng-c154186304=\"\" data-test-id=\"overflow-container\" class=\"overflow-container\"><!----><mat-action-list _ngcontent-ng-c154186304=\"\" role=\"group\" class=\"mat-mdc-action-list mat-mdc-list-base mdc-list top-action-list ng-star-inserted\" aria-disabled=\"false\"><side-nav-action-button _ngcontent-ng-c154186304=\"\" icon=\"edit_square\" arialabel=\"New chat\" data-test-id=\"reset-button\" _nghost-ng-c1918873410=\"\" jslog=\"188172;track:generic_click,impression\" class=\"ia-redesign ng-star-inserted\" style=\"--side-nav-open-dynamic-item-opacity-duration: 100ms; --side-nav-open-dynamic-item-opacity-delay: 150ms; --side-nav-close-dynamic-item-opacity-duration: 50ms;\"><!----><a _ngcontent-ng-c1918873410=\"\" mat-icon-button=\"\" matripple=\"\" mattooltipposition=\"right\" class=\"mdc-icon-button mat-mdc-icon-button mat-mdc-button-base mat-ripple mat-mdc-tooltip-trigger side-nav-action-collapsed-button explicit-gmat-override mat-mdc-button-disabled mat-unthemed ng-star-inserted\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" mat-ripple-loader-centered=\"\" href=\"https://gemini.google.com/app\" mat-ripple-loader-disabled=\"\" aria-label=\"New chat\" disabled=\"true\" aria-disabled=\"true\" tabindex=\"-1\"><span class=\"mat-mdc-button-persistent-ripple mdc-icon-button__ripple\"></span><div _ngcontent-ng-c1918873410=\"\" class=\"xap-count-badge-container ng-star-inserted\"><div _ngcontent-ng-c1918873410=\"\" class=\"icon-container\"><mat-icon _ngcontent-ng-c1918873410=\"\" role=\"img\" data-test-id=\"side-nav-action-button-icon\" class=\"mat-icon notranslate gds-icon-l google-symbols mat-ligature-font mat-icon-no-color ng-star-inserted\" aria-hidden=\"true\" data-mat-icon-type=\"font\" data-mat-icon-name=\"edit_square\" fonticon=\"edit_square\"></mat-icon><!----><!----></div><!----></div><!----><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></a><!----><!----><!----><!----><!----><!----><!----><!----></side-nav-action-button><!----><!----><!----></mat-action-list><!----><!----><!----><infinite-scroller _ngcontent-ng-c154186304=\"\" _nghost-ng-c2119281370=\"\" class=\"disable-scroll\"><div _ngcontent-ng-c2119281370=\"\" class=\"top-gradient-container ng-star-inserted\"><div _ngcontent-ng-c2119281370=\"\" class=\"top-gradient\"></div></div><!----><div _ngcontent-ng-c154186304=\"\" class=\"loading-content-spinner-container ng-star-inserted\"><mat-progress-spinner _ngcontent-ng-c154186304=\"\" role=\"progressbar\" tabindex=\"-1\" data-test-id=\"loading-content-spinner\" mode=\"indeterminate\" diameter=\"24\" aria-label=\"Loading Gems and Recent conversations\" class=\"mat-mdc-progress-spinner mdc-circular-progress mat-primary mdc-circular-progress--indeterminate\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 24px; height: 24px; --mat-progress-spinner-size: 24px; --mat-progress-spinner-active-indicator-width: 24px;\"><!----><div aria-hidden=\"true\" class=\"mdc-circular-progress__determinate-container\"><svg xmlns=\"http://www.w3.org/2000/svg\" focusable=\"false\" class=\"mdc-circular-progress__determinate-circle-graphic\" viewBox=\"0 0 16.4 16.4\"><circle cx=\"50%\" cy=\"50%\" class=\"mdc-circular-progress__determinate-circle\" r=\"7\" style=\"stroke-dasharray: 43.9823px; stroke-width: 10%;\"></circle></svg></div><div aria-hidden=\"true\" class=\"mdc-circular-progress__indeterminate-container\"><div class=\"mdc-circular-progress__spinner-layer\"><div class=\"mdc-circular-progress__circle-clipper mdc-circular-progress__circle-left\"><svg xmlns=\"http://www.w3.org/2000/svg\" focusable=\"false\" class=\"mdc-circular-progress__indeterminate-circle-graphic ng-star-inserted\" viewBox=\"0 0 16.4 16.4\"><circle cx=\"50%\" cy=\"50%\" r=\"7\" style=\"stroke-dasharray: 43.9823px; stroke-dashoffset: 21.9911px; stroke-width: 10%;\"></circle></svg><!----></div><div class=\"mdc-circular-progress__gap-patch\"><svg xmlns=\"http://www.w3.org/2000/svg\" focusable=\"false\" class=\"mdc-circular-progress__indeterminate-circle-graphic ng-star-inserted\" viewBox=\"0 0 16.4 16.4\"><circle cx=\"50%\" cy=\"50%\" r=\"7\" style=\"stroke-dasharray: 43.9823px; stroke-dashoffset: 21.9911px; stroke-width: 10%;\"></circle></svg><!----></div><div class=\"mdc-circular-progress__circle-clipper mdc-circular-progress__circle-right\"><svg xmlns=\"http://www.w3.org/2000/svg\" focusable=\"false\" class=\"mdc-circular-progress__indeterminate-circle-graphic ng-star-inserted\" viewBox=\"0 0 16.4 16.4\"><circle cx=\"50%\" cy=\"50%\" r=\"7\" style=\"stroke-dasharray: 43.9823px; stroke-dashoffset: 21.9911px; stroke-width: 10%;\"></circle></svg><!----></div></div></div></mat-progress-spinner></div><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><div _ngcontent-ng-c154186304=\"\" class=\"gems-list-container ng-star-inserted\"><!----><!----></div><!----><!----><!----><!----><div _ngcontent-ng-c154186304=\"\" class=\"chat-history collapsed ng-star-inserted\"><!----><!----><!----><conversations-list-signed-out _ngcontent-ng-c154186304=\"\" data-test-id=\"conversations-list-signed-out\" _nghost-ng-c422867629=\"\" class=\"ng-tns-c422867629-7 ng-star-inserted\"><div _ngcontent-ng-c422867629=\"\" class=\"title-container ng-tns-c422867629-7 ng-trigger ng-trigger-conversationListTitleVisibilityAnimation\" style=\"visibility: hidden;\"><h1 _ngcontent-ng-c422867629=\"\" class=\"title gds-label-l ng-tns-c422867629-7 ng-star-inserted\" style=\"\"> Chats </h1><!----></div><div _ngcontent-ng-c422867629=\"\" class=\"sign-in-container ng-tns-c422867629-7\"><div _ngcontent-ng-c422867629=\"\" class=\"sign-in-header-text gds-title-s ng-tns-c422867629-7\">Sign in to start saving your chats</div><div _ngcontent-ng-c422867629=\"\" class=\"sign-in-body-text gds-body-m ng-tns-c422867629-7\">Once you're signed in, you can access your recent chats here.</div><button _ngcontent-ng-c422867629=\"\" mat-button=\"\" class=\"mdc-button mat-mdc-button-base sign-in-button ng-tns-c422867629-7 mat-mdc-button mat-unthemed\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" jslog=\"248446;track:generic_click,impression\"><span class=\"mat-mdc-button-persistent-ripple mdc-button__ripple\"></span><span class=\"mdc-button__label\">Sign in</span><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></button></div><div _ngcontent-ng-c422867629=\"\" class=\"microsite-container ng-tns-c422867629-7\"><!----></div></conversations-list-signed-out><!----><!----></div><!----><!----><!----><!----><!----><div _ngcontent-ng-c2119281370=\"\" class=\"bottom-gradient-container ng-star-inserted\"><div _ngcontent-ng-c2119281370=\"\" class=\"bottom-gradient\"></div></div><!----></infinite-scroller><!----><mat-action-list _ngcontent-ng-c154186304=\"\" role=\"group\" class=\"mat-mdc-action-list mat-mdc-list-base mdc-list desktop-controls ng-star-inserted\" aria-disabled=\"false\"><!----><side-nav-action-button _ngcontent-ng-c154186304=\"\" icon=\"settings_2\" arialabel=\"Settings &amp; help\" data-test-id=\"settings-and-help-button\" class=\"soft-badge-dot ia-redesign\" _nghost-ng-c1918873410=\"\" jslog=\"250248;track:generic_click,impression\" style=\"--side-nav-open-dynamic-item-opacity-duration: 100ms; --side-nav-open-dynamic-item-opacity-delay: 150ms; --side-nav-close-dynamic-item-opacity-duration: 50ms;\"><!----><!----><button _ngcontent-ng-c1918873410=\"\" mat-icon-button=\"\" matripple=\"\" mattooltipposition=\"right\" class=\"mdc-icon-button mat-mdc-icon-button mat-mdc-button-base mat-mdc-menu-trigger mat-ripple mat-mdc-tooltip-trigger side-nav-action-collapsed-button explicit-gmat-override mat-unthemed ng-star-inserted\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" mat-ripple-loader-centered=\"\" aria-label=\"Settings &amp; help\" aria-haspopup=\"menu\" aria-expanded=\"false\"><span class=\"mat-mdc-button-persistent-ripple mdc-icon-button__ripple\"></span><div _ngcontent-ng-c1918873410=\"\" class=\"xap-count-badge-container ng-star-inserted\"><div _ngcontent-ng-c1918873410=\"\" class=\"icon-container\"><mat-icon _ngcontent-ng-c1918873410=\"\" role=\"img\" data-test-id=\"side-nav-action-button-icon\" class=\"mat-icon notranslate gds-icon-l google-symbols mat-ligature-font mat-icon-no-color ng-star-inserted\" aria-hidden=\"true\" data-mat-icon-type=\"font\" data-mat-icon-name=\"settings_2\" fonticon=\"settings_2\"></mat-icon><!----><!----></div><!----></div><!----><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></button><!----><!----><!----><!----><!----><!----><!----></side-nav-action-button><!----><!----><mat-menu _ngcontent-ng-c154186304=\"\" overlaptrigger=\"true\" class=\"\"><!----></mat-menu><mat-menu _ngcontent-ng-c154186304=\"\" lmmenutheme=\"\" overlaptrigger=\"true\"><!----></mat-menu><mat-menu _ngcontent-ng-c154186304=\"\" lmmenutheme=\"\" overlaptrigger=\"true\"><!----></mat-menu></mat-action-list><!----><!----><!----></div></div><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></side-navigation-content><!----><!----><!----><div _ngcontent-ng-c1604973533=\"\" class=\"ng-tns-c1604973533-3 ng-star-inserted\" jslog=\"235231;track:impression\" style=\"\"></div><!----></bard-sidenav><!----><bard-sidenav-content _ngcontent-ng-c3332273266=\"\" _nghost-ng-c24741362=\"\" aria-hidden=\"false\"><div _ngcontent-ng-c3332273266=\"\" class=\"desktop-ogb-buffer\"></div><div _ngcontent-ng-c3332273266=\"\" class=\"content-wrapper\"><div _ngcontent-ng-c2617788653=\"\" class=\"main-content ng-trigger ng-trigger-routeChangeAnimation\"><!----><!----><chat-app-banners _ngcontent-ng-c2617788653=\"\" class=\"app-upsell-banner ng-tns-c2617788653-0 ng-star-inserted\"><!----></chat-app-banners><!----><!----><!----><chat-app-announcement-banners _ngcontent-ng-c2617788653=\"\" _nghost-ng-c1481749014=\"\" class=\"ng-tns-c2617788653-0 ng-star-inserted\"><div _ngcontent-ng-c1481749014=\"\" data-test-id=\"announcement-banner-container\" class=\"announcement-banner-container\"><!----><!----><!----><!----><!----><!----><!----><bot-banner _ngcontent-ng-c1481749014=\"\" _nghost-ng-c4063629592=\"\"><!----></bot-banner></div></chat-app-announcement-banners><!----><!----><!----><!----><!----><div _ngcontent-ng-c2617788653=\"\" class=\"content-container\"><router-outlet _ngcontent-ng-c2617788653=\"\"></router-outlet><chat-window _nghost-ng-c1250566425=\"\" class=\"ng-tns-c1250566425-1 center-input-layout ng-star-inserted\" style=\"\"><div _ngcontent-ng-c1250566425=\"\" file-drop-zone=\"!inGemsMode\" trace=\"ChatContainer\" class=\"xap-uploader-dropzone chat-container ng-tns-c1250566425-1 ng-trigger ng-trigger-chatHistoryImmersiveTransitions\" jslog=\"173898;track:impression,attention\" data-hveid=\"0\" decode-data-ved=\"1\" data-ved=\"0CAAQys4KahcKEwj4mc_Bq_WTAxUAAAAAHQAAAAAQBg\"><!----><chat-window-content _ngcontent-ng-c1250566425=\"\" trace=\"\" _nghost-ng-c1368622494=\"\" class=\"ng-tns-c1250566425-1 ui-improvements-phase-1 ng-star-inserted\" style=\"\"><h1 _ngcontent-ng-c1368622494=\"\" class=\"cdk-visually-hidden\"> Conversation with Gemini </h1><!----><!----><!----><div _ngcontent-ng-c1368622494=\"\" id=\"chat-history\" chatcontentdimensions=\"\" class=\"chat-history-scroll-container\"><infinite-scroller _ngcontent-ng-c1368622494=\"\" data-test-id=\"chat-history-container\" class=\"chat-history enable-2026q1-formatting-improvements\" _nghost-ng-c2119281370=\"\" jslog=\"268632;track:impression,attention\" data-lhcontainer=\"1\" data-hveid=\"1\"><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><div _ngcontent-ng-c1368622494=\"\" class=\"zero-state-container modular-zero-state-container ng-star-inserted\"><modular-zero-state _ngcontent-ng-c1368622494=\"\" trace=\"\" _nghost-ng-c2798633592=\"\" class=\"ng-star-inserted\"><div _ngcontent-ng-c2798633592=\"\" class=\"blur-bg visible-primary-message\"></div><div _ngcontent-ng-c2798633592=\"\" class=\"modular-zero-state-container\" jslog=\"311406;track:impression\" style=\"--animation-duration: 300ms;\"><div _ngcontent-ng-c2798633592=\"\" class=\"top-section-container visible-primary-message\" style=\"--top-section-container-height: 49871px;\"><zero-state-block-picker _ngcontent-ng-c2798633592=\"\" _nghost-ng-c4066761280=\"\" jslog=\"278445;track:impression;mutable:true\" class=\"ng-star-inserted\"><div _ngcontent-ng-c4066761280=\"\" class=\"zero-state-block-container\"><!----><assistant-messages-primary _ngcontent-ng-c4066761280=\"\" _nghost-ng-c2407322323=\"\" class=\"ng-star-inserted\"><div _ngcontent-ng-c2407322323=\"\" class=\"assistant-messages-primary-container visible-primary-message open\"><div _ngcontent-ng-c2407322323=\"\" class=\"content-container\"><!----><div _ngcontent-ng-c2407322323=\"\" class=\"content-wrapper\"><h1 _ngcontent-ng-c2407322323=\"\" data-test-id=\"message\" class=\"gds-display-s ng-star-inserted fade-in-animation\" jslog=\"278446;track:impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[&quot;MESSAGE_TYPE_FALLBACK0&quot;,null,null,&quot;en-US&quot;]]\" style=\"--animation-delay: 25ms;\"><span _ngcontent-ng-c2407322323=\"\" class=\"message-text\"> Meet Gemini, your personal AI assistant </span><!----></h1><!----><!----><!----></div></div></div></assistant-messages-primary><!----><!----><!----></div></zero-state-block-picker><!----></div><div _ngcontent-ng-c2798633592=\"\" style=\"height: 118px;\"></div><div _ngcontent-ng-c2798633592=\"\" class=\"scroll-container ng-star-inserted\"><div _ngcontent-ng-c2798633592=\"\" class=\"bottom-section-container\"><zero-state-block-picker _ngcontent-ng-c2798633592=\"\" _nghost-ng-c4066761280=\"\" jslog=\"278450;track:impression;mutable:true\" class=\"ng-star-inserted\"><div _ngcontent-ng-c4066761280=\"\" class=\"zero-state-block-container\"><!----><!----><!----><intent-chips-block _ngcontent-ng-c4066761280=\"\" _nghost-ng-c989457258=\"\" class=\"ng-star-inserted\"><intent-card-bar _ngcontent-ng-c989457258=\"\" _nghost-ng-c21280271=\"\" class=\"ng-tns-c21280271-5 ng-star-inserted fade-in-animation\" style=\"--animation-delay: 75ms;\"><!----><!----><div _ngcontent-ng-c21280271=\"\" class=\"card-container ng-tns-c21280271-5 ng-star-inserted\"><intent-card _ngcontent-ng-c21280271=\"\" _nghost-ng-c628781896=\"\" class=\"ng-tns-c21280271-5 ng-trigger ng-trigger-fadeIn ng-star-inserted ng-animating\"><button _ngcontent-ng-c628781896=\"\" matripple=\"\" class=\"mat-ripple card card-zero-state\" aria-label=\"Write, button, tap to use tool\" jslog=\"280840;track:generic_click;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[&quot;intent_chip_write&quot;,1,null,&quot;en-US&quot;]];index:0\"><!----><!----><div _ngcontent-ng-c628781896=\"\" class=\"card-label gds-body-l\"> Write </div><!----><!----></button></intent-card><intent-card _ngcontent-ng-c21280271=\"\" _nghost-ng-c628781896=\"\" class=\"ng-tns-c21280271-5 ng-trigger ng-trigger-fadeIn ng-star-inserted ng-animating\"><button _ngcontent-ng-c628781896=\"\" matripple=\"\" class=\"mat-ripple card card-zero-state\" aria-label=\"Plan, button, tap to use tool\" jslog=\"280844;track:generic_click;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[&quot;intent_chip_plan&quot;,2,null,&quot;en-US&quot;]];index:1\"><!----><!----><div _ngcontent-ng-c628781896=\"\" class=\"card-label gds-body-l\"> Plan </div><!----><!----></button></intent-card><intent-card _ngcontent-ng-c21280271=\"\" _nghost-ng-c628781896=\"\" class=\"ng-tns-c21280271-5 ng-trigger ng-trigger-fadeIn ng-star-inserted ng-animating\"><button _ngcontent-ng-c628781896=\"\" matripple=\"\" class=\"mat-ripple card card-zero-state\" aria-label=\"Research, button, tap to use tool\" jslog=\"280842;track:generic_click;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[&quot;intent_chip_research&quot;,3,null,&quot;en-US&quot;]];index:2\"><!----><!----><div _ngcontent-ng-c628781896=\"\" class=\"card-label gds-body-l\"> Research </div><!----><!----></button></intent-card><intent-card _ngcontent-ng-c21280271=\"\" _nghost-ng-c628781896=\"\" class=\"ng-tns-c21280271-5 ng-trigger ng-trigger-fadeIn ng-star-inserted ng-animating\"><button _ngcontent-ng-c628781896=\"\" matripple=\"\" class=\"mat-ripple card card-zero-state\" aria-label=\"Learn, button, tap to use tool\" jslog=\"280845;track:generic_click;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[&quot;intent_chip_learn&quot;,4,null,&quot;en-US&quot;]];index:3\"><!----><!----><div _ngcontent-ng-c628781896=\"\" class=\"card-label gds-body-l\"> Learn </div><!----><!----></button></intent-card><!----></div><!----><!----></intent-card-bar></intent-chips-block><!----></div></zero-state-block-picker><!----></div></div><!----><!----></div></modular-zero-state><!----><!----><!----><!----><!----><!----><!----></div><div _ngcontent-ng-c1368622494=\"\" class=\"human-review-disclosure-container show-disclosures ng-star-inserted\"><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></div><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></infinite-scroller><div _ngcontent-ng-c1368622494=\"\" class=\"autosuggest-scrim\"></div><!----></div><!----><div _ngcontent-ng-c1368622494=\"\" class=\"hidden-content-image-cache\"><user-profile-picture _ngcontent-ng-c1368622494=\"\" _nghost-ng-c3394852812=\"\"><img _ngcontent-ng-c3394852812=\"\" alt=\"profile picture\" class=\"user-icon\" src=\"https://lh3.googleusercontent.com/a/default-user=s64-c\" style=\"height: 32px; width: 32px;\"></user-profile-picture></div></chat-window-content><!----><!----><!----><input-container _ngcontent-ng-c1250566425=\"\" trace=\"\" _nghost-ng-c3053421169=\"\" class=\"ng-tns-c3053421169-2 ng-tns-c1250566425-1 input-gradient ui-improvements-phase-1 edge-to-edge ng-star-inserted\" style=\"\"><!----><!----><!----><!----><!----><!----><!----><fieldset _ngcontent-ng-c3053421169=\"\" class=\"input-area-container ng-tns-c3053421169-2 ng-trigger ng-trigger-inputAreaAnimation ng-star-inserted is-zero-state\" style=\"position: absolute; bottom: 50vh; transform: translateY(50%);\"><!----><!----><!----><input-area-v2 _ngcontent-ng-c3053421169=\"\" trace=\"\" _nghost-ng-c1742934034=\"\" class=\"ng-tns-c1742934034-4 ng-tns-c3053421169-2 ui-improvements-phase-1 with-toolbox-drawer discovery-feed-theme faster-input-animation ng-star-inserted\" style=\"\"><div _ngcontent-ng-c1742934034=\"\" uireadyparent=\"\" data-node-type=\"input-area\" class=\"input-area ng-tns-c1742934034-4 with-toolbox-drawer is-zero-state children-ready\"><!----><!----><auto-suggest _ngcontent-ng-c1742934034=\"\" trace=\"\" _nghost-ng-c3850302574=\"\" class=\"ng-tns-c3850302574-8 ng-tns-c1742934034-4 ng-star-inserted\"><!----><!----><!----></auto-suggest><!----><!----><!----><div _ngcontent-ng-c1742934034=\"\" xapfileselectordropzone=\"\" class=\"text-input-field ng-tns-c1742934034-4 with-toolbox-drawer height-expanded-past-single-line\"><!----><!----><div _ngcontent-ng-c1742934034=\"\" class=\"ng-tns-c1742934034-4 text-input-field_textarea-wrapper ng-star-inserted\" style=\"--chat-container-height: 99786;\"><div _ngcontent-ng-c1742934034=\"\" class=\"text-input-field-main-area ng-tns-c1742934034-4\"><div _ngcontent-ng-c1742934034=\"\" class=\"text-input-field_textarea-inner ng-tns-c1742934034-4\" style=\"height: 24px;\"><!----><!----><rich-textarea _ngcontent-ng-c1742934034=\"\" atmentions=\"\" class=\"text-input-field_textarea ql-container ql-bubble ng-tns-c1742934034-4 ng-untouched ng-pristine ng-valid ng-star-inserted\" _nghost-ng-c343230697=\"\" enterkeyhint=\"send\" dir=\"ltr\" style=\"--textarea-max-rows: 7; --chat-container-height: 99786px;\"><div class=\"ql-editor ql-blank textarea new-input-ui\" data-gramm=\"false\" contenteditable=\"true\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Enter a prompt for Gemini\" data-placeholder=\"Ask Gemini\"><p><br></p></div><div class=\"ql-clipboard\" contenteditable=\"true\" tabindex=\"-1\"></div></rich-textarea><at-mentions-menu _nghost-ng-c3320950607=\"\" class=\"ng-tns-c1742934034-4 ng-star-inserted\"><mat-menu _ngcontent-ng-c3320950607=\"\" class=\"\"><!----></mat-menu><!----><!----><!----></at-mentions-menu><!----><!----><!----><!----></div></div></div><!----><div _ngcontent-ng-c1742934034=\"\" class=\"leading-actions-wrapper ng-tns-c1742934034-4 ui-ready-fade-in has-model-picker ng-star-inserted\"><!----><!----><!----><div _ngcontent-ng-c1742934034=\"\" class=\"uploader-button-container ng-tns-c1742934034-4 ng-star-inserted\"><uploader-signed-out-tooltip _ngcontent-ng-c1742934034=\"\" class=\"ng-tns-c1742934034-4\" _nghost-ng-c34363628=\"\"><!----></uploader-signed-out-tooltip><uploader _ngcontent-ng-c1742934034=\"\" maticonprefix=\"\" trace=\"\" class=\"upload-button ng-tns-c1742934034-4\" _nghost-ng-c677746877=\"\"><!----><!----><div _ngcontent-ng-c677746877=\"\" cdk-overlay-origin=\"\" class=\"file-uploader ng-star-inserted\"><div _ngcontent-ng-c677746877=\"\" class=\"mat-mdc-tooltip-trigger mat-mdc-tooltip-disabled\"><!----><button _ngcontent-ng-c677746877=\"\" mat-icon-button=\"\" color=\"primary\" aria-haspopup=\"menu\" aria-controls=\"upload-file-menu\" class=\"mdc-icon-button mat-mdc-icon-button mat-mdc-button-base mat-mdc-tooltip-trigger upload-card-button open mat-primary ng-star-inserted\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" mat-ripple-loader-centered=\"\" aria-label=\"Open upload file menu\" aria-expanded=\"false\" jslog=\"188890;track:generic_click,impression,hover\" data-hveid=\"0\" decode-data-ved=\"1\" data-ved=\"0CAAQ2sMLahcKEwj4mc_Bq_WTAxUAAAAAHQAAAAAQCA\"><span class=\"mat-mdc-button-persistent-ripple mdc-icon-button__ripple\"></span><mat-icon _ngcontent-ng-c677746877=\"\" role=\"img\" class=\"mat-icon notranslate gds-icon-l google-symbols mat-ligature-font mat-icon-no-color\" aria-hidden=\"true\" data-mat-icon-type=\"font\" data-mat-icon-name=\"add_2\" fonticon=\"add_2\"></mat-icon><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></button><!----><!----><!----></div><!----><!----></div><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><button _ngcontent-ng-c677746877=\"\" tabindex=\"-1\" xapfileselectortrigger=\"\" aria-hidden=\"true\" data-test-id=\"hidden-local-image-upload-button\" class=\"hidden-local-upload-button\"></button><button _ngcontent-ng-c677746877=\"\" tabindex=\"-2\" xapfileselectortrigger=\"\" aria-hidden=\"true\" data-test-id=\"hidden-local-file-upload-button\" class=\"hidden-local-file-upload-button\"></button></uploader></div><!----><!----><!----><!----><!----><!----><toolbox-drawer _ngcontent-ng-c1742934034=\"\" trace=\"\" _nghost-ng-c1693398615=\"\" class=\"ng-tns-c1693398615-9 ng-tns-c1742934034-4 ng-star-inserted\" style=\"\"><div _ngcontent-ng-c1693398615=\"\" class=\"ng-tns-c1693398615-9 toolbox-drawer-container ng-trigger ng-trigger-toolboxDrawerEnter ng-animating\" jslog=\"251251;track:impression\"><!----><!----><!----><div _ngcontent-ng-c1693398615=\"\" cdkoverlayorigin=\"\" class=\"toolbox-drawer-button-container ng-tns-c1693398615-9 ng-star-inserted\" style=\"\"><!----><button _ngcontent-ng-c1693398615=\"\" mat-button=\"\" aria-haspopup=\"menu\" class=\"mdc-button mat-mdc-button-base toolbox-drawer-button toolbox-drawer-button-with-label mat-mdc-button ng-tns-c1693398615-9 mat-unthemed ng-star-inserted\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" aria-expanded=\"false\" jslog=\"304974;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[0]]\"><span class=\"mat-mdc-button-persistent-ripple mdc-button__ripple\"></span><mat-icon _ngcontent-ng-c1693398615=\"\" role=\"img\" fonticon=\"page_info\" class=\"mat-icon notranslate gds-icon-l toolbox-drawer-button-icon google-symbols mat-ligature-font mat-icon-no-color\" aria-hidden=\"true\" data-mat-icon-type=\"font\" data-mat-icon-name=\"page_info\"></mat-icon><span class=\"mdc-button__label\"><div _ngcontent-ng-c1693398615=\"\" class=\"toolbox-drawer-button-label-icon-text\"><span _ngcontent-ng-c1693398615=\"\" class=\"ng-tns-c1693398615-9\">Tools</span><!----></div></span><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></button><!----><!----><!----></div><!----><!----><!----><!----><!----><!----><!----></div><!----><!----><!----></toolbox-drawer><!----><!----><!----><!----><!----><!----></div><!----><!----><div _ngcontent-ng-c1742934034=\"\" class=\"trailing-actions-wrapper ng-tns-c1742934034-4\"><!----><!----><!----><div _ngcontent-ng-c1742934034=\"\" class=\"model-picker-container ng-tns-c1742934034-4 ng-star-inserted\" style=\"\"><bard-mode-switcher _ngcontent-ng-c1742934034=\"\" trace=\"\" class=\"ng-tns-c1742934034-4\" _nghost-ng-c3106001208=\"\"><!----><!----><button _ngcontent-ng-c3106001208=\"\" mat-button=\"\" aria-label=\"Open mode picker\" data-test-id=\"bard-mode-menu-button\" class=\"mdc-button mat-mdc-button-base mat-mdc-menu-trigger input-area-switch mat-mdc-button mat-unthemed ng-star-inserted\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" jslog=\"206752;track:generic_click;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[&quot;fbb127bbb056c959&quot;]]\" aria-haspopup=\"menu\" aria-expanded=\"false\"><span class=\"mat-mdc-button-persistent-ripple mdc-button__ripple\"></span><span class=\"mdc-button__label\"><div _ngcontent-ng-c3106001208=\"\" data-test-id=\"logo-pill-label-container\" class=\"logo-pill-label-container input-area-switch-label ng-star-inserted\"><!----><span _ngcontent-ng-c3106001208=\"\" class=\"ng-star-inserted\">Fast</span><!----><!----><!----><mat-icon _ngcontent-ng-c3106001208=\"\" role=\"img\" fonticon=\"keyboard_arrow_down\" class=\"mat-icon notranslate dropdown-icon gds-icon-l google-symbols mat-ligature-font mat-icon-no-color ng-star-inserted\" aria-hidden=\"true\" data-mat-icon-type=\"font\" data-mat-icon-name=\"keyboard_arrow_down\"></mat-icon><!----></div><!----></span><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></button><!----><!----><!----><!----><mat-menu _ngcontent-ng-c3106001208=\"\" data-test-id=\"desktop-nested-mode-menu\" class=\"ng-star-inserted\"><!----></mat-menu><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></bard-mode-switcher></div><!----><!----><!----><!----><!----><div _ngcontent-ng-c1742934034=\"\" class=\"input-buttons-wrapper-bottom ng-tns-c1742934034-4\"><div _ngcontent-ng-c1742934034=\"\" class=\"mic-button-container ng-tns-c1742934034-4 ng-trigger ng-trigger-slide ng-star-inserted\"><!----><speech-dictation-mic-button _ngcontent-ng-c1742934034=\"\" class=\"speech-dictation-mic-button ng-tns-c3801945718-6 ng-tns-c1742934034-4 ng-star-inserted\" _nghost-ng-c3801945718=\"\" style=\"\"><button _ngcontent-ng-c3801945718=\"\" data-node-type=\"speech_dictation_mic_button\" maticonsuffix=\"\" mat-icon-button=\"\" mattooltip=\"Use microphone\" aria-label=\"Microphone\" class=\"mdc-icon-button mat-mdc-icon-button mat-mdc-button-base mat-mdc-tooltip-trigger speech_dictation_mic_button ng-tns-c3801945718-6 mat-unthemed\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" mat-ripple-loader-centered=\"\" aria-pressed=\"false\" jslog=\"175863;track:generic_click,impression\" aria-describedby=\"cdk-describedby-message-ng-1-3\" cdk-describedby-host=\"ng-1\"><span class=\"mat-mdc-button-persistent-ripple mdc-icon-button__ripple\"></span><div _ngcontent-ng-c3801945718=\"\"><mat-icon _ngcontent-ng-c3801945718=\"\" role=\"img\" class=\"mat-icon notranslate ng-tns-c3801945718-6 gds-icon-l icon-filled google-symbols mat-ligature-font mat-icon-no-color\" aria-hidden=\"true\" data-mat-icon-type=\"font\" data-mat-icon-name=\"mic\" fonticon=\"mic\"></mat-icon><!----><!----></div><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></button><!----></speech-dictation-mic-button><!----><!----></div><!----><!----><!----><div _ngcontent-ng-c1742934034=\"\" class=\"mat-mdc-tooltip-trigger send-button-container ng-tns-c1742934034-4 disabled inner mat-mdc-tooltip-disabled ng-star-inserted\"><!----><button _ngcontent-ng-c1742934034=\"\" mat-icon-button=\"\" class=\"mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1742934034-4 submit mat-unthemed ng-star-inserted\" mat-ripple-loader-uninitialized=\"\" mat-ripple-loader-class-name=\"mat-mdc-button-ripple\" mat-ripple-loader-centered=\"\" aria-label=\"Send message\" jslog=\"173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[&quot;fbb127bbb056c959&quot;],null,null,null,null,null,null,null,null,null,null,null,[0]];mutable:true\" aria-disabled=\"true\" tabindex=\"-1\"><span class=\"mat-mdc-button-persistent-ripple mdc-icon-button__ripple\"></span><mat-icon _ngcontent-ng-c1742934034=\"\" role=\"img\" class=\"mat-icon notranslate send-button-icon icon-filled gds-icon-xl google-symbols mat-ligature-font mat-icon-no-color\" aria-hidden=\"true\" data-mat-icon-type=\"font\" data-mat-icon-name=\"send\" fonticon=\"send\"></mat-icon><!----><!----><span class=\"mat-focus-indicator\"></span><span class=\"mat-mdc-button-touch-target\"></span></button><!----></div><!----><!----></div></div><!----></div></div><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></input-area-v2><!----><!----><!----><!----></fieldset><!----><hallucination-disclaimer _ngcontent-ng-c3053421169=\"\" aligntext=\"center\" class=\"hallucination-disclaimer ng-tns-c3053421169-2\" _nghost-ng-c1285485736=\"\"><div _ngcontent-ng-c1285485736=\"\" class=\"capabilities-disclaimer\" style=\"--align-text: center;\"><!----><!----><!----><p _ngcontent-ng-c1285485736=\"\" data-test-id=\"signed-out-disclaimer\" data-nosnippet=\"\" class=\"gds-body-s desktop-spacing ng-star-inserted\"><a _ngcontent-ng-c1285485736=\"\" target=\"_blank\" rel=\"noopener\" externallink=\"\" data-test-id=\"footer-terms-link\" class=\"footer-privacy-notice-link\" _nghost-ng-c1859802561=\"\" href=\"https://policies.google.com/terms\"><!----><span _ngcontent-ng-c1859802561=\"\" data-test-id=\"content\" class=\"link-content ng-star-inserted\"> Google Terms</span><span _ngcontent-ng-c1859802561=\"\" class=\"cdk-visually-hidden ng-star-inserted\"> Opens in a new window </span><!----><!----><!----></a> and the <a _ngcontent-ng-c1285485736=\"\" target=\"_blank\" rel=\"noopener\" externallink=\"\" data-test-id=\"footer-app-privacy-link\" class=\"footer-privacy-notice-link\" _nghost-ng-c1859802561=\"\" href=\"https://policies.google.com/privacy\"><!----><span _ngcontent-ng-c1859802561=\"\" data-test-id=\"content\" class=\"link-content ng-star-inserted\"> Google Privacy Policy</span><span _ngcontent-ng-c1859802561=\"\" class=\"cdk-visually-hidden ng-star-inserted\"> Opens in a new window </span><!----><!----><!----></a> apply. Gemini is AI and can make mistakes. </p><!----><!----><!----><!----><!----></div><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></hallucination-disclaimer></input-container><!----></div><!----><!----><!----><!----></chat-window><!----></div></div><!----></div></bard-sidenav-content></bard-sidenav-container><!----><!----><!----><!----><!----></side-navigation-v2><!----><!----><chat-app-tooltips _ngcontent-ng-c2617788653=\"\" class=\"ng-tns-c2617788653-0 ng-star-inserted\"><!----><!----><!----><!----></chat-app-tooltips><!----></main></chat-app><div ng-non-bindable=\"\"></div><div class=\"cdk-live-announcer-element cdk-visually-hidden\" aria-atomic=\"true\" aria-live=\"polite\" id=\"cdk-live-announcer-0\"></div><div class=\"cdk-describedby-message-container cdk-visually-hidden\" style=\"visibility: hidden;\"><div id=\"cdk-describedby-message-ng-1-2\" role=\"tooltip\">Expand menu</div><div id=\"cdk-describedby-message-ng-1-3\" role=\"tooltip\">Use microphone</div></div><div src=\"https://gemini.google.com/_/bscframe\" style=\"display: none;\" data-original-tag=\"iframe\"></div></body></html>",
+    "json": {
+      "company_name": "Gemini",
+      "company_description": "Meet Gemini, your personal AI assistant that helps you write, plan, research, and learn."
+    }
+  },
+  "scrape_id": "019d9c57-fa03-72ff-9298-cda19cea8dbd",
+  "id": "wasDWfPh_ynigDvnlrqud",
+  "startedAt": "2026-04-17T16:48:23.866Z",
+  "endedAt": "2026-04-17T16:48:49.909Z",
+  "endpoint": "scrape",
+  "formState": {
+    "extractSetupCompleted": false,
+    "urls": [],
+    "extractSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "company_mission": {
+          "type": "string"
+        },
+        "supports_sso": {
+          "type": "boolean"
+        },
+        "is_open_source": {
+          "type": "boolean"
+        },
+        "is_in_yc": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extractPrompt": "Extract the company details, following the schema.",
+    "enableWebSearch": false,
+    "constrainUrls": false,
+    "options": {
+      "onlyMainContent": false,
+      "parsePDF": true,
+      "stealthMode": false,
+      "excludeTags": [],
+      "includeTags": [],
+      "waitFor": "",
+      "timeout": "",
+      "maxAge": "2 days",
+      "ignoreSitemap": false,
+      "crawlEntireDomain": false,
+      "sitemap": "include",
+      "limit": "10",
+      "maxDepth": "",
+      "excludePaths": [],
+      "includePaths": [],
+      "includeSubdomains": false,
+      "search": "",
+      "scrapeContentFromSearchResults": true,
+      "timeBasedSearch": "",
+      "location": "",
+      "prompt": ""
+    },
+    "formats": [
+      "html",
+      "json",
+      "branding"
+    ],
+    "sources": [
+      "web"
+    ],
+    "categories": [],
+    "jsonSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "company_name": {
+          "type": "string"
+        },
+        "company_description": {
+          "type": "string"
+        }
+      }
+    },
+    "jsonPrompt": "",
+    "agent": {},
+    "url": "gemini.google.com/",
+    "endpoint": "scrape"
+  },
+  "status": "success",
+  "version": "kRAH6Bml869NZpitKt46x",
+  "isPreview": false
+}

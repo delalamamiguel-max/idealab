@@ -1,0 +1,370 @@
+# Environment Configuration for AKS Microservice Deployment
+# Focus: Multi-framework AKS deployments with progressive delivery and governance
+# Uses AT&T Artifact Registry for all base images and packages
+
+frameworks:
+  supported:
+    - nodejs
+    - python
+    - java
+    - dotnet
+    - react-nginx
+  default: nodejs
+  detection:
+    nodejs: "package.json"
+    python: "requirements.txt"
+    java: "pom.xml"
+    dotnet: "*.csproj"
+    react: "vite.config.js"
+
+# AT&T Artifact Registry Configuration
+artifact_registry:
+  base_url: "artifact.it.att.com"
+  docker_proxy: "artifact.it.att.com/docker-proxy"
+  push_port: ""  # No port for push operations
+  pull_port: "22609"  # Required port for Kubernetes image pulls
+  
+  # Repository naming pattern: apm<project-id>-dkr-<type>
+  repositories:
+    push: "apm0013448-dkr-gold"  # Example: FAMLI gold repo (push operations)
+    pull: "apm0013448-dkr-group"  # Example: FAMLI group repo (pull operations, includes gold)
+    
+  # CRITICAL: Repository URL Rules
+  # - PUSH to gold:  artifact.it.att.com/apm0013448-dkr-gold/image:tag (NO PORT)
+  # - PULL from group: artifact.it.att.com:22609/apm0013448-dkr-group/image:tag (WITH PORT :22609)
+  # - imagePullSecret MUST use: --docker-server=artifact.it.att.com:22609
+  
+  base_images:
+    nodejs: "artifact.it.att.com/docker-proxy/node:20-alpine"
+    python: "artifact.it.att.com/docker-proxy/python:3.11-slim"
+    java_builder: "artifact.it.att.com/docker-proxy/maven:3.9-eclipse-temurin-17"
+    java_runtime: "artifact.it.att.com/docker-proxy/eclipse-temurin:17-jre-alpine"
+    dotnet_sdk: "artifact.it.att.com/docker-proxy/dotnet/sdk:8.0"
+    dotnet_runtime: "artifact.it.att.com/docker-proxy/dotnet/aspnet:8.0"
+    nginx: "artifact.it.att.com/docker-proxy/nginx:alpine"
+
+azure:
+  subscription_id: "your-subscription-id"
+  tenant_id: "your-tenant-id"
+  resource_group: "your-rg"
+  
+  # AKS Cluster Examples
+  aks_clusters:
+    - name: "Fml-EastUs2-Dev-AKS-Cluster"  # Example: FAMLI Dev
+      environment: "dev"
+      namespace: "com-att-myapp-runtime"
+      context: "Fml-EastUs2-Dev-AKS-Cluster"
+    - name: "Fml-EastUs2-PreProd-AKS-Cluster"  # Example: FAMLI PreProd
+      environment: "staging"
+      namespace: "com-att-myapp-runtime"
+      context: "Fml-EastUs2-PreProd-AKS-Cluster"
+    - name: "Fml-EastUs2-Prd-AKS-Cluster"  # Example: FAMLI Production
+      environment: "production"
+      namespace: "com-att-myapp-runtime"
+      context: "Fml-EastUs2-Prd-AKS-Cluster"
+  
+  # Ingress Configuration Examples
+  ingress:
+    dev:
+      host: "fraudml.dev.att.com"
+      tls_secret: "fraudml-dev-ingress-tls"
+    staging:
+      host: "fraudml.stage.att.com"
+      tls_secret: "fraudml-stage-ingress-tls"
+    production:
+      host: "fraudml.it.att.com"
+      tls_secret: "fraudml-prod-ingress-tls"
+  
+  key_vault:
+    name: "your-keyvault"
+    tenant_id: "your-tenant-id"
+
+cicd:
+  platform: "Azure DevOps"  # or "GitHub Actions" or "Jenkins"
+  default_branch: "main"
+  pipeline_path: "azure-pipelines.yml"
+  stages:
+    - build
+    - security_scan
+    - push_image
+    - deploy_dev
+    - deploy_staging
+    - deploy_prod
+  approvals:
+    staging: false
+    production: true
+    emergency_bypass: false
+
+helm:
+  chart_path: "./helm"
+  repository: "artifact.it.att.com/helm"
+  default_values:
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "512Mi"
+      limits:
+        cpu: "1000m"
+        memory: "1Gi"
+    autoscaling:
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilization: 70
+
+security:
+  image_scanning: "trivy"
+  image_signing: "cosign"
+  sbom_generator: "syft"
+  policy_engine: "opa"
+  vulnerability_severity_threshold: "HIGH,CRITICAL"
+  required_checks:
+    - "vulnerability-scan"
+    - "image-signature"
+    - "sbom-generation"
+    - "secret-scan"
+    - "policy-validation"
+  runtime_security:
+    runAsNonRoot: true
+    runAsUser: 1001
+    fsGroup: 1001
+    readOnlyRootFilesystem: true
+    dropCapabilities: ["ALL"]
+
+progressive_delivery:
+  strategy: "canary"  # or "blue-green"
+  canary_increments: [10, 25, 50, 100]
+  soak_time_seconds: 300
+  golden_signals:
+    - metric: "error_rate"
+      threshold: 0.01
+      operator: "<"
+    - metric: "p95_latency_seconds"
+      threshold: 1.0
+      operator: "<"
+    - metric: "availability"
+      threshold: 0.99
+      operator: ">"
+  rollback:
+    automatic: true
+    on_failure: true
+
+observability:
+  metrics_endpoint: "/metrics"
+  prometheus:
+    enabled: true
+    port: 8080
+    scrape_interval: 30s
+  grafana:
+    dashboard_path: "observability/grafana-dashboard.json"
+  azure_monitor:
+    enabled: true
+    workspace_id: "your-workspace-id"
+  logging:
+    format: "json"
+    level: "info"
+    retention_days: 90
+  tracing:
+    enabled: true
+    backend: "opentelemetry"
+
+health_checks:
+  nodejs:
+    liveness_path: "/health"
+    readiness_path: "/health"
+    port: 3000
+    dockerfile: "Dockerfile.nodejs"
+    base_image: "artifact.it.att.com/docker-proxy/node:20-alpine"
+    build_cmd: "npm ci --only=production"
+    start_cmd: "node server.js"
+    healthcheck_cmd: "node -e \"require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})\""
+  python:
+    liveness_path: "/health"
+    readiness_path: "/health"
+    port: 8000
+    dockerfile: "Dockerfile.python"
+    base_image: "artifact.it.att.com/docker-proxy/python:3.11-slim"
+    build_cmd: "pip install --user --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt"
+    start_cmd: "python -m uvicorn main:app --host 0.0.0.0 --port 8000"
+    healthcheck_cmd: "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()\""
+  java:
+    liveness_path: "/actuator/health"
+    readiness_path: "/actuator/health"
+    port: 8080
+    dockerfile: "Dockerfile.java"
+    base_image_builder: "artifact.it.att.com/docker-proxy/maven:3.9-eclipse-temurin-17"
+    base_image_runtime: "artifact.it.att.com/docker-proxy/eclipse-temurin:17-jre-alpine"
+    build_cmd: "mvn clean package -DskipTests"
+    start_cmd: "java $JAVA_OPTS -jar app.jar"
+    jvm_opts: "-Xmx512m -Xms256m"
+    healthcheck_cmd: "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health"
+  dotnet:
+    liveness_path: "/health"
+    readiness_path: "/health"
+    port: 5000
+    dockerfile: "Dockerfile.dotnet"
+    base_image_sdk: "artifact.it.att.com/docker-proxy/dotnet/sdk:8.0"
+    base_image_runtime: "artifact.it.att.com/docker-proxy/dotnet/aspnet:8.0"
+    build_cmd: "dotnet publish -c Release -o out"
+    start_cmd: "dotnet YourApp.dll"
+    healthcheck_cmd: "curl -f http://localhost:5000/health"
+  react_nginx:
+    liveness_path: "/health"
+    readiness_path: "/health"
+    port: 8080
+    dockerfile: "Dockerfile.react-nginx"
+    base_image_builder: "artifact.it.att.com/docker-proxy/node:20-alpine"
+    base_image_runtime: "artifact.it.att.com/docker-proxy/nginx:alpine"
+    build_cmd: "npm ci && npm run build"
+    start_cmd: "nginx -g 'daemon off;'"
+    api_url_env: "VITE_API_URL=/your-app-backend"
+    healthcheck_cmd: "wget --no-verbose --tries=1 --spider http://localhost:8080/health"
+  probe_config:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+compliance:
+  constitution_path: ".cdo-aifc/memory/archetypes/05-infrastructure-devops/aks-microservice-deployment-constitution.md"
+  guardrail_script: "scripts/check-guardrails.sh"
+  validation_script: "scripts/validate-env.sh"
+  change_approval_required: true
+  cab_approval_for_prod: true
+  audit_log_retention_days: 90
+
+quality_gates:
+  code_coverage_threshold: 80
+  unit_test_required: true
+  integration_test_required: true
+  security_scan_required: true
+  max_image_size_mb:
+    nodejs: 200
+    python: 250
+    java: 300
+    dotnet: 200
+  performance_targets:
+    deployment_frequency_per_week: 10
+    lead_time_minutes: 30
+    change_failure_rate_pct: 5
+    mttr_minutes: 45
+
+validation:
+  required_cli_tools:
+    - name: "az"
+      min_version: "2.50.0"
+    - name: "kubectl"
+      min_version: "1.27.0"
+    - name: "helm"
+      min_version: "3.12.0"
+    - name: "docker"
+      min_version: "24.0.0"
+    - name: "trivy"
+      min_version: "0.45.0"
+    - name: "cosign"
+      min_version: "2.0.0"
+  required_env_vars:
+    - "AZURE_SUBSCRIPTION_ID"
+    - "AZURE_TENANT_ID"
+    - "ATT_ARTIFACT_REGISTRY"
+    - "ATT_REPOSITORY"
+  optional_env_vars:
+    - "SLACK_WEBHOOK_URL"
+    - "PAGERDUTY_TOKEN"
+  preflight_checks:
+    - "az account show"
+    - "kubectl config current-context"
+    - "helm version"
+    - "docker version"
+
+variables:
+  service_name: "sample-service"
+  service_port: 8080
+  pagerduty_service: "aks-microservices-oncall"
+  deploy_channel: "#deployments"
+  runbook_path: "runbooks/deployment-runbook.md"
+
+# Framework-Specific Build Patterns
+framework_patterns:
+  nodejs:
+    secrets_required:
+      - npmrc  # .npmrc file with AT&T Artifactory credentials
+    build_args:
+      - "--mount=type=secret,id=npmrc,target=/root/.npmrc"
+    env_vars:
+      NODE_ENV: "production"
+    user:
+      uid: 1001
+      gid: 1001
+      name: "nodejs"
+  
+  python:
+    secrets_required:
+      - JFROG_TOKEN  # Optional: for internal AT&T packages
+    build_args:
+      - "--trusted-host pypi.org"
+      - "--trusted-host files.pythonhosted.org"
+    env_vars:
+      PYTHONUNBUFFERED: "1"
+    user:
+      uid: 1001
+      gid: 1001
+      name: "appuser"
+  
+  java:
+    secrets_required:
+      - JFROG_TOKEN  # Required for Maven dependencies
+    maven_mirror: "https://artifact.it.att.com/artifactory/maven-virtual"
+    env_vars:
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+    user:
+      uid: 1001
+      gid: 1001
+      name: "appuser"
+  
+  dotnet:
+    secrets_required:
+      - JFROG_TOKEN  # Required for NuGet packages
+    nuget_source: "https://artifact.it.att.com/artifactory/api/nuget/nuget-virtual"
+    env_vars:
+      ASPNETCORE_URLS: "http://+:5000"
+    user:
+      uid: 1001
+      gid: 1001
+      name: "appuser"
+  
+  react_nginx:
+    secrets_required:
+      - npmrc  # .npmrc file with AT&T Artifactory credentials
+    build_args:
+      - "VITE_API_URL=/your-backend-path"
+    nginx_user:
+      uid: 101  # Built-in nginx user
+      name: "nginx"
+    nginx_config_required: true
+
+examples:
+  prompts:
+    - "Scaffold Node.js microservice deployment to AKS with canary strategy"
+    - "Debug CrashLoopBackOff for Python FastAPI service in staging"
+    - "Generate test suite for Java Spring Boot deployment validation"
+    - "Compare Node.js vs Python for ML inference API on AKS"
+    - "Deploy React frontend with Nginx to AKS using artifact.it.att.com"
+  
+  dockerfile_references:
+    nodejs: "Uses artifact.it.att.com/docker-proxy/node:20-alpine with npm ci and non-root user (1001)"
+    python: "Uses artifact.it.att.com/docker-proxy/python:3.11-slim with pip and non-root user (1001)"
+    java: "Uses Maven 3.9 builder and Temurin 17 runtime with JFrog token authentication"
+    dotnet: "Uses .NET SDK 8.0 builder and ASP.NET 8.0 runtime with NuGet authentication"
+    react_nginx: "Uses Node 20 builder and Nginx alpine runtime with non-root nginx user (101)"
+  
+  project_config_template:
+    description: "PROJECT-CONFIG.template provides shell environment setup"
+    key_variables:
+      - "APP_NAME: Application name for service naming"
+      - "CLUSTER_CONTEXT: AKS cluster context (e.g., Fml-EastUs2-Dev-AKS-Cluster)"
+      - "APP_NAMESPACE: Kubernetes namespace (e.g., com-att-myapp-runtime)"
+      - "INGRESS_HOST: Domain/host for ingress (e.g., fraudml.dev.att.com)"
+      - "TLS_SECRET_NAME: TLS secret name for HTTPS"
+      - "PUSH_REPOSITORY: artifact.it.att.com/apm0013448-dkr-gold (NO PORT)"
+      - "PULL_REPOSITORY: artifact.it.att.com:22609/apm0013448-dkr-group (WITH PORT)"

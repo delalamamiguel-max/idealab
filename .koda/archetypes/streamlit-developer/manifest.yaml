@@ -1,0 +1,26 @@
+archetype:
+  name: streamlit-developer
+  display_name: Streamlit Developer
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the Streamlit Developer archetype, which generates production-ready
+    data applications adhering to AT&T brand guidelines.
+  keywords:
+  - api
+  - compliance
+  - developer
+  - pandas
+  - python
+  - security
+  - sql
+  - streamlit
+  - validation
+  constitution:
+    path: streamlit-developer-constitution.md
+  dependencies: []
+  workflows:
+    compare: compare-streamlit-developer
+    test: test-streamlit-developer
+    refactor: refactor-streamlit-developer
+    document: document-streamlit-developer
+    debug: debug-streamlit-developer
+    scaffold: scaffold-streamlit-developer

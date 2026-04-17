@@ -1,0 +1,26 @@
+# Environment Configuration for quality guardian
+
+python:
+  version: "3.8+"
+  libraries:
+    - great_expectations: "0.18+"
+    - pytest: "6+"
+    - deequ: "2.0+"
+
+spark:
+  version: "3.0+"
+  config:
+    spark.sql.read.option.badRecordsPath: "/tmp/bad_records"
+
+ci:
+  test_framework: "pytest"
+  coverage_threshold: "80%"
+
+notifications:
+  email:
+    default_route: "data-quality-alerts@company.com"
+
+variables:
+  min_amt: 0
+  max_amt: 10000
+  null_threshold: 0.05

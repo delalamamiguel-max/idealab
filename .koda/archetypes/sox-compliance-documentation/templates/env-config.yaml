@@ -1,0 +1,223 @@
+# SOX Compliance Environment Configuration
+# This file defines validation parameters and thresholds for SOX compliance checks
+# Supports two modes: Development and Release
+
+# Mode Detection
+mode_detection:
+  development_branch_patterns:
+    - "feature/*"
+    - "SPTOCE-*"
+    - "bugfix/*"
+    - "hotfix/*"
+  release_branch_patterns:
+    - "release/*"
+    - "REL-*"
+    - "main"
+    - "master"
+  keywords:
+    development: ["development", "dev", "feature"]
+    release: ["release", "rel", "production", "prod"]
+
+# Common Validation (Both Modes)
+validation:
+  common:
+    # iTrack field requirements
+    itrack:
+      component_required: true
+      fix_version_required: true
+      aots_ticket_must_be_empty: true  # HARD STOP if populated
+      code_review_required: false  # NOT required
+    
+    # Logging validation
+    logging:
+      sql_queries_allowed: false  # HARD STOP if logged
+      api_request_allowed: false  # HARD STOP if logged
+      api_response_allowed: false  # HARD STOP if logged
+      pci_allowed: false
+      rpi_allowed: false
+      spi_allowed: false
+      # Patterns to detect violations
+      sql_patterns:
+        - "SELECT\\s+.*\\s+FROM"
+        - "INSERT\\s+INTO"
+        - "UPDATE\\s+.*\\s+SET"
+        - "DELETE\\s+FROM"
+      api_payload_patterns:
+        - "request\\s*[=:].*\\{|\\["
+        - "response\\s*[=:].*\\{|\\["
+        - "payload\\s*[=:].*\\{|\\["
+        - "body\\s*[=:].*\\{|\\["
+    
+    # Secrets detection
+    secrets:
+      scanning_enabled: true
+      patterns:
+        - "api[_-]?key"
+        - "password"
+        - "secret"
+        - "token"
+        - "private[_-]?key"
+        - "certificate"
+        - "credential"
+    
+    # Sensitive data patterns
+    sensitive_data:
+      patterns:
+        - "ssn"
+        - "social[_-]?security"
+        - "credit[_-]?card"
+        - "pan"
+        - "dob"
+        - "date[_-]?of[_-]?birth"
+        - "account[_-]?number"
+
+  # Development Mode Settings
+  development:
+    work_item_status:
+      expected: "In Progress"
+      hard_stop: false  # Different status is warning, not hard stop
+    sast_required: false
+    test_coverage:
+      required: false
+      run_tests_if_unavailable: true
+      recommended_threshold: 80
+      test_commands:
+        maven: "./mvnw test"
+        gradle: "./gradlew test"
+    code_quality:
+      check_todo_fixme: true
+      check_error_handling: true
+
+  # Release Mode Settings
+  release:
+    work_item_status:
+      us_required: "Accepted"
+      non_us_required: "Test Complete"
+      hard_stop: true
+    sast_required: true
+    sast:
+      coverage_threshold: 100
+      high_severity_allowed: 0
+      tool: "veracode"
+      mcp_tool: "mcp0_get_veracode_alerts"
+    fix_version:
+      must_match_release: true
+      release_date_within_version: true
+    release_comparison:
+      compare_with_previous: true
+      flag_incorrect_stories: true  # HARD STOP
+    branch_hygiene:
+      only_current_release_commits: true
+      flag_future_release_commits: true
+
+# Repository Discovery
+repository:
+  discovery:
+    use_workspace_first: true
+    fallback_to_github: true
+    mcp_tool: "mcp0_get_user_assigned_repositories"
+  branch_naming:
+    derive_from_fix_version: true
+    pattern: "release/{fix_version}"
+
+# MCP Tool Configuration
+mcp_tools:
+  veracode:
+    tool_name: "mcp0_get_veracode_alerts"
+    parameter: "veracodeAppName"
+    source: "component_from_itrack"
+  work_items:
+    tool_name: "mcp0_get_multiple_work_items"
+    parameters:
+      - "organization"
+      - "project"
+      - "itemIds"
+      - "targetAlm"
+  repositories:
+    tool_name: "mcp0_get_user_assigned_repositories"
+
+# Metrics Thresholds
+metrics:
+  common:
+    aots_ticket_populated: 0  # Hard stop
+    components_not_tagged: 0
+    fix_version_missing: 0
+    sql_queries_logged: 0
+    api_request_response_logged: 0
+    exposed_secrets: 0
+    pci_rpi_spi_logged: 0
+  development:
+    unit_test_coverage_recommended: 80
+  release:
+    us_not_accepted: 0
+    fix_version_mismatches: 0
+    stories_incorrectly_added: 0
+    components_without_sast: 0
+    high_severity_veracode_findings: 0
+    out_of_scope_commits: 0
+
+# Escalation Triggers
+escalation:
+  common:
+    - "exposed_secrets"
+    - "sql_queries_logged"
+    - "api_request_response_logged"
+    - "pci_rpi_spi_logged"
+    - "aots_ticket_populated"
+  release_only:
+    - "sast_coverage_below_100"
+    - "work_items_not_accepted"
+    - "stories_incorrectly_added"
+    - "out_of_scope_commits"
+
+# Reporting
+reporting:
+  output_format: "markdown"
+  include_remediation_steps: true
+  
+  development:
+    report_name: "Development Compliance Report"
+    # Sections to INCLUDE in Development mode report
+    sections:
+      - "executive_summary"
+      - "itrack_validation"       # Field validation results ONLY (no raw MCP JSON)
+      - "hard_stop_validation"
+      - "logging_compliance"
+      - "secrets_scan"
+      - "test_coverage"           # Run tests if local workspace
+      - "compliance_decision"
+      - "remediation_actions"
+    # Sections to EXCLUDE from Development mode report
+    excluded_sections:
+      - "mcp_response_data"       # Do NOT include raw MCP JSON
+      - "sast_veracode_status"    # Not required in Development mode
+    # Optional sections (show only if conditions met)
+    optional_sections:
+      implementation_status:
+        show_if: "execution_summary_exists AND implementation_incomplete"
+        display_as: "warning"     # Show as warning, not hard-stop
+    # Test execution settings
+    test_execution:
+      run_if_local_workspace: true
+      commands:
+        maven: "./mvnw test jacoco:report"
+        gradle: "./gradlew test jacocoTestReport"
+      coverage_report_paths:
+        maven: "target/site/jacoco/index.html"
+        gradle: "build/reports/jacoco/test/html/index.html"
+  
+  release:
+    report_name: "Release Compliance Report"
+    sections:
+      - "executive_summary"
+      - "itrack_validation"
+      - "veracode_coverage"
+      - "work_item_status"
+      - "fix_version_validation"
+      - "release_comparison"
+      - "logging_compliance"
+      - "secrets_scan"
+      - "go_no_go_decision"
+      - "remediation_actions"
+    # MCP response data can be included in Release mode for audit trail
+    include_mcp_data: true

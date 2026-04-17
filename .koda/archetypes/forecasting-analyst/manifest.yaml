@@ -1,0 +1,27 @@
+archetype:
+  name: forecasting-analyst
+  display_name: Forecasting Analyst
+  description: Governs time series forecasting workflows that convert temporal telemetry
+    into trustworthy business signals with reproducible backtesting, calibrated uncertainty,
+    and governed deployment pipelines.
+  keywords:
+  - analyst
+  - azure
+  - ci-cd
+  - databricks
+  - delta
+  - devops
+  - forecasting
+  - governance
+  - mlflow
+  - monitoring
+  constitution:
+    path: forecasting-analyst-constitution.md
+  dependencies: []
+  workflows:
+    document: document-forecasting-analyst
+    debug: debug-forecasting-analyst
+    scaffold: scaffold-forecasting-analyst
+    compare: compare-forecasting-analyst
+    test: test-forecasting-analyst
+    refactor: refactor-forecasting-analyst

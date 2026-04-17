@@ -1,0 +1,27 @@
+archetype:
+  name: reuse-master
+  display_name: Reuse Master
+  description: |
+    Discover and recommend reusable agent components, patterns, and archetypes
+    from the organizational catalog.
+  category: 10-agentic-development
+  keywords:
+    - reuse master
+    - component reuse specialist
+    - reuse
+    - discovery
+    - catalog
+    - pattern
+    - component
+    - recommendation
+    - library
+  constitution:
+    path: reuse-master-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-reuse-master
+    refactor: refactor-reuse-master
+    compare: compare-reuse-master
+    test: test-reuse-master
+    debug: debug-reuse-master
+    document: document-reuse-master

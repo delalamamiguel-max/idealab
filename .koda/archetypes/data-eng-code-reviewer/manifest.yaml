@@ -1,0 +1,31 @@
+archetype:
+  name: code-reviewer
+  display_name: Code Reviewer Archetype
+  description: Establish an AI-assisted, consistent code review and quality gate practice. This archetype performs peer reviews, security audits, and architectural compliance checks for Snowflake SQL, Python, TWS, and Databricks. It ensures every change is understandable, testable, and safe.
+  version: 1.0.0
+  keywords:
+    - review
+    - code
+    - quality
+    - gate
+    - code-review
+    - quality-gate
+    - security
+    - architectural-compliance
+    - peer-review
+    - code-audit
+    - best-practices
+    - snowflake
+    - sql
+    - python
+    - tws
+    - databricks
+  workflows:
+    scaffold: .windsurf/workflows/scaffold-code-reviewer.md
+    debug: .windsurf/workflows/debug-code-reviewer.md
+    refactor: .windsurf/workflows/refactor-code-reviewer.md
+    test: .windsurf/workflows/test-code-reviewer.md
+    compare: .windsurf/workflows/compare-code-reviewer.md
+    document: .windsurf/workflows/document-code-reviewer.md
+  template_dir: templates/
+  manifest_version: 1.1

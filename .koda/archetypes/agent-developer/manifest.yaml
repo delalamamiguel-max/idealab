@@ -1,0 +1,42 @@
+archetype:
+  name: agent-developer
+  display_name: Agent Developer
+  description: |
+    Build production-grade AI agents with ReAct patterns, RAG integration, tool calling,
+    and memory management. Implements LangGraph/LangChain patterns with enterprise
+    guardrails, observability, and SOX compliance.
+  category: 10-agentic-development
+  keywords:
+    - agent developer
+    - react agent development
+    - agent development
+    - agent
+    - ReAct
+    - ReAct agents
+    - RAG
+    - tool calling
+    - function calling
+    - memory
+    - LangChain
+    - LangGraph
+    - LlamaIndex
+    - reasoning
+    - action
+    - autonomous
+    - agentic
+    - orchestration
+  constitution:
+    path: agent-developer-constitution.md
+  dependencies:
+    - langchain
+    - langgraph
+    - langsmith
+    - openai
+    - anthropic
+  workflows:
+    scaffold: scaffold-agent-developer
+    refactor: refactor-agent-developer
+    compare: compare-agent-developer
+    test: test-agent-developer
+    debug: debug-agent-developer
+    document: document-agent-developer

@@ -1,0 +1,26 @@
+archetype:
+  name: ontology-engineer
+  display_name: Ontology Engineer
+  description: Generate RelationalAI ontology from Snowflake tables with types, rules,
+    and deployment scripts
+  keywords:
+  - api
+  - azure
+  - compliance
+  - engineer
+  - jupyter
+  - monitoring
+  - notebook
+  - ontology
+  - python
+  - security
+  constitution:
+    path: ontology-engineer-constitution.md
+  dependencies: []
+  workflows:
+    document: document-ontology-engineer
+    refactor: refactor-ontology-engineer
+    test: test-ontology-engineer
+    debug: debug-ontology-engineer
+    scaffold: scaffold-ontology-engineer
+    compare: compare-ontology-engineer

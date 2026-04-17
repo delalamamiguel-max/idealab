@@ -1,0 +1,29 @@
+# Agent Archetype: Workflow Optimizer
+# Version: 1.1.0
+
+performance:
+  profiling_timeout_ms: 30000
+  max_baseline_samples: 100
+  ab_test_min_samples: 50
+  optimization_iteration_limit: 10
+
+variables:
+  latency_reduction_target: 0.2
+  cost_reduction_target: 0.3
+  python_version: "3.10"
+  available_libraries:
+    - langsmith>=0.0.70
+  required_env_vars:
+    - LANGSMITH_API_KEY  # bash/zsh: export LANGSMITH_API_KEY=... | PowerShell: $env:LANGSMITH_API_KEY=... | cmd: set LANGSMITH_API_KEY=...
+  optional_env_vars:
+    - LANGCHAIN_API_KEY
+
+validation:
+  min_latency_reduction: 0.0
+  max_latency_reduction: 0.9
+  min_cost_reduction: 0.0
+  max_cost_reduction: 0.9
+  required_fields:
+    - baseline_metrics
+    - optimization_target
+  schema_version: "1.1.0"

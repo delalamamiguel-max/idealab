@@ -1,0 +1,234 @@
+package {{PACKAGE_NAME}}.config;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.azure.cosmos.CosmosAsyncClient;
+import com.azure.cosmos.CosmosAsyncDatabase;
+import com.azure.cosmos.CosmosClient;
+import com.azure.cosmos.CosmosDatabase;
+
+import javax.annotation.PreDestroy;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Configuration(proxyBeanMethods = false)
+@EnableConfigurationProperties(CosmosPropertiesMap.class)
+@ConditionalOnProperty(value = "cosmos.autoconfig.enabled", havingValue="true", matchIfMissing = false)
+public class CosmosAutoConfiguration {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CosmosAutoConfiguration.class);
+
+    @Autowired
+    private CosmosPropertiesMap cosmosPropertiesMap;
+    
+    private final Map<String, CosmosClient> cosmosClients = new ConcurrentHashMap<>();
+    private final Map<String, CosmosAsyncClient> cosmosAsyncClients = new ConcurrentHashMap<>();
+
+    /**
+     * Initializes all Cosmos DB connections and registers them as Spring beans.
+     * Supports multiple database connections via map-based configuration.
+     *
+     * @return Map of CosmosDatabase instances keyed by configuration key
+     */
+    @Bean(name = "cosmosDatabases")
+    @RefreshScope
+    public Map<String, CosmosDatabase> getCosmosDatabases() {
+        LOG.info("Initializing Cosmos DB connections");
+        Map<String, CosmosDatabase> cosmosDatabaseMap = new HashMap<>();
+
+        if (cosmosPropertiesMap.getConfig() == null || cosmosPropertiesMap.getConfig().isEmpty()) {
+            LOG.warn("No Cosmos DB configurations found");
+            return cosmosDatabaseMap;
+        }
+
+        for(String key : cosmosPropertiesMap.getConfig().keySet()) {
+            try {
+                Map<String, String> properties = cosmosPropertiesMap.getConfig().get(key);
+                LOG.info("Creating Cosmos DB connection for key: {}", key);
+                
+                CosmosProperties cosmosProperties = createCosmosProperties(key, properties);
+                CosmosClient client = CosmosClientAutoConfiguration.getCosmosClient(cosmosProperties);
+                
+                // Store client for cleanup
+                cosmosClients.put(key, client);
+
+                CosmosDatabase database = client.getDatabase(cosmosProperties.getDatabaseName());
+                cosmosDatabaseMap.put(key, database);
+                LOG.info("Successfully created Cosmos DB connection for key: {}", key);
+            } catch (Exception e) {
+                LOG.error("Failed to create Cosmos DB connection for key: {}", key, e);
+                throw new IllegalStateException("Failed to initialize Cosmos DB connection for key: " + key, e);
+            }
+        }
+        
+        LOG.info("Initialized {} Cosmos DB connection(s)", cosmosDatabaseMap.size());
+        return cosmosDatabaseMap;
+    }
+
+    /**
+     * Initializes all async Cosmos DB connections and registers them as Spring beans.
+     * Supports multiple database connections via map-based configuration.
+     *
+     * @return Map of CosmosAsyncDatabase instances keyed by configuration key
+     */
+    @Bean(name = "cosmosAsyncDatabase")
+    @RefreshScope
+    public Map<String, CosmosAsyncDatabase> getCosmosAsyncDatabase() {
+        LOG.info("Initializing async Cosmos DB connections");
+        Map<String, CosmosAsyncDatabase> cosmosDatabaseMap = new HashMap<>();
+
+        if (cosmosPropertiesMap.getConfig() == null || cosmosPropertiesMap.getConfig().isEmpty()) {
+            LOG.warn("No Cosmos DB configurations found");
+            return cosmosDatabaseMap;
+        }
+
+        for(String key : cosmosPropertiesMap.getConfig().keySet()) {
+            try {
+                Map<String, String> properties = cosmosPropertiesMap.getConfig().get(key);
+                LOG.info("Creating async Cosmos DB connection for key: {}", key);
+                
+                CosmosProperties cosmosProperties = createCosmosProperties(key, properties);
+                CosmosAsyncClient client = CosmosClientAutoConfiguration.getCosmosAsyncClient(cosmosProperties);
+                
+                // Store client for cleanup
+                cosmosAsyncClients.put(key, client);
+
+                CosmosAsyncDatabase database = client.getDatabase(cosmosProperties.getDatabaseName());
+                cosmosDatabaseMap.put(key, database);
+                LOG.info("Successfully created async Cosmos DB connection for key: {}", key);
+            } catch (Exception e) {
+                LOG.error("Failed to create async Cosmos DB connection for key: {}", key, e);
+                throw new IllegalStateException("Failed to initialize async Cosmos DB connection for key: " + key, e);
+            }
+        }
+        
+        LOG.info("Initialized {} async Cosmos DB connection(s)", cosmosDatabaseMap.size());
+        return cosmosDatabaseMap;
+    }
+
+    /**
+     * Creates CosmosProperties from map-based configuration.
+     * Applies sensible defaults for optional properties.
+     *
+     * @param key Configuration key for error messages
+     * @param properties Map of configuration properties
+     * @return CosmosProperties instance
+     * @throws IllegalArgumentException if properties are invalid
+     */
+    private CosmosProperties createCosmosProperties(String key, Map<String, String> properties) {
+        if (properties == null) {
+            throw new IllegalArgumentException("Properties map cannot be null for key: " + key);
+        }
+        
+        CosmosProperties cosmosProperties = new CosmosProperties();
+
+        // Required properties - no uppercasing
+        cosmosProperties.setDatabaseName(properties.get("databaseName"));
+        cosmosProperties.setHostName(properties.get("hostName"));
+        cosmosProperties.setSecretKey(properties.get("secretKey"));
+        
+        // Optional properties with defaults
+        cosmosProperties.setAgentSuffix(properties.get("agentSuffix"));
+        cosmosProperties.setConsistencyLevel(properties.getOrDefault("consistencyLevel", "BOUNDED_STALENESS"));
+        cosmosProperties.setPreferredRegion(properties.get("preferredRegion"));
+        
+        // Numeric properties with exception handling
+        try {
+            cosmosProperties.setIdleConnectionTimeout(
+                properties.get("idleConnectionTimeout") != null ? 
+                    Long.parseLong(properties.get("idleConnectionTimeout")) : 1000L
+            );
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                "Invalid idleConnectionTimeout for key '" + key + "': " + properties.get("idleConnectionTimeout"), e
+            );
+        }
+        
+        try {
+            cosmosProperties.setMaxConnectionPool(
+                properties.get("maxConnectionPool") != null ? 
+                    Integer.parseInt(properties.get("maxConnectionPool")) : 50
+            );
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                "Invalid maxConnectionPool for key '" + key + "': " + properties.get("maxConnectionPool"), e
+            );
+        }
+        
+        // Boolean properties
+        cosmosProperties.setDirectModeEnabled(
+            properties.get("directModeEnabled") != null ? 
+                Boolean.parseBoolean(properties.get("directModeEnabled")) : true
+        );
+        cosmosProperties.setContentResponseOnWriteEnabled(
+            properties.get("contentResponseOnWriteEnabled") != null ? 
+                Boolean.parseBoolean(properties.get("contentResponseOnWriteEnabled")) : false
+        );
+
+        return cosmosProperties;
+    }
+
+    /**
+     * Creates a single CosmosDatabase instance from properties map.
+     * Useful for programmatic database creation.
+     *
+     * @param mapCosmosProperties Map of Cosmos properties
+     * @return CosmosDatabase instance
+     * @throws IllegalArgumentException if properties are invalid or missing
+     */
+    public CosmosDatabase getCosmosDatabase(Map<String, String> mapCosmosProperties) {
+        if (mapCosmosProperties == null) {
+            throw new IllegalArgumentException("Cosmos properties map cannot be null");
+        }
+        
+        String databaseName = mapCosmosProperties.get("databaseName");
+        if (databaseName == null) {
+            throw new IllegalArgumentException("databaseName is required but was not provided");
+        }
+        
+        LOG.info("Creating Cosmos DB for database: {}", databaseName);
+        CosmosProperties cosmosProperties = createCosmosProperties("programmatic", mapCosmosProperties);
+        CosmosClient client = CosmosClientAutoConfiguration.getCosmosClient(cosmosProperties);
+        CosmosDatabase database = client.getDatabase(cosmosProperties.getDatabaseName());
+        return database;
+    }
+    
+    /**
+     * Cleanup method to close all Cosmos clients when the application shuts down.
+     * Prevents resource leaks.
+     */
+    @PreDestroy
+    public void cleanup() {
+        LOG.info("Closing Cosmos DB clients");
+        
+        cosmosClients.forEach((key, client) -> {
+            try {
+                client.close();
+                LOG.debug("Closed CosmosClient for key: {}", key);
+            } catch (Exception e) {
+                LOG.error("Error closing CosmosClient for key: {}", key, e);
+            }
+        });
+        cosmosClients.clear();
+        
+        cosmosAsyncClients.forEach((key, client) -> {
+            try {
+                client.close();
+                LOG.debug("Closed CosmosAsyncClient for key: {}", key);
+            } catch (Exception e) {
+                LOG.error("Error closing CosmosAsyncClient for key: {}", key, e);
+            }
+        });
+        cosmosAsyncClients.clear();
+        
+        LOG.info("All Cosmos DB clients closed");
+    }
+}

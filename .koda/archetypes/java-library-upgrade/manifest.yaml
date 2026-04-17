@@ -1,0 +1,22 @@
+archetype:
+  name: java-library-upgrade
+  display_name: Java Library Upgrade
+  description: Ensure all Java dependencies are current, secure, and compatible with
+    the codebase. This agent governs the detection, analysis, and upgrade of outdated
+    libraries.
+  keywords:
+  - api
+  - java
+  - library
+  - testing
+  - upgrade
+  constitution:
+    path: java-library-upgrade-constitution.md
+  dependencies: []
+  workflows:
+    test: test-java-library-upgrade
+    scaffold: scaffold-java-library-upgrade
+    compare: compare-java-library-upgrade
+    refactor: refactor-java-library-upgrade
+    document: document-java-library-upgrade
+    debug: debug-java-library-upgrade

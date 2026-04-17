@@ -1,0 +1,36 @@
+# Agent Archetype: Production Monitor
+python_version: "3.10"
+
+performance:
+  profile: "observability-first"
+  latency_p95_ms: 2000
+  error_rate_threshold: 0.01
+  eval_pass_rate_threshold: 0.95
+
+variables:
+  required:
+    - PHOENIX_ENDPOINT
+  optional:
+    - PHOENIX_API_KEY
+    - PROMETHEUS_PUSHGATEWAY
+    - ALERT_WEBHOOK_URL
+
+validation:
+  slo_definition_required: true
+  alert_routing_required: true
+  retention_years_min: 7
+
+available_libraries:
+  - arize-phoenix>=4.0.0
+  - prometheus-client>=0.19.0
+  - opentelemetry-api>=1.20.0
+default_parameters:
+  slo:
+    latency_p95_ms: 2000
+    error_rate: 0.01
+    eval_pass_rate: 0.95
+  phoenix:
+    retention_years: 7
+    drift_threshold: 0.15
+required_env_vars:
+  - PHOENIX_ENDPOINT

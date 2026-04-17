@@ -1,0 +1,52 @@
+# Environment Configuration for model architect
+# Focus: governed model development leveraging Databricks, MLflow, and Azure DevOps
+
+spark:
+  version: "3.5+"
+  unity_catalog: true
+
+python:
+  version: "3.10"
+
+libraries:
+  - mlflow: "2.11+"
+  - databricks-feature-store: "0.18+"
+  - scikit-learn: "1.4+"
+  - xgboost: "2.0+"
+  - lightgbm: "4.3+"
+  - catboost: "1.2+"
+  - hyperopt: "0.2.7"
+  - accelerate: "0.29+"
+  - transformers: "4.36+"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/models/development"
+  registry_uri: "databricks-uc"
+  model_name_prefix: "ent_"
+
+azure_devops:
+  project: "AI-Analytics"
+  repo: "ml-models"
+  pipeline: "Model-Build"
+
+ci:
+  tests:
+    framework: "pytest"
+    min_coverage: "85%"
+  build_image: "mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04"
+
+compute:
+  training_cluster:
+    node_type: "Standard_NC6s_v3"
+    min_workers: 2
+    max_workers: 8
+
+security:
+  secret_scope: "mlops-secrets"
+  approved_databricks_runtime: "13.3 LTS ML"
+
+variables:
+  default_training_timeout_minutes: 240
+  registered_model_stage: "Staging"
+  default_primary_metric: "validation_rmse"

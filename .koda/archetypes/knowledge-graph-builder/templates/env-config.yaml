@@ -1,0 +1,26 @@
+# Environment Configuration for Knowledge Graph Builder
+
+python:
+  version: "3.10+"
+
+tools:
+  - name: "neo4j"
+    version: "5.x+"
+    purpose: "Primary graph database"
+  - name: "cypher"
+    version: "neo4j 5+"
+    purpose: "Graph query language"
+  - name: "neosemantics (n10s)"
+    version: "5.x+"
+    purpose: "RDF/ontology import"
+  - name: "apoc"
+    version: "5.x+"
+    purpose: "Utility procedures for Neo4j"
+  - name: "neo4j-admin"
+    version: "5.x+"
+    purpose: "Bulk import tool"
+
+performance:
+  expected_runtime_secs: 60
+  max_runtime_secs: 300
+

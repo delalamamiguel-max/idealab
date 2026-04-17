@@ -1,0 +1,32 @@
+archetype:
+  name: graph-data-scientist
+  display_name: Graph Data Scientist
+  description: |
+    Apply graph algorithms and machine learning to knowledge graphs. Covers centrality measures, community detection, pathfinding, similarity, graph embeddings, link prediction, and the Neo4j Graph Data Science (GDS) library.
+  keywords:
+  - centrality
+  - community-detection
+  - embeddings
+  - gds
+  - graph-algorithms
+  - graph-data-science
+  - graph-ml
+  - link-prediction
+  - machine-learning
+  - neo4j
+  - node2vec
+  - pagerank
+  - pathfinding
+  - similarity
+  constitution:
+    path: graph-data-scientist-constitution.md
+  dependencies: 
+  - graph-community-detection
+  - knowledge-graph-builder
+  workflows:
+    scaffold: scaffold-graph-data-scientist
+    debug: debug-graph-data-scientist
+    refactor: refactor-graph-data-scientist
+    test: test-graph-data-scientist
+    compare: compare-graph-data-scientist
+    document: document-graph-data-scientist

@@ -1,0 +1,27 @@
+archetype:
+  name: language-model-evaluation
+  display_name: Language Model Evaluation
+  description: Establishes disciplined LLM evaluation practices using custom grader
+    frameworks (heuristic and LLM-based judges), async orchestration, and comprehensive
+    specification-driven workflows for assessing la
+  keywords:
+  - api
+  - compliance
+  - evaluation
+  - governance
+  - language
+  - mlflow
+  - model
+  - monitoring
+  - testing
+  - validation
+  constitution:
+    path: language-model-evaluation-constitution.md
+  dependencies: []
+  workflows:
+    compare: compare-language-model-evaluation
+    test: test-language-model-evaluation
+    refactor: refactor-language-model-evaluation
+    document: document-language-model-evaluation
+    scaffold: scaffold-language-model-evaluation
+    debug: debug-language-model-evaluation

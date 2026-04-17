@@ -1,0 +1,27 @@
+archetype:
+  name: databricks-developer-workflow
+  display_name: Databricks Developer Workflow
+  description: Codifies the guardrails for **local IDE development, Databricks CLI
+    operations, notebook deployment workflows, and developer-initiated job execution**
+    when building and testing Databricks notebooks fr
+  keywords:
+  - api
+  - azure
+  - ci-cd
+  - databricks
+  - developer
+  - devops
+  - governance
+  - jupyter
+  - monitoring
+  - notebook
+  constitution:
+    path: databricks-developer-workflow-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-databricks-developer-workflow
+    debug: debug-databricks-developer-workflow
+    refactor: refactor-databricks-developer-workflow
+    test: test-databricks-developer-workflow
+    compare: compare-databricks-developer-workflow
+    document: document-databricks-developer-workflow

@@ -1,0 +1,72 @@
+archetype:
+  name: camunda-orchestration
+  display_name: Camunda Orchestration
+  description: Specialist archetype for Camunda 7 workflow orchestration including BPMN 2.0
+    process design, DMN decision tables, Apache Camel integration routes, external task
+    patterns, event-driven choreography, error/fallout handling, and Spring Boot configuration.
+    Covers best practices for process engine plugins, multi-instance parallel processing,
+    call activities, message correlation, timer events, and Groovy scripting within
+    Camunda workflows.
+  keywords:
+  - camunda
+  - bpmn
+  - bpmn2
+  - workflow
+  - orchestration
+  - process
+  - process-engine
+  - dmn
+  - decision-table
+  - camel
+  - apache-camel
+  - camel-route
+  - external-task
+  - service-task
+  - user-task
+  - call-activity
+  - message-event
+  - timer-event
+  - signal-event
+  - event-gateway
+  - event-based-gateway
+  - sequence-flow
+  - gateway
+  - exclusive-gateway
+  - inclusive-gateway
+  - parallel-gateway
+  - boundary-event
+  - error-event
+  - fallout
+  - compensation
+  - multi-instance
+  - loop
+  - process-variable
+  - execution-listener
+  - task-listener
+  - process-engine-plugin
+  - job-priority
+  - history
+  - cockpit
+  - spring-boot-camunda
+  - groovy
+  - groovy-script
+  - message-correlation
+  - async
+  - async-before
+  - async-after
+  - retry
+  - incident
+  - deployment
+  - process-application
+  - process-archive
+  constitution:
+    path: camumda-orchestration-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-camunda-orchestration
+    debug: debug-camunda-orchestration
+    compare: compare-camunda-orchestration
+    test: test-camunda-orchestration
+    document: document-camunda-orchestration
+    refactor: refactor-camunda-orchestration
+version: '1.0'

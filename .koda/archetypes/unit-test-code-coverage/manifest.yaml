@@ -1,0 +1,25 @@
+archetype:
+  name: unit-test-code-coverage
+  display_name: Unit Test Code Coverage
+  description: Ensure every line of code in the Java project is covered by meaningful
+    unit tests. This agent governs the creation, execution, and validation of unit
+    tests to maintain 100% code coverage.
+  keywords:
+  - ci-cd
+  - code
+  - coverage
+  - java
+  - test
+  - testing
+  - unit
+  - validation
+  constitution:
+    path: unit-test-code-coverage-constitution.md
+  dependencies: []
+  workflows:
+    test: test-unit-test-code-coverage
+    scaffold: scaffold-unit-test-code-coverage
+    compare: compare-unit-test-code-coverage
+    document: document-unit-test-code-coverage
+    debug: debug-unit-test-code-coverage
+    refactor: refactor-unit-test-code-coverage

@@ -1,0 +1,26 @@
+# Agent Archetype: Reuse Master
+# Version: 1.0.0
+
+performance:
+  max_catalog_size: 10000
+  search_timeout_ms: 5000
+  embedding_batch_size: 64
+  cache_ttl_seconds: 3600
+
+variables:
+  similarity_threshold: 0.75
+  require_review: true
+  python_version: "3.10"
+  available_libraries:
+    - sentence-transformers>=2.2.0
+    - faiss-cpu>=1.7.0
+    - numpy>=1.24.0
+  required_env_vars: []
+
+validation:
+  min_similarity_threshold: 0.5
+  max_similarity_threshold: 0.99
+  required_fields:
+    - catalog_path
+    - query
+  schema_version: "1.0.0"

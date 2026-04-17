@@ -1,0 +1,33 @@
+archetype:
+  name: sox-compliance
+  display_name: SOX Compliance
+  category: "07"
+  description: Validate code changes against SOX compliance rules. Supports two modes -
+    Development (post-coding validation on feature branches) and Release (pre-release
+    validation with SAST/Veracode coverage, work item status, and release comparison).
+  keywords:
+  - sox
+  - compliance
+  - audit
+  - security
+  - attestation
+  - traceability
+  - release
+  - sast
+  - veracode
+  - governance
+  - change-management
+  - review
+  - development
+  - logging
+  - validation
+  constitution:
+    path: sox-compliance-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-sox-compliance
+    test: test-sox-compliance
+    debug: debug-sox-compliance
+    refactor: refactor-sox-compliance
+    document: document-sox-compliance
+    compare: compare-sox-compliance

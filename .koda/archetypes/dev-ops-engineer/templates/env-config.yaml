@@ -1,0 +1,127 @@
+# Data Ops Engineer Archetype Environment Configuration
+
+archetype: data_ops_engineer
+name: "Data Ops Engineer"
+description: "Standardizes pipeline orchestration, deployment gating, observability, rollback, and policy enforcement for data platforms"
+
+python:
+  min_version: "3.11"
+  command: "python --version"
+
+required_tools:
+  - name: "jq"
+    command: "jq --version"
+  - name: "curl"
+    command: "curl --version"
+  - name: "pytest"
+    command: "pytest --version"
+  - name: "opa"   # optional for policy-as-code
+    command: "opa version"
+
+orchestration:
+  engine: "airflow"          # airflow | dagster | prefect | custom
+  dag_dir: "dags/"
+  max_concurrency: 64
+  default_retry_count: 2
+  default_retry_delay_sec: 300
+  enable_backfill_safety: true
+
+promotion:
+  environments: [dev, test, prod]
+  require_artifact_immutability: true
+  allow_hotfix_direct_to_prod: false
+  change_freeze_cron: "0 0 24 12 *"  # example holiday freeze placeholder
+
+policy_gates:
+  security_scan: required
+  license_compliance: required
+  data_quality_validation: required
+  lineage_capture: required
+  cost_regression_check: optional
+  performance_regression_check: optional
+
+canary:
+  enabled: true
+  sample_fraction: 0.1
+  max_error_increase_pct: 100
+  max_latency_p95_increase_pct: 30
+  evaluation_windows: 2
+
+slo:
+  lead_time_hours_median: 12
+  change_failure_rate_pct: 15
+  mttr_minutes: 30
+  success_ratio_pct: 99
+  deploy_frequency_per_service_daily_min: 1
+  rerun_mttr_minutes: 20
+
+observability:
+  metrics_namespace: "data_ops"
+  emit_stage_metrics: true
+  emit_event_audit_log: true
+  log_format: json_lines
+  trace_enabled: true
+  trace_vendor: "otlp"
+
+logging:
+  redact_secrets: true
+  include_correlation_ids: true
+  retention_days: 30
+
+secrets:
+  manager: "vault"  # vault | aws_secrets_manager | azure_key_vault
+  disallow_inline: true
+
+rollbacks:
+  enabled: true
+  validate_rollback_plan: true
+  max_parallel_reverts: 2
+  state_consistency_check: checksum
+
+replay:
+  enable_partition_replay: true
+  max_replay_parallelism: 4
+  safety_volume_multiplier: 1.2
+
+exception_ledger:
+  require_expiry: true
+  default_expiry_days: 14
+  notify_channel: "#data-ops-exceptions"
+
+risk_scoring:
+  weights:
+    change_failure: 8
+    mttr_breach: 7
+    canary_breach: 9
+    secret_detection: 10
+    freeze_violation: 6
+    exception_expired: 5
+
+cost:
+  track_stage_cost: true
+  max_cost_increase_pct: 20
+  enable_rightsizing_recommendations: true
+
+policy_as_code:
+  opa_enabled: false
+  rego_policy_dir: "policies/"
+
+alerts:
+  slack_channel: "#data-ops-alerts"
+  pagerduty_service: "data-ops-tier1"
+  email_distribution: "data-ops@att.com"
+
+ownership:
+  team: "data-ops"
+  slack: "#data-ops"
+  escalation_chain:
+    - primary_oncall
+    - secondary_oncall
+    - manager
+
+placeholders:
+  repo_root: "."
+  artifact_store: "s3://data-artifacts/"
+  lineage_api: "https://lineage.internal/api"
+
+# Future expansion: multi-region failover, dynamic concurrency autoscaling, cost anomaly scoring

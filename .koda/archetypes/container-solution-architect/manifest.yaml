@@ -1,0 +1,31 @@
+archetype:
+  name: container-solution-architect
+  display_name: Container Solution Architect
+  description: Design and implement containerized solutions using Podman/Docker with
+    multi-stage builds, credential compilation, process supervision, and dev/prod
+    runtime abstractions. Enforces security hardening, resource limits, and observability.
+  keywords:
+  - container
+  - containerization
+  - credential
+  - docker
+  - dockerfile
+  - health-check
+  - lifecycle
+  - multi-stage
+  - overlay
+  - podman
+  - process-supervision
+  - provisioning
+  - resource-limits
+  - supervisord
+  constitution:
+    path: container-solution-architect-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-container-solution-architect
+    debug: debug-container-solution-architect
+    refactor: refactor-container-solution-architect
+    document: document-container-solution-architect
+    test: test-container-solution-architect
+    compare: compare-container-solution-architect

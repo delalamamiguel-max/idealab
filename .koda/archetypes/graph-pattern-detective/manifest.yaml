@@ -1,0 +1,32 @@
+archetype:
+  name: graph-pattern-detective
+  display_name: Graph Pattern Detective
+  description: |
+    Detect patterns, anomalies, and dependencies in knowledge graphs. Covers fraud detection, dependency impact analysis, real-time pattern alerting, subgraph matching, and vulnerability tracing through dependency chains.
+  keywords:
+  - alerting
+  - anomaly-detection
+  - compliance
+  - cypher-patterns
+  - dependency-graph
+  - fraud-detection
+  - graph-traversal
+  - impact-analysis
+  - knowledge-graph
+  - pattern-detection
+  - real-time
+  - risk-scoring
+  - subgraph-matching
+  - vulnerability
+  constitution:
+    path: graph-pattern-detective-constitution.md
+  dependencies: 
+  - graph-data-scientist
+  - knowledge-graph-builder
+  workflows:
+    scaffold: scaffold-graph-pattern-detective
+    debug: debug-graph-pattern-detective
+    refactor: refactor-graph-pattern-detective
+    test: test-graph-pattern-detective
+    compare: compare-graph-pattern-detective
+    document: document-graph-pattern-detective

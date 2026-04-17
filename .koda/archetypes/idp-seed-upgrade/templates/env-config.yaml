@@ -1,0 +1,172 @@
+# IDP Seed Upgrade Environment Configuration
+# This file defines STATIC configuration and DYNAMIC wiki integration for Seed upgrades
+# Version-specific details are fetched from wiki at runtime
+
+# =============================================================================
+# WIKI INTEGRATION (Dynamic Content Source)
+# =============================================================================
+wiki:
+  # Base URL for IDP wiki
+  base_url: "https://wiki.web.att.com"
+  space_key: "IDSEPA"
+  
+  # URL templates for version-specific pages
+  # Use {VERSION} placeholder which will be replaced at runtime (e.g., 3.0.1)
+  url_templates:
+    release_notes: "https://wiki.web.att.com/pages/viewpage.action?spaceKey=IDSEPA&title=Seed+{VERSION}+-+Release+Notes"
+    upgrade_instructions: "https://wiki.web.att.com/display/IDSEPA/Seed+{VERSION}+-+Upgrade+Instructions"
+    faq: "https://wiki.web.att.com/display/IDSEPA/FAQ+-+{VERSION}"
+    security_vulnerabilities: "https://wiki.web.att.com/display/IDSEPA/Security+Vulnerabilities+in+Seed+{VERSION}"
+    managed_dependencies: "https://wiki.web.att.com/display/IDSEPA/IDP+Java+Seed+managed+dependency+versions"
+  
+  # HTML parsing patterns for extracting information from wiki pages
+  parsing_patterns:
+    # Release Notes page patterns
+    release_notes:
+      prerequisites:
+        selector: "table:contains('Pre-requisites') td"
+        extract: "text"
+      spring_boot_version:
+        selector: "td:contains('Spring Boot')"
+        regex: "Spring Boot.*?(\\d+\\.\\d+\\.\\d+)"
+      docker_images:
+        java_base:
+          selector: "td:contains('Java Base')"
+          regex: "idp-java-base[:\\s]*(\\d+\\.\\d+\\.\\d+v?\\d*)"
+        nginx_sidecar:
+          selector: "td:contains('NGINX Sidecar')"
+          regex: "idp-nginx-base[:\\s]*(\\d+\\.\\d+\\.\\d+v?\\d*)"
+      platform_libraries:
+        selector: "table:contains('IDP Platform Artifact') tr"
+        columns: ["artifact", "version", "comment"]
+    
+    # Upgrade Instructions page patterns
+    upgrade_instructions:
+      pom_version:
+        selector: "code:contains('version')"
+        regex: "<version>(\\d+\\.\\d+\\.\\d+)</version>"
+      code_changes:
+        # Each section in upgrade instructions (3.0.a, 3.0.b, etc.)
+        sections:
+          - id: "azure_app_config"
+            selector: "h3:contains('Spring Cloud Azure')"
+            dependency:
+              group_id: "com.azure.spring"
+              artifact_id: "spring-cloud-azure-appconfiguration-config-web"
+              version_regex: "<version>(\\d+\\.\\d+\\.\\d+)</version>"
+          - id: "spring_cloud_starter"
+            selector: "h3:contains('spring-cloud-starter')"
+            dependency:
+              group_id: "org.springframework.cloud"
+              artifact_id: "spring-cloud-starter"
+              version_regex: "<version>(\\d+\\.\\d+\\.\\d+)</version>"
+          - id: "soap_interceptor"
+            selector: "h3:contains('RemoveSoapHeadersInterceptor')"
+            replacement:
+              old_regex: "HttpComponents5MessageSender\\.RemoveSoapHeadersInterceptor\\(\\)"
+              new_pattern: "HttpComponents5ClientFactory.RemoveSoapHeadersInterceptor()"
+          - id: "application_java"
+            selector: "h3:contains('Application.java')"
+            replacement:
+              old_regex: 'com\\.\\(azure\\|microsoft\\|com\\.att\\.idp\\.config\\)\\.\\*'
+              new_pattern: 'com.(azure|microsoft).*'
+          - id: "mock_bean_deprecation"
+            selector: "h3:contains('MockBean')"
+            replacements:
+              - old: "@MockBean"
+                new: "@MockitoBean"
+                import_old: "org.springframework.boot.test.mock.mockito.MockBean"
+                import_new: "org.springframework.test.context.bean.override.mockito.MockitoBean"
+              - old: "@SpyBean"
+                new: "@MockitoSpyBean"
+                import_old: "org.springframework.boot.test.mock.mockito.SpyBean"
+                import_new: "org.springframework.test.context.bean.override.mockito.MockitoSpyBean"
+    
+    # FAQ page patterns
+    faq:
+      rest_assured_fix:
+        selector: "h3:contains('RestAssured')"
+        replacement:
+          old_pattern: ".auth().basic("
+          new_pattern: ".auth().preemptive().basic("
+
+# =============================================================================
+# STATIC CONFIGURATION (Does not change between versions)
+# =============================================================================
+seed_upgrade:
+  # Parent artifact configuration (static)
+  parent_artifacts:
+    sdk_java_parent:
+      group_id: "com.att.idp"
+      artifact_id: "sdk-java-parent"
+    sdk_java_library_parent:
+      group_id: "com.att.idp"
+      artifact_id: "sdk-java-library-parent"
+
+# Validation rules (static - apply to all versions)
+validation:
+  sast_coverage: 100
+  required_tests:
+    - unit
+    - component
+    - integration
+  branch_naming_convention: true
+  no_master_changes: true
+
+# Documentation requirements (static)
+documentation:
+  required_sections:
+    - migration_plan
+    - code_changes
+    - test_results
+    - rollback_plan
+  traceability:
+    - itrack_ticket
+    - aots_cr
+
+# =============================================================================
+# LOCAL CACHE CONFIGURATION
+# =============================================================================
+cache:
+  # Directory for caching wiki content locally
+  directory: "templates/seed-versions"
+  # Cache expiry in hours (re-fetch from wiki after this time)
+  expiry_hours: 24
+  # File naming pattern for cached versions
+  file_pattern: "seed-{VERSION}-cache.yaml"
+
+# =============================================================================
+# CODE CHANGE CATEGORIES (Static definitions, values from wiki)
+# =============================================================================
+# These define WHAT categories of changes exist, not the specific changes
+# Specific old/new values are fetched from wiki upgrade instructions
+code_change_categories:
+  pom_changes:
+    description: "POM file modifications"
+    file_patterns: ["pom.xml"]
+    types:
+      - parent_version
+      - dependency_version
+      - new_dependency
+  
+  annotation_replacements:
+    description: "Deprecated annotation replacements"
+    file_patterns: ["*Test.java", "*IT.java", "*Spec.groovy"]
+    requires_import_update: true
+  
+  class_relocations:
+    description: "Classes moved to different packages"
+    file_patterns: ["*.java"]
+    requires_import_update: true
+  
+  api_changes:
+    description: "Method/API signature changes"
+    file_patterns: ["*.java"]
+  
+  configuration_changes:
+    description: "Application configuration updates"
+    file_patterns: ["Application.java", "*.properties", "*.yaml", "*.yml"]
+  
+  test_changes:
+    description: "Test code modifications"
+    file_patterns: ["*Test.java", "*IT.java", "*Spec.groovy"]

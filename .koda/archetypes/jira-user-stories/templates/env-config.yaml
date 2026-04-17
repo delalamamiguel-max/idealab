@@ -1,0 +1,26 @@
+# Environment Configuration for jira user stories
+# Source: Created for eaifc_windsurf (no source env_prompt.yaml in vibe_cdo)
+
+jira:
+  version: "9.x"
+  project_key: "PROJ"
+
+story_format:
+  template: "As a [persona], I want [action], so that [outcome]"
+  acceptance_criteria_format: "Given/When/Then"
+
+story_points:
+  fibonacci: [1, 2, 3, 5, 8, 13]
+  small_story_max: 5
+  epic_min: 13
+
+required_fields:
+  - persona
+  - action
+  - outcome
+  - acceptance_criteria
+  - definition_of_done
+
+variables:
+  default_priority: "Medium"
+  default_story_points: 3

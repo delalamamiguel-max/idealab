@@ -1,0 +1,30 @@
+archetype:
+  name: model-architect
+  display_name: Model Architect
+  description: Establishes disciplined model development practices with reproducible
+    training pipelines, MLflow registration, and enterprise-ready documentation.
+  keywords:
+  - api
+  - architect
+  - azure
+  - ci-cd
+  - databricks
+  - devops
+  - experiment
+  - feature
+  - governance
+  - hyperparameter
+  - mlflow
+  - model
+  - monitoring
+  - training
+  constitution:
+    path: model-architect-constitution.md
+  dependencies: []
+  workflows:
+    document: document-model-architect
+    debug: debug-model-architect
+    refactor: refactor-model-architect
+    test: test-model-architect
+    compare: compare-model-architect
+    scaffold: scaffold-model-architect

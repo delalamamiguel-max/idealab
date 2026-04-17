@@ -1,0 +1,22 @@
+archetype:
+  name: performance-tuner
+  display_name: Performance Tuner
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the performance tuner archetype.
+  keywords:
+  - bottleneck
+  - optimization
+  - performance
+  - profiling
+  - spark
+  - tuning
+  constitution:
+    path: performance-tuner-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-performance-tuner
+    compare: compare-performance-tuner
+    document: document-performance-tuner
+    debug: debug-performance-tuner
+    test: test-performance-tuner
+    refactor: refactor-performance-tuner

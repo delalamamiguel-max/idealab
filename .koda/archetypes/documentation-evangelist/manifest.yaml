@@ -1,0 +1,26 @@
+archetype:
+  name: documentation-evangelist
+  display_name: Documentation Evangelist
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the documentation evangelist archetype.
+  keywords:
+  - api
+  - compliance
+  - databricks
+  - documentation
+  - evangelist
+  - governance
+  - notebook
+  - pandas
+  - python
+  - testing
+  constitution:
+    path: documentation-evangelist-constitution.md
+  dependencies: []
+  workflows:
+    test: test-documentation-evangelist
+    refactor: refactor-documentation-evangelist
+    compare: compare-documentation-evangelist
+    debug: debug-documentation-evangelist
+    scaffold: scaffold-documentation-evangelist
+    document: document-documentation-evangelist

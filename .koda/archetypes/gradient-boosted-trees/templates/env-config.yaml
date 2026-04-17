@@ -1,0 +1,88 @@
+# Environment Configuration for gradient boosted trees
+# Source: Gradient boosting governance playbooks and production runbooks
+
+spark:
+  version: "13.2.x-scala2.12"
+  photon: false
+  enable_unity_catalog: true
+
+python:
+  version: "3.10"
+
+libraries:
+  - xgboost: "2.0+"
+  - lightgbm: "4.3+"
+  - catboost: "1.2+"
+  - shap: "0.44+"
+  - optuna: "3.5+"
+  - mlflow: "2.11+"
+  - scipy: "1.11+"
+  - pandas: "2.1+"
+  - numpy: "1.26+"
+
+mlflow:
+  tracking_uri: "databricks"
+  experiment_path: "/Shared/models/gradient_boosted_trees/experiments"
+  model_registry: "/Shared/models/gradient_boosted_trees"
+  tags:
+    archetype: "gradient-boosted-trees"
+    governed: "true"
+
+training_defaults:
+  learning_rate: 0.05
+  n_estimators: 400
+  max_depth: 6
+  subsample: 0.8
+  colsample_bytree: 0.8
+  min_child_weight: 5
+  lambda_l2: 1.0
+  gamma: 0.0
+  early_stopping_rounds: 50
+  eval_metric: "auc"
+  objective: "binary:logistic"
+
+reproducibility:
+  random_seed: 20251023
+  deterministic_algorithms: true
+  log_feature_metadata: true
+
+validation:
+  split_strategy: "stratified_kfold"
+  n_splits: 5
+  holdout_fraction: 0.2
+  minimum_positive_class: 500
+  class_imbalance_threshold: 10
+  calibration_methods:
+    - "isotonic"
+    - "platt"
+
+feature_pipeline:
+  categorical_encoding: "target-safe-encoder"
+  text_encoding: "hashing-1M"
+  numeric_imputation: "median"
+  track_feature_lineage: true
+
+monitoring:
+  drift_detection:
+    population_stability_index: 0.1
+    kolmogorov_smirnov: 0.1
+  bias_metrics:
+    - "equalized_odds"
+    - "demographic_parity"
+  alert_channel: "#model-risk"
+
+storage:
+  feature_store_table: "main.feature_store.gbt_features"
+  training_dataset_path: "abfss://gold@<storage_account>.dfs.core.windows.net/gbt/training"
+  evaluation_dataset_path: "abfss://gold@<storage_account>.dfs.core.windows.net/gbt/evaluation"
+  model_artifacts_path: "abfss://models@<storage_account>.dfs.core.windows.net/gbt"
+
+ci_cd:
+  azure_devops_project: "AI-Analytics"
+  pipelines:
+    promote:
+      pipeline_name: "GBT-Model-Promote"
+      approvals_required: true
+    monitor:
+      pipeline_name: "GBT-Model-Monitor"
+      approvals_required: false

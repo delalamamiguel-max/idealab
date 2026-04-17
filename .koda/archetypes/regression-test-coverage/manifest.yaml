@@ -1,0 +1,22 @@
+archetype:
+  name: regression-test-coverage
+  display_name: Regression Test Coverage
+  description: Automate creation, execution, and verification of regression test suites
+    to ensure previously validated functionality remains intact after code changes.
+  keywords:
+  - ci-cd
+  - coverage
+  - regression
+  - test
+  - automation
+  - quality-assurance
+  constitution:
+    path: regression-test-coverage-constitution.md
+  dependencies: []
+  workflows:
+    document: document-regression-test-coverage
+    debug: debug-regression-test-coverage
+    scaffold: scaffold-regression-test-coverage
+    compare: compare-regression-test-coverage
+    refactor: refactor-regression-test-coverage
+    test: test-regression-test-coverage

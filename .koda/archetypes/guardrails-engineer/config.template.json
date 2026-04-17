@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Guardrails Engineer Configuration",
+  "description": "Configuration template for guardrails implementation",
+  
+  "version": "1.0.0",
+  
+  "input_guardrails": {
+    "prompt_injection": {
+      "enabled": true,
+      "model": "gpt-3.5-turbo",
+      "threshold": 0.8,
+      "action": "block",
+      "fallback_message": "I cannot process this request due to safety concerns.",
+      "log_triggers": true
+    },
+    
+    "pii_detection": {
+      "enabled": true,
+      "engine": "presidio",
+      "types": ["SSN", "CREDIT_CARD", "PHONE", "EMAIL", "ADDRESS", "PERSON", "EMPLOYEE_ID"],
+      "action": "mask",
+      "mask_pattern": "[REDACTED-{type}]",
+      "custom_recognizers": []
+    },
+    
+    "topic_boundary": {
+      "enabled": false,
+      "allowed_topics": [],
+      "action": "redirect",
+      "redirect_message": "I can only help with topics related to: {topics}"
+    },
+    
+    "rate_limiting": {
+      "enabled": true,
+      "max_requests_per_hour": 100,
+      "max_requests_per_day": 1000,
+      "action": "throttle"
+    },
+    
+    "input_length": {
+      "enabled": true,
+      "max_length_chars": 10000,
+      "action": "truncate"
+    }
+  },
+  
+  "output_guardrails": {
+    "hallucination": {
+      "enabled": true,
+      "metric": "FaithfulnessMetric",
+      "threshold": 0.9,
+      "action": "block",
+      "require_context": true,
+      "model": "gpt-4"
+    },
+    
+    "pii_leakage": {
+      "enabled": true,
+      "metric": "PIILeakageMetric",
+      "threshold": 1.0,
+      "action": "block",
+      "types": ["SSN", "CREDIT_CARD", "PHONE", "EMAIL", "ADDRESS"]
+    },
+    
+    "toxicity": {
+      "enabled": true,
+      "metric": "ToxicityMetric",
+      "threshold": 0.99,
+      "action": "block",
+      "model": "gpt-4"
+    },
+    
+    "bias": {
+      "enabled": true,
+      "metric": "BiasMetric",
+      "threshold": 0.95,
+      "action": "warn",
+      "model": "gpt-4"
+    },
+    
+    "non_advice": {
+      "enabled": true,
+      "metric": "NonAdviceMetric",
+      "advice_types": ["financial", "legal", "medical", "tax"],
+      "threshold": 0.95,
+      "action": "block"
+    },
+    
+    "schema_validation": {
+      "enabled": false,
+      "schema": null,
+      "action": "retry"
+    }
+  },
+  
+  "evaluation_strategy": {
+    "input_tiering": {
+      "enabled": true,
+      "tiers": [
+        {"name": "fast", "checks": ["input_length", "rate_limiting"]},
+        {"name": "medium", "checks": ["pii_detection"]},
+        {"name": "expensive", "checks": ["prompt_injection"]}
+      ]
+    },
+    
+    "output_parallel": {
+      "enabled": true,
+      "max_concurrent": 5
+    },
+    
+    "fail_closed": {
+      "enabled": true,
+      "timeout_seconds": 5.0
+    }
+  },
+  
+  "caching": {
+    "enabled": true,
+    "ttl_seconds": 3600,
+    "cache_decisions": true
+  },
+  
+  "monitoring": {
+    "log_all_triggers": true,
+    "alert_on_bypass": true,
+    "export_to_phoenix": true,
+    "metrics_endpoint": "${PROMETHEUS_PUSHGATEWAY}",
+    "effectiveness_tracking": {
+      "enabled": true,
+      "track_false_positives": true,
+      "user_feedback": true
+    }
+  },
+  
+  "sox_compliance": {
+    "enabled": true,
+    "audit_log_path": "${AGENT_DATA}/guardrail_audit/",
+    "immutable_logging": true,
+    "retention_years": 7
+  },
+  
+  "thresholds_by_environment": {
+    "development": {
+      "prompt_injection_threshold": 0.7,
+      "hallucination_threshold": 0.8
+    },
+    "staging": {
+      "prompt_injection_threshold": 0.75,
+      "hallucination_threshold": 0.85
+    },
+    "production": {
+      "prompt_injection_threshold": 0.8,
+      "hallucination_threshold": 0.9
+    }
+  },
+  
+  "agent_specific": {
+    "agent_name": "REPLACE_WITH_AGENT_NAME",
+    "maturity_level": "L3",
+    "custom_guardrails": []
+  }
+}

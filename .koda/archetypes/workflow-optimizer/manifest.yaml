@@ -1,0 +1,28 @@
+archetype:
+  name: workflow-optimizer
+  display_name: Workflow Optimizer
+  description: |
+    Optimize agent workflows for latency, cost, and quality with profiling,
+    bottleneck identification, and performance tuning.
+  category: 10-agentic-development
+  keywords:
+    - workflow optimizer
+    - workflow optimization specialist
+    - optimization
+    - performance
+    - latency
+    - cost
+    - profiling
+    - bottleneck
+    - tuning
+  constitution:
+    path: workflow-optimizer-constitution.md
+  dependencies:
+    - langsmith
+  workflows:
+    scaffold: scaffold-workflow-optimizer
+    refactor: refactor-workflow-optimizer
+    compare: compare-workflow-optimizer
+    test: test-workflow-optimizer
+    debug: debug-workflow-optimizer
+    document: document-workflow-optimizer

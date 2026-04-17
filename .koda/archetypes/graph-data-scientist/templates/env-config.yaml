@@ -1,0 +1,23 @@
+# Environment Configuration for Graph Data Scientist
+
+python:
+  version: "3.10+"
+
+tools:
+  - name: "neo4j-gds"
+    version: "2.x+"
+    purpose: "Graph Data Science library"
+  - name: "neo4j"
+    version: "5.x+"
+    purpose: "Graph database"
+  - name: "scikit-learn"
+    version: "1.0+"
+    purpose: "ML downstream tasks"
+  - name: "pandas"
+    version: "2.0+"
+    purpose: "Result analysis"
+
+performance:
+  expected_runtime_secs: 60
+  max_runtime_secs: 300
+

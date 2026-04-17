@@ -1,0 +1,192 @@
+# ──────────────────────────────────────────────────────────────
+# Environment Configuration for Code Reviewer Archetype
+# ──────────────────────────────────────────────────────────────
+# This file externalizes all environment-specific settings used
+# during code reviews. Workflows and templates reference these
+# values instead of hardcoding them.
+# ──────────────────────────────────────────────────────────────
+
+# ── Performance ───────────────────────────────────────────────
+# Thresholds and limits that govern review execution
+performance:
+  # Maximum time (minutes) before a review run is considered hung
+  max_review_duration_minutes: 15
+
+  # Maximum number of files to review in a single pass
+  max_files_per_review: 50
+
+  # Maximum lines per file before recommending decomposition
+  max_lines_per_file: 500
+
+  # Function/method size limit — exceeding triggers ✔ Low Cognitive Load rule
+  max_function_lines: 50
+
+  # Cognitive load target — a mid-level dev must understand flow in this many seconds
+  cognitive_load_target_seconds: 30
+
+  # Snowflake-specific
+  snowflake:
+    # MERGE operations above this row count must review clustering implications
+    large_merge_row_threshold: 1_000_000
+    # Minimum duration safeguard (% of expected) — below this = likely no-op
+    min_duration_pct: 5
+
+  # Python-specific
+  python:
+    # Chunk size for DataFrame operations to avoid memory overload
+    default_chunk_size: 50_000
+    # Max retries for transient failure backoff
+    max_retries: 3
+    backoff_base_delay_seconds: 1.0
+    backoff_factor: 2.0
+
+  # Databricks-specific
+  databricks:
+    # Max rows before collect()/toPandas() triggers ✘ No Driver OOM
+    driver_collect_row_limit: 10_000
+    # Streaming checkpoint location pattern
+    checkpoint_base_path: "/mnt/checkpoints"
+
+# ── Variables ─────────────────────────────────────────────────
+# Placeholders referenced by review templates and workflows
+variables:
+  # Review output
+  review_output_filename: "Code_Review.md"
+  review_template_path: "templates/Code_Review.md.template"
+
+  # Constitution reference
+  constitution_path: "code-reviewer-constitution.md"
+
+  # Best practices templates
+  templates:
+    shell: "templates/shell-best-practices.md"
+    python: "templates/python-best-practices.md"
+    snowflake: "templates/snowflake-best-practices.md"
+    tws: "templates/tws-best-practices.md"
+    databricks: "templates/databricks-best-practices.md"
+
+  # Snowflake connection context
+  snowflake:
+    account: "${SNOWFLAKE_ACCOUNT}"
+    warehouse: "${SNOWFLAKE_WAREHOUSE}"
+    database: "${SNOWFLAKE_DATABASE}"
+    schema: "${SNOWFLAKE_SCHEMA}"
+    role: "${SNOWFLAKE_ROLE}"
+
+  # Databricks context
+  databricks:
+    workspace_url: "${DATABRICKS_HOST}"
+    secret_scope: "etl-secrets"
+
+  # TWS context
+  tws:
+    variable_table_prefix: "VT_"
+    log_dir: "/var/log/etl"
+    agent_var: "&ETL_AGENT."
+
+  # Audit columns — mandatory on all target tables
+  audit_columns:
+    - name: load_ts
+      type: TIMESTAMP_NTZ
+      default: CURRENT_TIMESTAMP()
+    - name: source_file
+      type: VARCHAR(500)
+      default: null
+    - name: batch_id
+      type: VARCHAR(100)
+      default: null
+
+  # Logging
+  log_format: "%(asctime)s [%(levelname)s] [run:%(run_id)s] %(message)s"
+  log_date_format: "%Y-%m-%dT%H:%M:%SZ"
+  log_level: INFO
+
+  # Notifications
+  alert_email: "${ALERT_EMAIL}"
+  slack_webhook_url: "${SLACK_WEBHOOK_URL}"
+
+# ── Validation ────────────────────────────────────────────────
+# Pre-review checks and quality gate thresholds
+validation:
+  # Constitution quality gates (minimum rule counts)
+  constitution_minimums:
+    hard_stop_rules: 3
+    mandatory_patterns: 5
+    preferred_patterns: 2
+
+  # Discovery routing — minimum confidence score to consider a match
+  discovery_min_score: 30
+
+  # Review severity classification
+  severity_levels:
+    - level: hard_stop
+      marker: "✘"
+      action: "REJECT or CONDITIONAL APPROVAL"
+      description: "Blocking — must fix before merge"
+    - level: mandatory
+      marker: "✔"
+      action: "Must address before final approval"
+      description: "Quality improvement — required"
+    - level: preferred
+      marker: "➜"
+      action: "Advisory — non-blocking"
+      description: "Nice-to-have — improves long-term quality"
+
+  # Required environment variables (checked before review execution)
+  required_env_vars: []
+
+  # Optional environment variables (used if available)
+  optional_env_vars:
+    - SNOWFLAKE_ACCOUNT
+    - SNOWFLAKE_WAREHOUSE
+    - SNOWFLAKE_DATABASE
+    - SNOWFLAKE_SCHEMA
+    - SNOWFLAKE_ROLE
+    - DATABRICKS_HOST
+    - ALERT_EMAIL
+    - SLACK_WEBHOOK_URL
+
+  # Pre-review checks
+  pre_review_checks:
+    - check: "constitution_exists"
+      description: "Verify code-reviewer-constitution.md is present and non-empty"
+    - check: "templates_exist"
+      description: "Verify all best-practices templates exist in templates/"
+    - check: "manifest_valid"
+      description: "Verify manifest.yaml has valid YAML syntax and required fields"
+
+  # Code formatting standards enforced during review
+  formatting:
+    python:
+      formatter: "black"
+      linter: "ruff"
+      line_length: 120
+      target_version: "py311"
+    shell:
+      linter: "shellcheck"
+      strict_mode: "set -euo pipefail"
+    sql:
+      linter: "sqlfluff"
+      dialect: "snowflake"
+      max_line_length: 120
+
+  # File patterns to auto-detect language during review
+  language_detection:
+    - pattern: "*.sql"
+      language: snowflake
+      template: "templates/snowflake-best-practices.md"
+    - pattern: "*.py"
+      language: python
+      template: "templates/python-best-practices.md"
+    - pattern: "*.ksh"
+      language: shell
+      template: "templates/shell-best-practices.md"
+    - pattern: "*.sh"
+      language: shell
+      template: "templates/shell-best-practices.md"
+    - pattern: "*.bash"
+      language: shell
+      template: "templates/shell-best-practices.md"
+    - pattern: "*.ipynb"
+      language: databricks
+      template: "templates/databricks-best-practices.md"

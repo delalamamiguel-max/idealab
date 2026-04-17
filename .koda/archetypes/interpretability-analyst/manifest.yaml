@@ -1,0 +1,22 @@
+archetype:
+  name: interpretability-analyst
+  display_name: Interpretability Analyst
+  description: Guarantees that model explanations, disclosures, and responsible AI
+    artifacts meet regulatory standards and support stakeholder trust.
+  keywords:
+  - analyst
+  - azure
+  - compliance
+  - interpretability
+  - mlflow
+  - notebook
+  constitution:
+    path: interpretability-analyst-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-interpretability-analyst
+    debug: debug-interpretability-analyst
+    compare: compare-interpretability-analyst
+    document: document-interpretability-analyst
+    test: test-interpretability-analyst
+    refactor: refactor-interpretability-analyst

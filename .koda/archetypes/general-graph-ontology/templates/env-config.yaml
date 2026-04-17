@@ -1,0 +1,5 @@
+# Minimal env-config for general-graph-ontology
+workspace_url: "https://example"
+jobs_api_version: "2.1"
+cluster_policy: "default"
+runtime_version: "11.3"

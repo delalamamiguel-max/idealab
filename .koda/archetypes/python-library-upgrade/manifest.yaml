@@ -1,0 +1,23 @@
+archetype:
+  name: python-library-upgrade
+  display_name: Python Library Upgrade
+  description: Ensure all dependencies are up-to-date, secure, and compatible with
+    the current codebase for Python project.
+  keywords:
+  - api
+  - library
+  - python
+  - upgrade
+  - dependencies
+  - pip
+  - poetry
+  constitution:
+    path: python-library-upgrade-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-python-library-upgrade
+    test: test-python-library-upgrade
+    debug: debug-python-library-upgrade
+    document: document-python-library-upgrade
+    scaffold: scaffold-python-library-upgrade
+    compare: compare-python-library-upgrade

@@ -1,0 +1,27 @@
+archetype:
+  name: git-secret-remediation
+  display_name: Git Secret Remediation
+  description: Ensure the complete and compliant remediation of exposed secrets from
+    git history, resolution of GitHub Security Alerts, and prevention of future secret
+    exposures in accordance with AT&T's Secret Reme
+  keywords:
+  - azure
+  - ci-cd
+  - compliance
+  - git
+  - python
+  - remediation
+  - scala
+  - secret
+  - security
+  - testing
+  constitution:
+    path: git-secret-remediation-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-git-secret-remediation
+    test: test-git-secret-remediation
+    debug: debug-git-secret-remediation
+    document: document-git-secret-remediation
+    scaffold: scaffold-git-secret-remediation
+    compare: compare-git-secret-remediation

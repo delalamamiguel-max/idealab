@@ -1,0 +1,29 @@
+# Environment Configuration for pipeline builder
+
+workspace_name: "analytics-prod-dbx"
+spark_version: "13.2-cpu-x86_64"
+
+default_cluster:
+  node_type: "Standard_D16s_v4"
+  driver_memory: "32G"
+  worker_memory: "32G"
+
+available_libraries:
+  - delta-core-2.4.0
+  - dbx-utils-1.1
+  - great_expectations-0.18.2
+
+feature_flags:
+  aqe: true
+  dynamic_partition_pruning: true
+  photon: false
+
+variables:
+  # Azure ADLSg2 paths (abfss:// protocol)
+  input_path: "abfss://raw@<storage_account>.dfs.core.windows.net/data"
+  output_path: "abfss://processed@<storage_account>.dfs.core.windows.net/data"
+  checkpoint_path: "abfss://checkpoints@<storage_account>.dfs.core.windows.net/"
+  
+  # Storage account configuration
+  storage_account: "mystorageaccount"
+  adls_filesystem: "data"

@@ -1,0 +1,27 @@
+archetype:
+  name: key-vault-config-steward
+  display_name: Key Vault Config Steward
+  description: Defines the guardrails for producing a reusable configuration layer
+    that sources secrets from Azure Key Vault with typed fallbacks and operational
+    observability baked in.
+  keywords:
+  - airflow
+  - api
+  - azure
+  - compliance
+  - config
+  - fastapi
+  - governance
+  - key
+  - notebook
+  - observability
+  constitution:
+    path: key-vault-config-steward-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-key-vault-config-steward
+    test: test-key-vault-config-steward
+    document: document-key-vault-config-steward
+    compare: compare-key-vault-config-steward
+    scaffold: scaffold-key-vault-config-steward
+    debug: debug-key-vault-config-steward

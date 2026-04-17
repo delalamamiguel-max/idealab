@@ -1,0 +1,189 @@
+package {{PACKAGE_NAME}}.config;
+
+import com.azure.cosmos.ConnectionMode;
+import com.azure.cosmos.ConsistencyLevel;
+import com.azure.cosmos.CosmosAsyncClient;
+import com.azure.cosmos.CosmosClient;
+import com.azure.cosmos.CosmosClientBuilder;
+import com.azure.cosmos.DirectConnectionConfig;
+import com.azure.cosmos.GatewayConnectionConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Factory class for creating Cosmos DB clients.
+ * Handles both synchronous and asynchronous client creation with proper configuration.
+ */
+public class CosmosClientAutoConfiguration {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CosmosClientAutoConfiguration.class);
+
+    /**
+     * Creates a synchronous CosmosClient with the provided configuration.
+     *
+     * @param properties Cosmos DB connection properties
+     * @return Configured CosmosClient instance
+     * @throws IllegalArgumentException if required properties are missing
+     */
+    public static CosmosClient getCosmosClient(CosmosProperties properties) {
+        validateRequiredProperties(properties);
+        
+        LOG.info("Creating CosmosClient for database: {}", properties.getDatabaseName());
+        
+        CosmosClientBuilder builder = new CosmosClientBuilder()
+            .endpoint(properties.getHostName())
+            .key(properties.getSecretKey())
+            .consistencyLevel(parseConsistencyLevel(properties.getConsistencyLevel()));
+
+        // Configure connection mode
+        if (Boolean.TRUE.equals(properties.getDirectModeEnabled())) {
+            DirectConnectionConfig directConfig = DirectConnectionConfig.getDefaultConfig();
+            if (properties.getMaxConnectionPool() != null) {
+                directConfig.setMaxConnectionsPerEndpoint(properties.getMaxConnectionPool());
+            }
+            if (properties.getIdleConnectionTimeout() != null) {
+                directConfig.setIdleConnectionTimeout(
+                    java.time.Duration.ofMillis(properties.getIdleConnectionTimeout())
+                );
+            }
+            builder.directMode(directConfig);
+            LOG.debug("Using direct connection mode");
+        } else {
+            GatewayConnectionConfig gatewayConfig = GatewayConnectionConfig.getDefaultConfig();
+            if (properties.getMaxConnectionPool() != null) {
+                gatewayConfig.setMaxConnectionPoolSize(properties.getMaxConnectionPool());
+            }
+            if (properties.getIdleConnectionTimeout() != null) {
+                gatewayConfig.setIdleConnectionTimeout(
+                    java.time.Duration.ofMillis(properties.getIdleConnectionTimeout())
+                );
+            }
+            builder.gatewayMode(gatewayConfig);
+            LOG.debug("Using gateway connection mode");
+        }
+
+        // Configure preferred region
+        if (properties.getPreferredRegion() != null && !properties.getPreferredRegion().isEmpty()) {
+            builder.preferredRegions(java.util.Collections.singletonList(properties.getPreferredRegion()));
+            LOG.debug("Preferred region: {}", properties.getPreferredRegion());
+        }
+
+        // Configure agent suffix
+        if (properties.getAgentSuffix() != null && !properties.getAgentSuffix().isEmpty()) {
+            builder.userAgentSuffix(properties.getAgentSuffix());
+        }
+
+        // Configure content response on write
+        if (Boolean.TRUE.equals(properties.getContentResponseOnWriteEnabled())) {
+            builder.contentResponseOnWriteEnabled(true);
+        }
+
+        return builder.buildClient();
+    }
+
+    /**
+     * Creates an asynchronous CosmosAsyncClient with the provided configuration.
+     *
+     * @param properties Cosmos DB connection properties
+     * @return Configured CosmosAsyncClient instance
+     * @throws IllegalArgumentException if required properties are missing
+     */
+    public static CosmosAsyncClient getCosmosAsyncClient(CosmosProperties properties) {
+        validateRequiredProperties(properties);
+        
+        LOG.info("Creating CosmosAsyncClient for database: {}", properties.getDatabaseName());
+        
+        CosmosClientBuilder builder = new CosmosClientBuilder()
+            .endpoint(properties.getHostName())
+            .key(properties.getSecretKey())
+            .consistencyLevel(parseConsistencyLevel(properties.getConsistencyLevel()));
+
+        // Configure connection mode
+        if (Boolean.TRUE.equals(properties.getDirectModeEnabled())) {
+            DirectConnectionConfig directConfig = DirectConnectionConfig.getDefaultConfig();
+            if (properties.getMaxConnectionPool() != null) {
+                directConfig.setMaxConnectionsPerEndpoint(properties.getMaxConnectionPool());
+            }
+            if (properties.getIdleConnectionTimeout() != null) {
+                directConfig.setIdleConnectionTimeout(
+                    java.time.Duration.ofMillis(properties.getIdleConnectionTimeout())
+                );
+            }
+            builder.directMode(directConfig);
+            LOG.debug("Using direct connection mode");
+        } else {
+            GatewayConnectionConfig gatewayConfig = GatewayConnectionConfig.getDefaultConfig();
+            if (properties.getMaxConnectionPool() != null) {
+                gatewayConfig.setMaxConnectionPoolSize(properties.getMaxConnectionPool());
+            }
+            if (properties.getIdleConnectionTimeout() != null) {
+                gatewayConfig.setIdleConnectionTimeout(
+                    java.time.Duration.ofMillis(properties.getIdleConnectionTimeout())
+                );
+            }
+            builder.gatewayMode(gatewayConfig);
+            LOG.debug("Using gateway connection mode");
+        }
+
+        // Configure preferred region
+        if (properties.getPreferredRegion() != null && !properties.getPreferredRegion().isEmpty()) {
+            builder.preferredRegions(java.util.Collections.singletonList(properties.getPreferredRegion()));
+            LOG.debug("Preferred region: {}", properties.getPreferredRegion());
+        }
+
+        // Configure agent suffix
+        if (properties.getAgentSuffix() != null && !properties.getAgentSuffix().isEmpty()) {
+            builder.userAgentSuffix(properties.getAgentSuffix());
+        }
+
+        // Configure content response on write
+        if (Boolean.TRUE.equals(properties.getContentResponseOnWriteEnabled())) {
+            builder.contentResponseOnWriteEnabled(true);
+        }
+
+        return builder.buildAsyncClient();
+    }
+
+    /**
+     * Validates that all required properties are present.
+     *
+     * @param properties Cosmos DB connection properties
+     * @throws IllegalArgumentException if required properties are missing or invalid
+     */
+    private static void validateRequiredProperties(CosmosProperties properties) {
+        if (properties == null) {
+            throw new IllegalArgumentException("CosmosProperties cannot be null");
+        }
+        
+        if (properties.getHostName() == null || properties.getHostName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Cosmos DB hostName is required but was not provided");
+        }
+        
+        if (properties.getSecretKey() == null || properties.getSecretKey().trim().isEmpty()) {
+            throw new IllegalArgumentException("Cosmos DB secretKey is required but was not provided");
+        }
+        
+        if (properties.getDatabaseName() == null || properties.getDatabaseName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Cosmos DB databaseName is required but was not provided");
+        }
+    }
+
+    /**
+     * Parses consistency level string to ConsistencyLevel enum.
+     *
+     * @param consistencyLevel Consistency level as string
+     * @return ConsistencyLevel enum value
+     */
+    private static ConsistencyLevel parseConsistencyLevel(String consistencyLevel) {
+        if (consistencyLevel == null || consistencyLevel.trim().isEmpty()) {
+            return ConsistencyLevel.BOUNDED_STALENESS;
+        }
+        
+        try {
+            return ConsistencyLevel.valueOf(consistencyLevel.toUpperCase().replace(" ", "_"));
+        } catch (IllegalArgumentException e) {
+            LOG.warn("Invalid consistency level '{}', defaulting to BOUNDED_STALENESS", consistencyLevel);
+            return ConsistencyLevel.BOUNDED_STALENESS;
+        }
+    }
+}

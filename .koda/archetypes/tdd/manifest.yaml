@@ -1,0 +1,36 @@
+archetype:
+  name: tdd
+  display_name: TDD (Test-Driven Development)
+  description: Enforces Red-Green-Refactor discipline — write failing tests first,
+    implement minimal code to pass, then refactor with full test coverage.
+  keywords:
+  - tdd
+  - test-driven
+  - test-first
+  - red-green-refactor
+  - unit-test
+  - integration-test
+  - bdd
+  - atdd
+  - contract-test
+  - property-based
+  - coverage
+  - vitest
+  - jest
+  - pytest
+  - junit
+  - testing
+  - test
+  - failing-test
+  - test-plan
+  - test-strategy
+  constitution:
+    path: tdd-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-tdd
+    debug: debug-tdd
+    test: test-tdd
+    refactor: refactor-tdd
+    document: document-tdd
+    compare: compare-tdd

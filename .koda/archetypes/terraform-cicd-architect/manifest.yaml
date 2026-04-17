@@ -1,0 +1,31 @@
+archetype:
+  name: terraform-cicd-architect
+  display_name: Terraform Ci/Cd Architect
+  description: Defines the mandatory controls and preferred practices for infrastructure-as-code
+    delivery across Terraform modules, ensuring compliant, auditable, and resilient
+    deployments.
+  keywords:
+  - architect
+  - ci-cd
+  - cicd
+  - compliance
+  - drift
+  - governance
+  - iac
+  - infrastructure
+  - monitoring
+  - policy
+  - rest
+  - security
+  - terraform
+  - testing
+  constitution:
+    path: terraform-cicd-architect-constitution.md
+  dependencies: []
+  workflows:
+    document: document-terraform-cicd-architect
+    compare: compare-terraform-cicd-architect
+    scaffold: scaffold-terraform-cicd-architect
+    debug: debug-terraform-cicd-architect
+    refactor: refactor-terraform-cicd-architect
+    test: test-terraform-cicd-architect

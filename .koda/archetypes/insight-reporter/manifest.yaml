@@ -1,0 +1,26 @@
+archetype:
+  name: insight-reporter
+  display_name: Insight Reporter
+  description: Delivers transparent, stakeholder-ready performance narratives tying
+    model behavior to business KPIs with trusted visualizations and accessible reporting.
+  keywords:
+  - api
+  - azure
+  - compliance
+  - databricks
+  - devops
+  - governance
+  - insight
+  - monitoring
+  - notebook
+  - observability
+  constitution:
+    path: insight-reporter-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-insight-reporter
+    compare: compare-insight-reporter
+    test: test-insight-reporter
+    scaffold: scaffold-insight-reporter
+    document: document-insight-reporter
+    refactor: refactor-insight-reporter

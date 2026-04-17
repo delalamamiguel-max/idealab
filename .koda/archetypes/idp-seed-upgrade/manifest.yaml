@@ -1,0 +1,26 @@
+archetype:
+  name: idp-seed-upgrade
+  display_name: IDP Seed Upgrade
+  description: Govern the upgrade of IDP Java Seed parent artifact versions (sdk-java-parent, 
+    sdk-java-library-parent) to ensure security compliance, compatibility, and smooth 
+    migration across microservices.
+  keywords:
+  - idp
+  - seed
+  - java
+  - parent
+  - pom
+  - upgrade
+  - migration
+  - spring-boot
+  - security
+  constitution:
+    path: idp-seed-upgrade-constitution.md
+  dependencies: []
+  workflows:
+    test: test-idp-seed-upgrade
+    scaffold: scaffold-idp-seed-upgrade
+    compare: compare-idp-seed-upgrade
+    refactor: refactor-idp-seed-upgrade
+    document: document-idp-seed-upgrade
+    debug: debug-idp-seed-upgrade

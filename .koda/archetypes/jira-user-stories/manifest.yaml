@@ -1,0 +1,23 @@
+archetype:
+  name: jira-user-stories
+  display_name: Jira User Stories
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the jira user stories archetype.
+  keywords:
+  - governance
+  - jira
+  - stories
+  - user
+  - acceptance-criteria
+  - requirements
+  - backlog
+  constitution:
+    path: jira-user-stories-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-jira-user-stories
+    compare: compare-jira-user-stories
+    document: document-jira-user-stories
+    test: test-jira-user-stories
+    refactor: refactor-jira-user-stories
+    debug: debug-jira-user-stories

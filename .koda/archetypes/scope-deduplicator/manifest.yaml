@@ -1,0 +1,26 @@
+archetype:
+  name: scope-deduplicator
+  display_name: Scope Deduplicator
+  description: |
+    Identify and prevent duplicate agent capabilities across the organization
+    with similarity detection and consolidation recommendations.
+  category: 10-agentic-development
+  keywords:
+    - scope deduplicator
+    - capability deduplication specialist
+    - deduplication
+    - similarity
+    - consolidation
+    - governance
+    - inventory
+    - overlap
+  constitution:
+    path: scope-deduplicator-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-scope-deduplicator
+    refactor: refactor-scope-deduplicator
+    compare: compare-scope-deduplicator
+    test: test-scope-deduplicator
+    debug: debug-scope-deduplicator
+    document: document-scope-deduplicator

@@ -1,0 +1,31 @@
+archetype:
+  name: observability
+  display_name: Observability
+  description: Provide a consistent, secure, low-overhead, end-to-end observability
+    layer (traces, metrics, logs, profiles) for React (frontend) + FastAPI (backend)
+    services using OpenTelemetry, enabling rapid root-
+  keywords:
+  - api
+  - fastapi
+  - governance
+  - logs
+  - metrics
+  - monitoring
+  - observability
+  - opentelemetry
+  - python
+  - react
+  - sql
+  - telemetry
+  - traces
+  - validation
+  constitution:
+    path: observability-constitution.md
+  dependencies: []
+  workflows:
+    document: document-observability
+    refactor: refactor-observability
+    debug: debug-observability
+    compare: compare-observability
+    test: test-observability
+    scaffold: scaffold-observability

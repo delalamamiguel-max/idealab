@@ -1,0 +1,24 @@
+archetype:
+  name: impact-analyzer
+  display_name: Impact Analyzer
+  description: Archetype for Impact Analyzer
+  keywords:
+  - airflow
+  - aks
+  - analyzer
+  - databricks
+  - impact
+  - python
+  - scala
+  - sql
+  - testing
+  constitution:
+    path: impact-analyzer-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-impact-analyzer
+    debug: debug-impact-analyzer
+    refactor: refactor-impact-analyzer
+    test: test-impact-analyzer
+    compare: compare-impact-analyzer
+    document: document-impact-analyzer

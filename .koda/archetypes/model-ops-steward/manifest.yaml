@@ -1,0 +1,26 @@
+archetype:
+  name: model-ops-steward
+  display_name: Model Ops Steward
+  description: Provides operational guardrails for monitoring deployed models, managing
+    incidents, and ensuring lifecycle compliance across enterprise ML systems.
+  keywords:
+  - aks
+  - azure
+  - ci-cd
+  - compliance
+  - databricks
+  - delta
+  - devops
+  - governance
+  - mlflow
+  - model
+  constitution:
+    path: model-ops-steward-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-model-ops-steward
+    compare: compare-model-ops-steward
+    document: document-model-ops-steward
+    refactor: refactor-model-ops-steward
+    test: test-model-ops-steward
+    debug: debug-model-ops-steward

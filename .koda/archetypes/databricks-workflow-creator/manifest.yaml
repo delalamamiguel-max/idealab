@@ -1,0 +1,27 @@
+archetype:
+  name: databricks-workflow-creator
+  display_name: Databricks Workflow Creator
+  description: Codifies the guardrails for authoring and operating Databricks workflows,
+    Delta Live Tables pipelines, and Unity Catalog governed assets with enterprise-grade
+    reliability, security, and observability.
+  keywords:
+  - api
+  - azure
+  - creator
+  - databricks
+  - delta
+  - devops
+  - governance
+  - java
+  - kafka
+  - mlflow
+  constitution:
+    path: databricks-workflow-creator-constitution.md
+  dependencies: []
+  workflows:
+    debug: debug-databricks-workflow-creator
+    refactor: refactor-databricks-workflow-creator
+    compare: compare-databricks-workflow-creator
+    document: document-databricks-workflow-creator
+    test: test-databricks-workflow-creator
+    scaffold: scaffold-databricks-workflow-creator

@@ -1,0 +1,28 @@
+archetype:
+  name: archetype-architect
+  display_name: Archetype Architect
+  description: |
+    Meta-archetype for creating, refining, quality-controlling, and documenting
+    other archetypes in the ecosystem. Ensures consistency, discoverability, and
+    adherence to structural standards across all archetypes.
+  keywords:
+    - archetype
+    - meta
+    - template
+    - generator
+    - constitution
+    - workflow
+    - scaffold
+    - quality
+    - standard
+    - ecosystem
+  constitution:
+    path: archetype-architect-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-archetype-architect
+    refactor: refactor-archetype-architect
+    compare: compare-archetype-architect
+    test: test-archetype-architect
+    debug: debug-archetype-architect
+    document: document-archetype-architect

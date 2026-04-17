@@ -1,0 +1,48 @@
+# Environment Configuration for inference orchestrator
+# Focus: real-time and batch inference using MLflow registry and Azure AKS
+
+runtime:
+  base_image: "mcr.microsoft.com/azureml/curated/sklearn-1.4-ubuntu20.04-py310-cpu"
+  python_version: "3.10"
+
+mlflow:
+  registry_uri: "databricks-uc"
+  serving_endpoint: "mlflow-endpoint"
+  required_stage: "Production"
+
+aks:
+  cluster_name: "aks-ml-production"
+  resource_group: "rg-ml-prod"
+  namespace: "model-serving"
+  minimum_nodes: 3
+  autoscale:
+    min_replicas: 2
+    max_replicas: 10
+    target_cpu_percentage: 60
+
+networking:
+  ingress_controller: "nginx"
+  private_link: true
+  approved_ip_ranges:
+    - "10.0.0.0/16"
+    - "172.16.0.0/16"
+
+observability:
+  application_insights: "appi-mlprod"
+  log_analytics_workspace: "law-mlops"
+  prometheus_endpoint: "https://prometheus.mlops.internal"
+
+security:
+  key_vault_name: "kv-mlops-prod"
+  aad_managed_identity: "00000000-0000-0000-0000-000000000001"
+  tls_enabled: true
+
+ci:
+  azure_devops_project: "AI-Analytics"
+  pipeline_name: "Model-Deployment-AKS"
+  canary_strategy: "25-75-split"
+
+variables:
+  default_request_timeout_ms: 900
+  max_payload_mb: 5
+  shadow_traffic_percentage: 10

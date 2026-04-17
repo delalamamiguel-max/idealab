@@ -1,0 +1,35 @@
+archetype:
+  name: prompt-engineer
+  display_name: Prompt Engineer
+  description: |
+    Create, refactor, and optimize prompt templates with enterprise governance.
+    Supports versioning, token optimization, few-shot patterns, and prompt testing.
+  category: 10-agentic-development
+  keywords:
+    - prompt engineer
+    - prompt engineering specialist
+    - prompt
+    - template
+    - prompt engineering
+    - system prompt
+    - few-shot
+    - instruction
+    - context window
+    - token
+    - prompt chain
+    - prompt library
+    - jinja
+    - template
+  constitution:
+    path: prompt-engineer-constitution.md
+  dependencies:
+    - langchain
+    - tiktoken
+    - jinja2
+  workflows:
+    scaffold: scaffold-prompt-engineer
+    refactor: refactor-prompt-engineer
+    compare: compare-prompt-engineer
+    test: test-prompt-engineer
+    debug: debug-prompt-engineer
+    document: document-prompt-engineer

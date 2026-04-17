@@ -1,0 +1,40 @@
+archetype:
+  name: guardrails-engineer
+  display_name: Guardrails Engineer
+  description: |
+    Design and implement runtime guardrails for agent input validation, output filtering,
+    and safety enforcement. Provides prompt injection detection, PII masking, hallucination
+    blocking, toxicity filtering, and compliance gates for enterprise AI agents.
+  category: 10-agentic-development
+  keywords:
+    - guardrails engineer
+    - agent guardrails
+    - guardrails
+    - safety
+    - filter
+    - block
+    - validation
+    - injection
+    - PII
+    - hallucination
+    - toxicity
+    - boundary
+    - compliance
+    - Galileo
+    - runtime safety
+    - input validation
+    - output filtering
+  constitution:
+    path: guardrails-engineer-constitution.md
+  dependencies:
+    - deepeval
+    - presidio-analyzer
+    - presidio-anonymizer
+    - arize-phoenix
+  workflows:
+    scaffold: scaffold-guardrails-engineer
+    refactor: refactor-guardrails-engineer
+    compare: compare-guardrails-engineer
+    test: test-guardrails-engineer
+    debug: debug-guardrails-engineer
+    document: document-guardrails-engineer

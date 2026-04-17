@@ -1,0 +1,27 @@
+archetype:
+  name: cosmos-db-connector
+  display_name: Cosmos DB Connector
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the Cosmos DB Connector archetype, which generates production-ready
+    Azure Cosmos DB client libraries and connectors for Spring Boot applications.
+  keywords:
+  - azure
+  - cosmos
+  - cosmosdb
+  - database
+  - java
+  - maven
+  - nosql
+  - retry
+  - spring
+  - spring-boot
+  constitution:
+    path: cosmos-db-connector-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-cosmos-db-connector
+    debug: debug-cosmos-db-connector
+    test: test-cosmos-db-connector
+    refactor: refactor-cosmos-db-connector
+    compare: compare-cosmos-db-connector
+    document: document-cosmos-db-connector

@@ -1,0 +1,30 @@
+archetype:
+  name: data-pipeline-builder
+  display_name: Data Pipeline Builder
+  description: This constitution defines the foundational principles and hard-stop
+    rules for the pipeline builder archetype.
+  keywords:
+  - api
+  - batch
+  - builder
+  - data
+  - databricks
+  - delta
+  - incremental
+  - ingestion
+  - loading
+  - pipeline
+  - python
+  - scala
+  - source
+  - streaming
+  constitution:
+    path: data-pipeline-builder-constitution.md
+  dependencies: []
+  workflows:
+    scaffold: scaffold-data-pipeline-builder
+    debug: debug-data-pipeline-builder
+    refactor: refactor-data-pipeline-builder
+    compare: compare-data-pipeline-builder
+    document: document-data-pipeline-builder
+    test: test-data-pipeline-builder

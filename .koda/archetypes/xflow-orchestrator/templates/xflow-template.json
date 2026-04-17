@@ -1,0 +1,707 @@
+{
+    "srcId" : "customers_info",
+    "appId": "customers",
+    "feedDescription": "",
+    "feedType": "MGR", // [MGR | ING] - MGR - Migration, ING - Ingestion (default)
+    "correlationId": "", 
+    "createdBy": "abcd",
+    "dataLibrary": "DP-DLIB-Brws,DP-DLIB-Loc",
+    "rimPolicyName": "NET-440",
+    "sourceContact": dl6438@att.com,
+    "motsId": 18274,
+    "supportTeam": "datalake", // Since version 1.13.13 Not Mandatory. Default is datalake. Valid values are datalake, ecdw, edw.
+    "activeFromDate": "", //Not Mandatory. If set, feed will not be deployed before this date
+    "activeTillDate": "", //Not Mandatory. If set, feed will not be active after this date
+    "metadataNotifyServiceInd": false, //Not mandatory. Default is true - so update DTR feed with schema changes (new/updated) - see Metadata Notification service section for more details
+    "tracking": { //Not mandatory. Not to be used
+        "activeInd": true, //Default is true
+        "destination": "DELTA", //[DELTA|DB] default is 'DELTA'. Delta Tracking table will be located in ADLS (e.g. stl/tracking/stl_file_ctrl)
+        "elasticIntegrationInd": false, // Default is true
+        "srcFileMetadataInd": true //Default true - track file creation time and size from ADLS
+    },
+    "deltaAutoloader": { //Not mandatory. Not to be used
+        "activeInd": true, //Default true, non-mandatory, only true is supported
+        "autoGenerateQueueInd": false, //Default true. true = let autoloader create Storage queue (and event grid).
+        "queueNameMethod": "hashTablePath", //[hashTablePath | UUID] hashTablePath is the default - use full source table path, hash using Shake256 to shrink to 63 chars. Other option is "UUID" (relevant only for Redis option)
+        "queueMetadataTagsInd": true, //Default true - set tag with full table file path (no partitions).
+        "queueMetadataTagsPathMethod": "full", //[full | hashTablePath] default "full"
+        "queueConnectionStringKey": "storage-queue-sas", // Optional, default is taken from source credentials.
+        "queueConnectionScopeName": "storage-queue-kv-scope",  // Optional, mandatory if "queueConnectionStringKey" is popualted.
+        "updateMappingRepo": false, //Default false, if set to true, defined mapping repo will be maintained with Key/Value - Key is path, Value is defined queue name. *** Mapping repo is configurable in STL
+        "mappingRepoKeyMethod": "fullTablePath", //Default is "fullTablePath", meaning <container>/<full table path till partition directories> will be used as key
+        "triggerMode": "fetchAsTriggerOnce", // Default is "fetchAsTriggerOnce". Valid values are fetchAsTriggerOnce, fetchAllAvailable. It is avaialble since STL v1.11.0. fetchAsTriggerOnce - Process all events that seen when stream started. fetchAllAvailable - Process all events that are in Queue. Stream will stop by STL if it reached to max job run time. Default maxJobRunTime is 480 minutes.
+        "streamTrigger": "FIXED_INTERVAL", // Optional. valid values: ALL_AVAILABLE, ONCE, AVAILABLE_NOW, CONTINUOUS, FIXED_INTERVAL.
+        "triggerInterval": 300 //Optional. Interval time in seconds. Default is 300 seconds. Used for CONTINUOUS, FIXED_INTERVAL options in streamTrigger.
+  },
+    "reconciliationInd": false, //Not mandatory, default is false, if set to true, STL Reconciliation process will listen to delete file events for this source and run reconciliation. Migration feeds only
+    "supportMailingLists": "", //Reserved for future use
+    "azureStorageAccount": { //Not Mandatory. This is a way to overwrite default access set by APP_ID and logon sync. Not to be used
+            "subscriptionId": "azuretransformationpocsi",
+            "resourceGroup": "azuretransformationpocrg",
+            "storageAccountName" : "azuretransformationpocsa",
+            "spClientId": "123",
+            "spTenantId": "456",
+            "vaultName": "vault1",
+            "vaultSecretKey": "key1",
+            "vaultConnectionStringKey": "key2",
+            "scopeName": "",
+            "scopeSecretKey": "key1",
+            "scopeConnectionStringKey": "key2",
+            "databricksWorkspaceUrl": ""
+    },
+    "deltaAutoloaderConfiguration": [ //non-mandatory block. deltaAutoloaderInd must be true for this block to be defined. Not to be used
+        {
+        "stream": "read", //[read|write|all]
+        "key": "cloudFiles.maxFilesPerTrigger", //Name of property, Details below
+        "value": "5"
+    },
+    {
+        "stream": "read",
+        "key": "cloudFiles.useNotifications",
+        "value": "true"
+    },
+    {
+        "stream": "read",
+        "key": "cloudFiles.includeExistingFiles",
+        "value": "true"
+    },
+    {
+        "stream": "write",
+        "key": "checkpointLocation",
+        "value": "/mnt/data/checkpoint/customer_info_mapping"
+    },
+    {
+        "stream": "write",
+        "key": "badRecordsPath",
+        "value": "/mnt/data/bad_record_path/customer_info_mapping"
+    }
+  ],
+ 
+    "jobConfiguration": { //databricks job cluster setup. Not to be used
+        "clusterSize": "low", //This can replace "num_workers". Values: [low | medium | high]. Low - 4 worker nodes. Medium - 15. High - 50
+        "clusterConfiguration": {
+            "sparkVersion": "7.3.x-scala2.12", //This will be the default if not populated
+            "nodeTypeId": "Standard_DS4_v2", //This will be the default if not populated
+            "driverNodeTypeId" : "Standard_DS3_v2", //This will be the default if no populated
+            "usePoolInd" : false, // Default is false, if set to true, Pool will be used if provided for Driver and Workers. It is available from STL v1.12.0
+            "driverInstancePoolId" : "Driver Instance Pool Id", // It is not mandatory. If provided, then Driver VM will be used from provided pool. It is available from STL v1.12.0
+            "instancePoolId" : "Worker Pool Id", // It is not mandatory. If provided, then Worker VM will be used from provided pool. It is available from STL v1.12.0
+            "numWorkers": 4, //This will determine the number of worker nodes in job cluster
+            "autoscale": { // This is for simulation and not supported for auto scale
+                "stlAutoscalingInd": true, //Default true
+                "targetJobTimeMin": 90, //Target job time, default 90 min. Below that time, scale down will occur. Above that time, scale up will occur.
+                "minWorkers": 1, //Default 0
+                "maxWorkers": 8 //Default 10
+            },
+            "initScripts": [{ "dbfs" : { "destination" : "dbfs:/databricks/init/initscript-vk1.sh" } }], //This will be the default if not populated
+            "sparkEnvVars": {"http_proxy": "http://proxy.conexus.svc.local:3128", "https_proxy": "http://proxy.conexus.svc.local:3128"}, //This will be the default if not populated
+            "sparkConf": {"key1" : "val1"} // This will be added to spark conf of Cluster configuration.
+        },
+        "libraries": [{"jar": "dbfs:/mnt/data01-mnt/jars/stl-transformation-1.0-SNAPSHOT-jar-with-dependencies.jar"}], //This will be the default if not populated
+        "spark_jar_task": {"main_class_name": "com.att.datalake.stl.IngestMain"}, //This will be the default if not populated
+        "max_concurrent_runs": 1, //This will be the default if not populated. TBD - do not make it available in API to avoid issues.
+        "jobInvocationConfig": {
+          "continuousProcessing": {
+            "activeInd": false, //Default true, if set to true, this feed will run 24/7 (and schedule will not be allowed).
+            "intervalBetweenChecksMin": 30, //The minimum time interval between storage queue check, default 60 minute - non-mandatory. The lowest possible value is 5 min
+            "minimumMessagesForInvocation": 10, //Minimum messages for invocation, default 1 (once we have messages, invoke job)
+            "maxIntervalsWithoutMinimumMessages": 3, //If minimumMessagesForInvocation > 1, this sets the maximum number of times, default 3
+            "checkFromTime": "", //24HH:MM format, default null (no activation window). If set, the check on queue will occur only within given activation window (checkToTime must be set too and before checkToTime)
+            "checkToTime": "" //24HH:MM format, default null (no activation window). If set, the check on queue will occur only within given activation window (checkFromTime must be set and before checkFromTime)
+          },
+          "schedule": { //Not mandatory. If not selected, only job API invocation will start a job.
+             "type": "databricks", //Valid options are 'databricks', 'external'. Default is "databricks". If external is used, schedule trigger will be externally managed. Since xflow 2.0.0 external option is available.
+             "cronSchedule": "0 0 * * * ?",
+             "timeZone": "America/Los_Angeles" //relevant for databricks scheduler only. Default will be - US East (NiFi Tracking Timezone)
+          },
+          "autoRestartInd": false // Not mandatory, default false. Cannot be combined with active continuousProcessing or schedule. if true, jobs will be re-invoked whenever they identified as completed.
+      },
+        "maxJobRunningTimeMin": 480 //This will be the default if not populated. Maximum number of Minutes a single job should run for. If exceeded, the job will be stopped.
+    },
+    "source": {
+        "httpFileSource": { //will be translated to routing rule in FileGW - call addRule API in FileGW with app_id, src_id, sourceLocation and below parameters
+               "feedId": "msp", //Not mandatory - to be used in rare cases in which unique FileGW end point is required for this table. default feedId is appId
+               "writeEmptyFileOnTargetInd": true, //Not mandatory - Default is false. If set to true, FileGW will write empty file on target location with identified partitions.
+               "authAppId": "msp", //Not mandatory. Only to be used if a different service principle is required (than root app_id)
+               "tempDirInd": true, //Not mandatory, default false. If set to true, files will be downloaded to local drive first and then re-routed to destination
+               "tempFileRetentionHours": 24, //Not Mandatory, default 0 (deleted immediately). Relevant only if tempDirInd=true
+               "duplicateFileCheckInd": true,
+               "filterBy": "FILE_NAME", //Options: [FILE_NAME | HTTP_HEADER]. To be used only if Routing Rules not defined
+               "filterRegex": "MSP_T1.*", //regex pattern to execute on "filterBy"
+               "fileActions": [ //With this option, tempDirInd must be set to true
+                     {
+                          "actionType": "EMPTY_FILE_VALIDATION", //Mandatory, options: [EMPTY_FILE_VALIDATION|RECORD_COUNT_VALIDATION|CLEANSING|COMPRESSION_ARCHIVE|EXTRACT_HEADER_TRAILER|CREATE_AUDIT|DEST_FILE_PATTERN|DEST_PARTITIONING]
+                          "actionParameters": {
+                            "onEmpty": "IGNORE", //Default IGNORE, options [IGNORE|LOAD|FAIL]. IGNORE - send file to reject. LOAD - move to target. FAIL - send to reject dir and fail. In case of archives - check each file in archive
+                        }
+                    },
+                    {
+                        "actionType": "RECORD_COUNT_VALIDATION",
+                        "actionParameters": {
+                            "source": "HEADER", //options: [HEADER|TRAILER|HTTP_HEADER] //For header/trailer - only first/last lines will used in case of header/trailer
+                            "countRegex": ".*record_count=(.*)", //Must define exactly one group that identifies the record count in text
+                            "offset" : 1, //Default 0, if Record count does not inlcude header/trailer lines - offset must be set for how many records to exclude when counting file records.
+                            "actionOnFailure": "FAIL", //TBD [FAIL|WARN] FAIL - will fail the file, WARN will generate alert but will process file
+                        }
+                    },
+                    {
+                        "actionType": "CLEANSE",
+                        "actionParameters": {
+                           "cleansePatterns": [
+                              {"removePattern": "\\r", "replaceWith": "NULL"},
+                              {"removePattern": ".*|~.*", "replaceWith": ""}
+                           ]
+                        }
+                    },
+                   {
+                      "actionType": "COMPRESSION",
+                      "actionParameters": {
+                           "compressionArchiveMethod": "gzip", //Mandatory. Options: [gzip|snappy|bzip2]
+                           "decompressInd": true, //Not Mandatory. Default true
+                           "reCompressionArchiveMethod": "gzip" //Not Mandatory. Options: [gzip|snappy|bzip2]
+                          }
+                    },
+                    {
+                        "actionType": "EXTRACT_HEADER_TRAILER",
+                        "actionParameters": {
+                            "removeHeaderTrailerInd": true, //False by default. Relevant for text files with header/footer only.
+                            "headerLineCount": 1, //should not be less than or equal to 0, how many lines to remove from header
+                            "trailerLineCount": 2, //should not be less than or equal to 0, how many lines to remove from trailer
+                            "excludeEmptyLine" : false //If set to true (default), empty lines will not be counted as lines and will be removed regardless to header/trailerLineCount
+                        }
+                    },
+                    {
+                        "actionType": "CREATE_AUDIT",
+                        "actionParameters": {
+                            "authAppId": "msp", //Not mandatory. Only to be used if a different service principle is required (than root app_id)
+                            "targetLocation": "abfss://adl@datalakeeastus2prd.dfs.core.windows.net/dlfilegw/audit", //Where Audit files will be routed to. TBD
+                            "generateFrom": "SOURCE", //Mandatory. Options: [SOURCE|RECORD_COUNT|GENERATE] -
+                                    SOURCE - audit files sent by caller/source system.
+                                    RECORD_COUNT - build audit files from record count received. recordCount must be set for this option to be valid.
+                                    GENERATE - generate the audit file by counting rows
+                            "sourceAuditFileNameRegex": "msp.*.audit", //Relevant for generateFrom="SOURCE" only. If set, all received file names will be filter for this pattern (prior to routing pattern matching)
+                            "offset" : 0 //Relevant for generateFrom="GENERATE" or "RECORD_COUNT" - if we wish not to add header/trailer records in count
+                        }
+                    },
+                    {
+                        "actionType": "DEST_FILE_PATTERN",
+                        "actionParameters": {
+                            "sourceFileNameRegex": "(.+?)(\.[^.]*$|$)",
+                            "targetFileNamePattern": "${1}_msp_{TIMESTAMP}_{REC_ID}_{REC_ID}${2}",
+                            "targetFileNameOperation":"TO_LOWERCASE" //Options: [TO_LOWERCASE | TO_UPPERCASE]
+                        }
+                    },
+                    {
+                        "actionType": "DEST_PARTITIONING",
+                        "actionParameters": {
+                          "partitions": [
+                            {
+                              "partitionOrder": 1,
+                              "partitionName": "region", //Not mandatory. If defined will use Hive/Spark partitioning style, e.g. data_dt=20230330 (for partitionName="data_dt"). If not defined, will use only date
+                               "source": "FILE_NAME", //Mandatory. Options: [FILE_NAME | SYSDATE]
+                               "partitionValueRegex": ".*_(.*)_.*.dat" //Relevant/Mandatory only if source=FILE_NAME. Need to define a group that isolates the date string
+                            },
+                            {
+                               "partitionOrder": 2,
+                               "partitionName": "data_dt", //Not mandatory. If defined will use Hive/Spark partitioning style, e.g. data_dt=20230330 (for partitionName="data_dt"). If not defined, will use only date
+                               "source": "FILE_NAME", //Mandatory. Options: [FILE_NAME | SYSDATE]
+                               "partitionValueRegex": ".*_.*_(.*).dat", //Relevant/Mandatory only if source=FILE_NAME. Need to define a group that isolates the date string
+                               "sourceDateFormat": "yyyyMMddhhss", //Relevant/Mandatory only if source=FILE_NAME. Describes the format of the date string taken from file name
+                               "targetDateFormat": "yyyyMMdd"
+                            }
+                          ]
+                        }
+                    }
+                ]
+        },
+        "azureFilesSource": {
+               "sourcePullConfig": {
+                    "pullFrequencyMin": 60, // Default is 60 mins. This value controls about wow frequently file share to be scanned for files. Available since 1.19.0
+                    "startWindowHrs": "09:00", // Format is HH:mm, if provided than file share will be scanned during start and end Window hours only. Available since 1.19.0
+                    "endWindowHrs": "10:00", // Format is HH:mm, if provided than file share will be scanned during start and end Window hours only. Available since 1.19.0
+                    "ignoreUnmatchedFilesInd" : false, // Default is false. if sets to true, File Gateway will ignore unmatched files for 3 days and then move to reject if not processed by any other feed. Available since 1.30.0
+                     "azureFileShare": {
+                       "fileShareName": "bravo-dev01", // file share name on storage account
+                       "accountName": "dicorenprddev01cd", // storage account name
+                       "sasTokenVaultName": "dl-nprd-dev-xflow-kv", // Azure file share SAS token vault name
+                       "sasTokenSecretKey": "sas-token-cd-files-secret-key", // Azure file share SAS token related vault key
+                       "resourcePath": "lz/inbound" // directory path from which files will be picked
+                   }
+               },
+               "feedId": "msp", //Not mandatory - to be used in rare cases in which unique FileGW end point is required for this table. default feedId is appId
+               "writeEmptyFileOnTargetInd": true, //Not mandatory - Default is false. If set to true, FileGW will write empty file on target location with identified partitions.
+               "authAppId": "msp", //Not mandatory. Only to be used if a different service principle is required (than root app_id)
+               "tempDirInd": true, //Not mandatory, default false. If set to true, files will be downloaded to local drive first and then re-routed to destination
+               "tempFileRetentionHours": 24, //Not Mandatory, default 0 (deleted immediately). Relevant only if tempDirInd=true
+               "duplicateFileCheckInd": true,
+               "filterBy": "FILE_NAME", //Options: [FILE_NAME | HTTP_HEADER]. To be used only if Routing Rules not defined
+               "filterRegex": "MSP_T1.*", //regex pattern to execute on "filterBy"
+               "fileActions": [
+                     // All options are similar to httpFileSource for file actions.
+                ]
+        },
+        "jdbcSource": {
+               "connectionType": "ORACLE", //Mandatory. Options: [ORACLE | SQL_SERVER | MY_SQL | VERTICA | TERRADATA | SNOWFLAKE | TRINO | POSTGRESQL | GENERIC]
+               "logonScopeName": "dl-eastus2-dev-sec-kv-scope", //Mandatory
+               "logonSecretName": "logon-oracle-dev", //Mandatory.
+                                                      // JDBC Connection/Logon secret format:
+                                                      //     Pipe-delimited properties in the general property format of key:value,
+                                                      //     Should include the properties:
+                                                      //          - user
+                                                      //          - password or pem_private_key   (pem_private_key for Snowflake)
+                                                      //          - url or (host and port)        (host and port are optional format for Snowflake in DBR 11.3 LTS and above)                                                  
+               "sqlFileLocation": "", //Location of SQL file. ADLS container should be accessible by the SP for this feed. Either sqlFileLocation or dbTable is mandatory
+               "driverLocation": "dbfs:/mnt/adlcontainer/stl/3rd-party/ojdbc8.jar", //Not mandatory
+               "driverClassName" : "oracle.jdbc.OracleDriver",
+               "fetchSize": 20000, //Not mandatory. Default per JDBC connection
+               "lowerCaseHeaderInd": true, //Default true - will lower-case source table column names
+               "parametersSubstituteString": ":?", //Optional, default is "?". Occurrences of this string in the SQL query are substituted with parameters' values in runtime.
+               "dbTable": "MY_SCHEMA.MY_TABLE", //Name of a table to select records from. Either sqlFileLocation or dbTable is mandatory.
+               "sfDatabaseName": "snowflake_database_name", // Required for Snowflake option.
+               "sfSchemaName": "snowflake_schema_name",     // Required for Snowflake option.
+               "sfWarehouse": "snowflake_warehouse",        // Required for Snowflake option.
+                                                            // More optional Snowflake properties can be defined via the following "jdbcSourceProperties" section. Here are the available options:
+                                                            // https://docs.snowflake.com/en/user-guide/spark-connector-use#setting-configuration-options-for-the-connector
+               "jdbcSourceProperties": { // Optional. Any property to setup on the Spark jdbc connection                                    
+                   "<property key 1>": "<property value 1>",   
+                   "<property key 2>": "<property value 2>", // ...     
+               },
+               "dbTablePartitioning": { //Optional. If exists, then all sub properties are mandatory, except "boundsSource".
+                   "partitionColumn": "BATCH_ID", // Only column with Numeric|Date|Timestamp datatype. Has to be a selected column in sqlFileLocation or dbTable.
+                                                  // For Oracle source, if partition column is date or timestamp, then consider adding any or all of the following properties:
+                                                  //   "jdbcSourceProperties" : {
+                                                  //       "oracle.jdbc.mapDateToTimestamp" : "false",
+                                                  //       "oracle.jdbc.timezoneAsRegion" : "false",
+                                                  //       "sessionInitStatement" : "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS' NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS'"
+                                                  //    }
+                   "boundsSource": "PARAMETER", //Optional, values: PARAMETER|FIXED, default FIXED.
+                                                // - If PARAMETER, then "lowerBound" and "upperBound" identify parameter indexes. Otherwise, those are real values.
+                                                //                 it could be one of the parameters already used for the query itself, or a separate one.
+                   "lowerBound": "1", // (Long|Date|Timestamp) Read source in parallel with defined number of partitions between the bounds, and the rest of the matching data.
+                   "upperBound": "2", // (Long|Date|Timestamp) Parameter index will populate the bound with the identified parameter’s current value.  
+                   "numPartitions": 10,
+                   "useQueryAlias": true //Optional, default- false. set to true for jdbc sources that require to wrap the query in the "dbTable" property with a table alias.
+               },
+               "parameters": [
+                {
+                  "index": 1, //Mandatory.
+                  "sourceType": "SQL", //Mandatory. Options [SQL | SYSDATE | FIXED | TBD...]
+                  "source": "SELECT CONVERT(VARCHAR(8), GETDATE()-1, 112) AS [yyyymmdd]", //One value only
+                  "outputType": "STRING", //Default STRING, options: [BIG_DECIMAL | BOOLEAN | BYTE | DATE | DOUBLE | FLOAT | INT | LONG | ROW_ID | SHORT | STRING | TIME | TIMESTAMP]
+                  "outputDateFormat": "yyyyMMdd", //Not mandatory. When sourceType="SYSDATE"
+                  "outputTimezone": "US/Eastern", //Not mandatory. When sourceType="SYSDATE"
+                  "fetchParameterType": "FETCH_ON_NULL", // [FETCH_ALWAYS | FETCH_ON_NULL]. FETCH_ALWAYS - execute query every time. FETCH_ON_NULL executes query only if last value (watermark) is null
+                  "saveValueFromIndex":2 //Not mandatory
+                },{
+                  "index": 2,
+                  "sourceType": "SQL",
+                  "source": "select MAX(BATCH_ID) as param2 FROM ECDW_UVRS_ENB01_GGS.SRC_MKT_BATCH_SCN_LOG WHERE lower(TABLE_NAME) ='csm_pay_channel'",
+                  "outputType": "STRING",
+                  "fetchParameterType": "FETCH_ALWAYS"
+                }
+               ],
+               "auditFileConfig": {
+                      "authAppId": "msp", //Not mandatory. Only to be used if a different service principle is required (than root app_id)
+                      "targetLocation": "abfss://adl@datalakeeastus2prd.dfs.core.windows.net/dlfilegw/audit", //Where Audit files will be routed to.
+                      "targetNameFormat": {
+                             "targetFileNamePattern": "msp_audit_{TIMESTAMP,'yyyMMdd'}" //Mandatory. Variable options: [TIMESTAMP | EPOCH]
+                       },
+                       "auditFileContentConfiguration": { //Mandatory for generated audit files
+                              "delimiter": "|", //Not mandatory, default pipe
+                              "dateSource": "SYSDATE", //Not mandatory. Options: [SYSDATE]
+                              "dateOutputFormat": "yyyyMMdd" //Mandatory
+                       }
+               }
+       },
+       "kafkaSource": {
+               "logonScopeName": "dl-eastus2-dev-sec-kv-scope",
+               "logonSecretName": "logon-kafka-dev", // Logon secret value is a json map element, i.e. {"key1":"value1", ...} with any required logon properties.
+                                 // For example:
+                                 //   {
+                                 //      "userName": "kafkauser@dbde.att.com", //Mandatory
+                                 //      "password": "kafka password", //Mandatory
+                                 //      "kafka.ssl.truststore.location": "/dbfs/mnt/adlcontainer/kafka/jks/datalake.truststore.jks", // SP permitted to access this mounted location
+                                 //      "kafka.ssl.keystore.location": "/dbfs/mnt/adlcontainer/kafka/jks/datalake.keystore_kafka.jks", // SP permitted to access this mounted location
+                                 //      "kafka.ssl.truststore.password": "kafka truststore password",
+                                 //      "kafka.ssl.key.password": "kafka key password",
+                                 //      "kafka.ssl.keystore.password": "kafka keystore password"
+                                 //    }
+               "saslMechanism": "PLAIN", //Optional, default = PLAIN
+               "securityProtocol": "SASL_SSL", // Optional, default = PLAINTEXT. valid values: SSL | SASL_SSL | PLAINTEXT
+               "bootstrapServers": "zlt19931.vci.att.com:9093,zlt19932.vci.att.com:9093,zlt08654.vci.att.com:9093,zlt07881.vci.att.com:9093",
+               "subscribe": "oce.common.all.reporting-v1-T3",
+               "groupId": "CLOUD_DL_CG_OCE_ORDERS",
+               "maxOffsetsPerTrigger": 10000, //Optional
+               "maxBytesPerTrigger": 5242880, //Optional, default is 1GB
+               "pollTimeoutMs": 60000, //Optional, default is 120000
+               "startingOffsets": "latest", // Optional, default is "latest". valid values: earliest|latest
+               "failOnDataLoss": true // Optional, default is true. true|false
+           // Define "sourceFileFormat" below with the Kafka messages format - csv, json or avro.
+           // To save Kafka feed as-is to target location:
+           //   A. Define the "sourceFileFormat" with "kafkatext" for text messages (json/csv).
+           //   B. Don't define a source schema. Target schema can have only added target partition columns.
+           //   C. "targetFileFormat" should be "csv" or "text".
+       },
+       "sourceLocation": "abfss://staging@azuretransformationpocsa.dfs.core.windows.net/customers/customer_info", //mandatory
+       "sourceRejectLocation": "abfss://reject@azuretransformationpocsa.dfs.core.windows.net/customers/customer_info", //non-mandatory. If set, failed files will move to this location. Even if more than one destination fails, only one copy will exists in reject. If the file pre-exist in reject directory already, rename the existing file with <orig name>.<timestamp>
+       "sourceBadFilePath": "abfss://reject@azuretransformationpocsa.dfs.core.windows.net/customers/customer_info", //Defines the location in which a bad-file JSON with location & reason will be created. Default: <stl container>/sources/<app_id>/<feed_id>/bad_files
+       "sourceFileFormat": "csv", //Mandatory, except for jdbc source. option between: parquet, orc, avro, csv, fixed, xml, json (xml option valid from STL 1.6.0, json option valid from STL 1.10.0)
+       "fixedLengthCounts": [9,10,2,15,4] //Optional. Only relevant for "fixed" "sourceFileFormat". A list of column fixed lengths.
+       "jsonMultiline" : false, //Relevant only if "sourceFileFormat" is "json". Default false. More details: https://wiki.web.att.com/display/ED/STL+User+Guide#STLUserGuide-JSONSource
+       "csvDelimiter": ",", //Relevant only if "sourceFileFormat" is "csv". Not mandatory - default ',' (comma)
+       "csvIgnoreHeaderInd": true, //Relevant only if "sourceFileFormat" is "csv". Not mandatory - default false. If set to true, the first record of each file will be removed.
+                                   //Note: STL do not require schema on header even if source files has that. Schema must be defined in the "schema" element below.
+       "csvIgnoreExtraColumnsInd": false, //Optional, default is false. If true, STL will allow csv source files with more columns than configured.
+       "csvSourceProperties": { // Optional, This is used only for source csv file format.
+                                 // Possible properties: https://spark.apache.org/docs/latest/sql-data-sources-csv.html#data-source-option                                       
+            "<property key 1>": "<property value 1>",   
+            "<property key 2>": "<property value 2>", // ...     
+        },
+       "fileEncryption": {"encryptionType" : "openssl"}, //Optional. option between: "openssl", "gpg". (gpg option valid from STL 1.6.0)
+       "fileCompression": "gzip", //Optional. Only relevant when "fileEncryption" is populated. only "gzip" is supported.
+       "filterQuery": "", //non-mandatory. Spark SQL filter to be executed on source data. Supported as of STL 1.4.0
+       "createObjectMetadataInd": true, //non-mandatory. default false. Will add metadata tags "stlstatus" with one of ['complete','fail'] and "stllastupdate" with timestamp of last update
+       "xmlRowPath": "", // non-mandatory. Provide xmlRowPath only when sourceFileFormat is xml. (valid from STL 1.6.0)
+       "schema": [ //Mandatory
+           {"columnName":"id", "columnType" :"int"}, //Spark SQL/Scala data types https://spark.apache.org/docs/latest/sql-ref-datatypes.html#tab_scala_0
+           {"columnName":"first_name"}, //type "string is the default"
+           {"columnName":"family_name"},
+           {"columnName":"email", "jsonMapping":"contact.email"}, // for full json mapping options see : https://wiki.web.att.com/display/ED/STL+User+Guide#STLUserGuide-JSONSource
+           {"columnName":"gender"},
+           {"columnName":"phone_number"},
+           {"columnName":"download_count"},
+           {"columnName":"created_at_timestamp"}
+       ],
+       "fileRetentionDays": 45, //Not mandatory. default 90 days (for ING feeds only. MGR feeds will default -1). Days after which STL will delete the file id processing was successful. To disable, set to -1. From STL 1.9.0
+       "validations": [ //non-mandatory
+                {
+                     "description": "Validate Schema and Schema types",
+                     "validationType": "schema", //Not relevant for Autoloader
+                     "validationParameters": {
+                     "validateDataTypes": true
+                  }
+                },
+                {
+                     "description": "Duplicate File Check",
+                     "validationType": "duplicateFileCheck", //Not relevant for Autoloader
+                     "validationParameters": {
+                     "daysBack": 60
+                  }
+                },
+                {
+                    "description": "Validate download_count is integer before casting",
+                    "validationType": "regex",
+                    "sourceColumns": ["id"],
+                    "validationParameters": {
+                        "pattern": "^[0-9]*$"
+                    }
+                }
+              ]
+    },
+   "targets": [{
+       "targetLocation": "abfss://data@azuretransformationpocsa.dfs.core.windows.net/customers/customer_info", //Mandatory.
+       "targetFileFormat": "delta", //non-mandatory, default "delta", Supported options parquet, csv and delta, database
+       "filterQuery": "", //non-mandatory. Spark SQL filter to be executed on source data. future item.
+       "writeMode": "upsert", //non-mandatory, default: "append". Other options ['overwrite','overwritePartition','append'].
+                              // 'append' - default option. Will append incoming data
+                              // 'overwrite' - this option will clear the table before loading
+                              // 'overwritePartition' - will clear target partitions that are in incoming data (as of STL 1.3.5)
+                              // 'upsert' - update (will require PK definitionin schema). Not fully supported
+       "databaseTarget": { //Required for 'database' file format.
+           "connectionType": "SNOWFLAKE", //Mandatory. Options: [ORACLE | SQL_SERVER | MY_SQL | VERTICA | TERRADATA | SNOWFLAKE]            
+           "logonScopeName": "dl-eastus2-dev-sec-kv-scope", //Mandatory
+           "logonSecretName": "logon-sf-dev", //Mandatory. see 'jdbcSource' for details on logon format.
+           "driverLocation": "/Volumes/container/3rd-party/ojdbc8.jar", //Optional
+           "driverClassName": "oracle.jdbc.OracleDriver", //Optional
+           "connectionProperties": {
+               "<property key 1>": "<property value 1>",
+               "<property key 2>": "<property value 2>
+           },
+           "snowflake": { //Required for 'SNOWFLAKE' connectionType.
+                  "url": "cdononprod.east-us-2.privatelink.snowflakecomputing.com",
+                  "databaseName": "snowflake_database_name",
+                  "schemaName": "snowflake_schema_name",
+                  "warehouse": "snowflake_warehouse",
+                  "role": "snowflake_role",
+                  "externalStageInd": true, //Optional, default is false. If true - Existing Snowflake stage is required; Admins to create and set access permissions for the app-id SP.
+                  "externalStageName": "SF_NAME_SPACE.SF_STAGE_NAME", //Required when externalStageInd is true.  
+                  "externalStageFileFormat": "parquet", //Optional. default is parquet. Other supported option: csv
+                  "externalStageProperties": {  //Optional. Additional properties will be used during Spark write to stage location.
+                      "<property key 1>": "<property value 1>",
+                      "<property key 2>": "<property value 2>
+                  },
+                  "cleanupStageOnSuccessInd": true //Optional, default true
+           },
+           "dbTable": { //Mandatory
+               "tableName": "MY_TABLE", //Mandatory
+               "tableProperties": {
+                   "<property key 1>": "<property value 1>",
+                   "<property key 2>": "<property value 2>
+               }
+           }
+       },
+       "upsertRankingColumnOrder": ["created_at_timestamp"], //non-mandatory. TBD - if an input file will contain more than one record with the same primary key, Delta update will fail. We have to create unique dataset and for that we need to know how to rank
+       "vacuumDaysOld": 7, //Vacuum deletes files that are not active in Delta table. By default STL will run it (at the end of the job) for files older than 7 days only if writeMode is not 'append'. -1 disables this. It is relevant only for target write format delta.
+       "controlColumns": { //non-mandatory. This will add new control records to each table
+            "fileNameColumnInd": true, //Default is true - add "dl_src_file_name" column with full table path
+            "fileNameSourceColumn": "", //Not mandatory. If defined, must be a column from source schema - from which the value will be taken. If not defined, value will be autogenerated by STL
+            "creationTimestampColumnInd": true, //Default is true - add "dl_load_ts" column name with loading timestamp
+            "creationTimestampSourceColumn": "" //Not mandatory. If defined, must be a column from source schema - from which the value will be taken. If not defined, value will be autogenerated by STL
+            "creationTimestampSourceColumnFormat": "yyyymmdd_hhmmss" //Not mandatory. Relevant when source column is a String
+        },
+        "removeTargetMetadataFilesInd" : true, // Default is false. If this is set _SUCESSS, _committed* files will be not written on target. It is relevant only on parquet and csv target file format.
+        "csvTargetProperties": { // Optional, This is used only for target file format as csv.
+                                 // Possible properties: https://spark.apache.org/docs/latest/sql-data-sources-csv.html#data-source-option
+                                 // Default properties values:
+                                     // "sep": ","
+                                     // "header": "false"
+                                     // "compression": "none"   // Supported options are none, bzip2, gzip, lz4, snappy and deflate.
+                                     // "emptyValue": "null"
+                                     // "nullValue": null
+                                     // "ignoreLeadingWhiteSpace": "false"
+                                     // "ignoreTrailingWhiteSpace": "false"                                           
+            "<property key 1>": "<property value 1>",   
+            "<property key 2>": "<property value 2>", // ...     
+        },
+        "castToNumericReplaceNaNWith": -1, //Optional, if defined, then nulls in numeric columns that go through casting is replaced with this value.
+        "replaceValuesWithNull": ["","NA"], //Optional. default: [""] (replace only empty string). For string columns, will replace matching values with real null.
+        "trimSpacesInd": true, //Optional, default is true. Trim space characters on string columns. Not relevant for jdbc source feed.
+        "targetFilePattern" : "{CONFIG_ID}_{APP_ID}_{SRC_ID}_{TIMESTAMP, 'yyyyMMddhhmmss'}_{UNIQUE_ID}.csv", //Not mandatory, Relevant for NON-DELTA targets only e.g. csv or parquet, if not defined - Spark default will be used. Note! This will force writing files to temp dir, listing and renaming, use only when no other option is available. It supports APP_ID, SRC_ID, CONFIG_ID, SRC_FILE_NAME, UNIQUE_ID, TIMESTAMP
+        "maxRecordsPerFile": 10000, //Optional. default is based on number of executors. Configured value is not guaranteed.
+        "maxBytesPerFile": 10000,  //Optional. default is based on number of executors. Configured value is not guaranteed.
+        "writeOneFileInd" : false, // Default is false, If targetFilePattern is used for output file then this needs to be set to true. If this is set to true then it can cause performance issues for large files or many files on source location
+        "processOneFileInd" : false, // Default is false, If targetFilePattern needs SRC_FILE_NAME in output file then this needs to be set to true. If this is set to true then it can cause performance issues for large files or many files on source location. It needs to be used in combination with writeOneFileInd and required only wehn SRC_FILE_NAME is needed in targetFilePattern
+        "useStlTempTargetLocationInd": false, //Not mandatory, default false, Relevant only when targetFilePattern is set. If set, files will be downloaded to STL internal container, renamed and moved to target. Else, files will be downloaded to {target location}_{epoch time}
+       "schema": [ //Mandatory only if it is different than source
+           {"columnName":"id", "columnType": "int", "pk": true, "partitionOrder": 1, "columnDescription": "", "ASPR": 1, "pii":0}, // Partitioning logic TBD
+           {"columnName":"first_name"},
+           {"columnName":"last_name","srcColumnName": "family_name"},
+           {"columnName":"email"},
+           {"columnName":"gender"},
+           {"columnName":"phone_number", "encrypted": true},      //encrypted - default is false. Must be set to true in order to use encryption transformations
+           {"columnName":"download_count", "columnType": "int"},              // Casting will run for this column, since the target data type is different than the source.
+           {"columnName":"created_at_timestamp", "columnType": "timestamp"},  // Casting will run for this column, but dateFormat transformation is required.
+           {"columnName":"data_dt"} //New column - must be defined in transformations
+       ],
+       
+       "globalTransformation": {
+            "trimSpacesInd" : true,  //Optional, default is true. Trim space characters on string columns.
+            "removeStartCharacters": "\"", //Optional, if provided remove start characters from columns of string type if matches with provided startCharacters
+            "removeEndCharacters" : "\"", //Optional, if provided remove end characters from columns of string type if matches with provided endCharacters
+            "removeStartAndEndCharacters" : "\"", //Optional, if provided remove only when start and end characters from columns of string type if matches with provided start and end characters. // Since 1.17.0
+             // Optional, replaceValues - replaces existing Values with newValue on all columns that string type.
+             // Use reserved keyword "reserved:NULL" in existingValues to recognize real null values.
+             // Use reserved keyword "reserved:NULL" in newValue to replace with real null value.
+            "replaceValues" : [
+                {
+                    "existingValues" : ["","NA","reserved:NULL"],
+                    "newValue" : "Null"
+                },
+                {
+                    "existingValues" : ["null"],
+                    "newValue" : "Null"
+                }
+            ]  
+        },      
+       "transformations": [ //non-mandatory
+          {
+             "targetColumnName": "id",
+             "sourceColumns": ["id"],
+             "transformationSteps": [  // mandatory at least one step for current transformation
+               {
+                  "transformationType": "uppercase",  // transformationType is mandatory for current transformation step
+                  "description": "Change characters to upper case"
+               },
+               {
+                  "transformationType": "hashingAndEncrypt",
+                  "description": "Encryption",
+                  "transformationParameters": {
+                      "encryptIdentity": "DL_IDENTITY@ATT.COM",
+                      "encryptFormat": "ALPHA_NUM"
+                   },
+                   "onError": { //not mandatory
+                      "failRecordInd": false, // The default is true. This will decide if the transformation failure should be counted for Error Handling Threshold.
+                                              // For example, if set to false, this record will not go to Error Table
+                      "replaceFailedValueWith": "CONSTANT", //Not mandatory - default "NULL". Options:
+                                                  //  'NULL' - will replace failed value with empty value
+                                                  //  'SOURCE' - will replace failed value with original source value before transformation. (This is not valid for encryption transformation since STL 1.4.0)
+                                                  //  'CONSTANT' - will replace failed value with a fixed string
+                                                  //  'SKIP_RECORD' - the entire record will be written to Error table only (since STL 1.7.0)
+                      "replaceFailedValueWithValue": "ABC" //Fixed String to replace with in case replaceFailedValueWith is 'CONSTANT'
+                    }
+                }
+              ]
+          },
+          {
+             "targetColumnName": "card_id",
+             "sourceColumns": ["card_id"],
+             "transformationSteps": [
+                 {
+                     "transformationType": "hashingAndEncrypt",
+                     "description": "Hashing and Encryption with padding",
+                     "transformationParameters": {
+                         "padding": {
+                            "padSide": "left",
+                            "padWidth": "0",
+                            "padToLength": 12
+                         }
+                     }
+                 }
+              ]
+           },
+          {
+             "targetColumnName": "data_dt",
+             "transformationSteps": [
+                 {
+                     "transformationType": "dateFormat",
+                     "description": "Create a new partition date field",
+                     "transformationParameters": {
+                         "dateTargetFormat": "yyyymmdd",
+                         "generatedValue": "SYSDATE"   // reserved words: SYSDATE|SYSDATETIME - to use system date/time. otherwise, referred as a constant value.
+                     }
+                 }
+              ]
+           },
+           {
+             "targetColumnName": "created_at_timestamp",
+            "sourceColumns": ["created_at_timestamp"],
+             "transformationSteps": [
+                 {
+                     "transformationType": "dateFormat",
+                     "description": "Define the source format for casting",
+                     "transformationParameters": {                    // for timestamp target data type, "dateTargetFormat" should not be defined.
+                         "dateSourceFormats": ["yyyy/MM/dd HH:mm:ss"],
+                         "dateSourceTimeZone": "America/Los_Angeles"  // Optional. default is system time zone (EST). Conforms to java.time.ZoneId ID's values.
+                     }
+                 }
+              ]
+           },
+           {
+               "targetColumnName": "email",
+               "sourceColumns": ["email"],
+                "transformationSteps": [
+                   {
+                      "transformationType": "regex",
+                      "description": "Formatting email address",
+                      "transformationParameters": {
+                          "pattern": "(.*)@(.*)\\.(.*)",
+                          "outputFormat": "domain: {2}, user: {1}"
+                       }
+                    }
+                ]
+            },
+            {
+             "targetColumnName": "first_name",
+            "sourceColumns": ["first_name"],
+             "transformationSteps": [
+                 {
+                     "transformationType": "lowercase",
+                     "description": "Change characters to lower case format"
+                 }
+              ]
+           },
+           {
+              "targetColumnName": "created_at_timestamp",
+              "sourceColumns": ["created_at_epoch"],
+              "transformationSteps": [
+                {
+                   "transformationType": "epochToTimestamp",  //valid from STL 1.7.0
+                   "transformationParameters": {
+                        "dateTargetFormat": "yyyy/MM/dd HH:mm:ss", //Mandatory if target column type is string (no required if target column type is timestamp)
+                        "sourceEpochUnit": "seconds" //Not mandatory, Default seconds, options: [seconds|milliseconds]
+                    }
+                 }
+              ]
+           },
+           {
+               "targetColumnName": "download_count",
+                "transformationSteps": [
+                   {
+                      "transformationType": "replace",
+                      "transformationParameters": {
+                          "removePatterns": ["^$","Null"], // list of regex style patterns - e.g. "^$" is for empty string. Optional reserved words: "reserved:NULL"
+                          "replaceWith": "0" // reserved words: "reserved:NULL","SYSDATE","SYSDATETIME" - See below for details.
+                       }
+                    }
+                ]
+            },
+            {
+             "targetColumnName": "card_id",
+             "sourceColumns": ["card_id"],
+             "transformationSteps": [
+                 {
+                     "transformationType": "hash",
+                     "description": "Hashing only",
+                     "transformationParameters": {
+                        "secretScopeName": "dl-prd-vault-name", //Optional, default is DL voltage vault
+                        "saltSecretKey": "salt-secret-key" //Optional, default is DL default salt
+                     }
+                 }
+              ]
+             }
+         ],
+        
+        "errorHandling": { //Not mandatory. Relevant only if record level transformations/validations is set.
+            "errorTableLocation": "abfss://data@azuretransformationpocsa.dfs.core.windows.net/customers/customer_info_errors", //Not mandatory, default name is <table_name>_stlerror
+            "fileFailureThresholdPercentage": 10, //Not Mandatory. Default 0. Above defined % of failed records (validation or transformation), abort job. Below defined %, move failed records to quarantine table.
+            "skipMalformedRecsInd": true, //Not Mandatory. Default true. When true, malformed records (text source files) will not be written to the target table.
+            "onFailure": { //Not mandatory
+                "moveToRejectInd": false, //Deafult false
+                "tagObjectInd": false, //Default false
+                "badFileInd": true, //Default true
+                "retryFileInd": true //Default false - if true, failed file over fatal error will be retried up to 3 times. more details: https://wiki.web.att.com/display/ED/Delta+Lake+Run+Book#DeltaLakeRunBook-FileFailures
+             }
+        },
+        "rimPolicy": { //Valid from STL 1.4.0
+            "rimPolicyCode": "INF-200", //Not Mandatory. ATT RIM Policy Code if exist
+            "rimPolicyDetails": "",
+            "targetRetentionDays": "365", //Mandatory. Data created beyond retention days qualify for deletion.
+            "targetDatePartitionColumn": "", //Not Mandatory. If deletion should be done based on date partition - the partition name should be defined here (and should be defined on target schema as partition).
+            "targetDatePartitionFormat": "yyyymmdd", //Mandatory if targetDatePartitionColumn is set.
+            "targetDateColumn": "", //If deletion is not based on partition, this is the date column the purge will run against (consider metadata/control column dl_load_ts in this case)
+            "targetDateColumnFormat": "", //In case "targetDateColumn" is populated, and the column is Date String, here we can define the format
+            "vacuumDaysOld": "" //non mandatory, default 30 days. After each purge operation, Delta vacuum operation will be executed with 7 days data old. If users wish to change, they can set it here
+        },
+        "postIngestion": { //Not Mandatory. Will define all post ingestion activities such as compaction and validation. Since STL 1.8.0
+            "publish": { //Not Mandatory. Publish raw data. This will configure DDP https://wiki.web.att.com/pages/viewpage.action?spaceKey=ED&title=DDP. Since STL 1.10.0
+                //This will configure DDP with dedicated setup to support incremental publish of Delta sources
+                //Here, users can set DDP feed but only "targetConfiguration" is allowed to be defined (and "jobConfiguration" if needed). The rest will be auto-populated by STL as follows (main points)
+                //  feedId = {feedId} - this will be taken from STL
+                //  sourceConfiguration.sourceType = "table" (source.filterQuery will be populated automatically with start/end timestamp based on dl_load_ts and optional partition filter)
+                //Below is typical example to publish to Data Router (HTTP end point). For all options, please check DDP documentation @ https://wiki.web.att.com/pages/viewpage.action?spaceKey=ED&title=DDP
+                "targetConfiguration": { //Mandatory
+                   "destinationType": "HTTP", //Mandatory, options : S3|HTTP
+                   "fileFormat": "csv", //[parquet|csv] Not mandatory, default "parquet" (other formats might be supported in future).
+                   "tableColumns": "id,first_name,last_name", //Not mandatory. Comma separated list of columns to be published - when a subset of columns should be published.
+                   "addPartitionsAsColumnsInd": true, //Not Mandatory. Default false. If set to true, table partitions will be added as last columns of published files (column name will be partition name)
+                   "csvDelimiter": ",", //Not mandatory, default: \t - relevant for fileFormat="csv" only.
+                   "httpTarget": {
+                       "authentication": { //Mandatory
+                           "useAafInd": true, //Default true (DTR uses only AAF). If set to false, user/password will have to be defined
+                       },
+                       "httpUrl": "https://blpd588.bhdc.att.com:9072/subscriber/download/msp/", //Mandatory (if httpTarget is chosen). Publish destination
+                   }
+                },
+                "invokeAfterBatchInd": false, //Not Mandatory, Default true - invoke DDP after each batch, otherwise invoke once after job completes
+                "filterSourceByPartitionInd": false, //Not Mandatory, Default false. If set to true, partition filter will be added, but this might slow down ingestion
+                "useStlJobConfigurationInd": false //Not Mandatory, Default false. If set to true, STL will set DDP job configuration based on STL job configuration
+            },
+            "compaction": { //Delta Optimize on partitions that were updated since last run. Since STL 1.8.0
+                "activeInd": true, //Default true. 
+                "frequency": "daily", //Default "daily". Options: [daily|afterIngest]. Daily - nightly batch . afterIngest - after each ingestion cycle, Optimize will be called
+                "targetFileSize": 1073741824, //Not mandatory. Default size depends on table size (recommended). Sets spark.databricks.delta.optimize.maxFileSize.
+                "zorder": { //since STL 1.12
+                    "zorderBy": "first_name", //Not mandatory - if not set, zorder will not happen. Sets zorder by column/s.
+                    "minCubeSizeTargetCubeSize": 5497558138880, //Target zcube size in bytes in partition (zorder batch). If not set, Spark/Databricks default will be used
+                    "minCubeSizeThreshold": 161061273600 //Existing zcube will be considered for zorder if existing zcube is below this size (for re-order). If not set, Spark/Databricks default will be used
+                }
+            },
+            "srcToTgtValidation": { //Not mandatory. Since STL 1.9.0. This is a service that runs daily
+                "sourceToTargetValidationInd": true, //Default false. If set to true, completed partitions will be compared to source partitions for row count.
+                "overwriteTargetPartitionOnFailureInd": true //Not Mandatory, default false. If set to true, if partition failed validation, it will be overwritten from SRC partition
+            },
+            "partitionDaysOld": 5, //Not mandatory, default 1. Dont compact/compare partitions before partitionDaysOld passed.
+        }
+    }
+  ]
+}

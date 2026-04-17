@@ -1,0 +1,26 @@
+archetype:
+  name: general-graph-ontology
+  display_name: General Graph Ontology
+  description: Scaffold workflow for General Graph Ontology archetype (General Graph
+    Ontology)
+  keywords:
+  - databricks
+  - delta
+  - general
+  - governance
+  - graph
+  - monitoring
+  - ontology
+  - pyspark
+  - security
+  - spark
+  constitution:
+    path: general-graph-ontology-constitution.md
+  dependencies: []
+  workflows:
+    refactor: refactor-general-graph-ontology
+    test: test-general-graph-ontology
+    debug: debug-general-graph-ontology
+    document: document-general-graph-ontology
+    scaffold: scaffold-general-graph-ontology
+    compare: compare-general-graph-ontology
