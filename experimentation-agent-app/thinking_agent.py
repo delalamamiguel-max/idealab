@@ -3,15 +3,21 @@ Thinking Agent — Multi-Agent Orchestrator with Dynamic Reasoning
 
 This implements a true thinking agent that coordinates specialized subagents
 for experimentation intelligence, with dynamic context building and reasoning.
+
+Now includes Market Intelligence integration — the Telecom Intel pipeline
+feeds competitive signals into the reasoning process.
 """
 
 import json
 import time
+import logging
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
 
 from openai import OpenAI
+
+logger = logging.getLogger(__name__)
 
 
 class AgentMode(Enum):
@@ -49,12 +55,19 @@ class ThinkingAgent:
     with full reasoning transparency.
     """
     
-    def __init__(self, client: OpenAI, model: str = "gpt-4o", temperature: float = 0.4):
+    def __init__(
+        self,
+        client: OpenAI,
+        model: str = "gpt-4o",
+        temperature: float = 0.4,
+        market_intel_context: Optional[str] = None,
+    ):
         self.client = client
         self.model = model
         self.temperature = temperature
         self.thinking_history: List[ThinkingStep] = []
         self.context_cache: Dict[str, Any] = {}
+        self.market_intel_context: Optional[str] = market_intel_context
         
     def process_query(self, query: str, context: str, stream_callback=None) -> str:
         """
@@ -224,6 +237,12 @@ class ThinkingAgent:
                 stream_callback("📝 **Intake Agent:** Structuring for delivery...\n")
             results["intake"] = self._intake_agent(query, context)
         
+        # Market Intel Agent — if market intelligence is available
+        if self.market_intel_context:
+            if stream_callback:
+                stream_callback("📡 **Market Intel Agent:** Analyzing competitive signals...\n")
+            results["market_intel"] = self._market_intel_agent(query, context)
+
         # Always include reasoning agent for synthesis
         if stream_callback:
             stream_callback("🧮 **Reasoning Agent:** Analyzing patterns and implications...\n")
@@ -422,6 +441,54 @@ class ThinkingAgent:
             next_actions=["Review with stakeholders", "Validate technical feasibility"]
         )
     
+    def _market_intel_agent(self, query: str, context: Dict[str, Any]) -> AgentResponse:
+        """Specialized agent for analyzing competitive market signals and their experiment implications."""
+
+        prompt = f"""
+        You are the Market Intelligence Agent, specialized in analyzing competitive telecom
+        market signals and translating them into experimentation opportunities for AT&T.
+
+        Query: "{query}"
+
+        Historical Experiment Context: {context['content'][:3000]}
+
+        Current Market Intelligence:
+        {self.market_intel_context[:4000] if self.market_intel_context else "(No market data available)"}
+
+        Your tasks:
+        1. **Signal Relevance**: Which market signals are most relevant to this query?
+        2. **Competitive Context**: What are competitors doing that affects this area?
+        3. **Opportunity Identification**: What experiments should AT&T consider based on market moves?
+        4. **Risk Assessment**: Are there competitive threats that make this experiment more/less urgent?
+        5. **Signal-Experiment Bridge**: Connect specific market signals to specific experiment recommendations.
+
+        Rules:
+        - Always cite specific signals (provider, signal type, source)
+        - Distinguish between confirmed market moves and Reddit sentiment
+        - Rate signal reliability: official source (high), news (medium), Reddit (low-medium)
+        - Connect market signals to historical experiment patterns when possible
+        - If no relevant market signals exist for this query, say so honestly
+
+        Format your response as structured analysis with clear signal citations.
+        """
+
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=1500,
+        )
+
+        content = response.choices[0].message.content
+
+        return AgentResponse(
+            content=content,
+            confidence=0.80,
+            reasoning=["Market signal analysis", "Competitive intelligence"],
+            evidence=["Telecom market signals", "Competitor website data", "Reddit community sentiment"],
+            next_actions=["Validate signals with product team", "Monitor signal evolution"],
+        )
+
     def _reasoning_agent(self, query: str, context: Dict[str, Any], subagent_results: Dict[str, AgentResponse]) -> AgentResponse:
         """Meta-agent that analyzes patterns and provides strategic reasoning."""
         

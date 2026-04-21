@@ -3,3 +3,5 @@ openai>=1.12.0
 openpyxl>=3.1.2
 python-dotenv>=1.0.0
 pandas>=2.1.0
+# Note: telecom_intel uses only stdlib (urllib, json, ssl) for Apify calls
+# No additional dependencies required for the market intelligence pipeline

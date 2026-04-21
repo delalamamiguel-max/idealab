@@ -1,0 +1,147 @@
+[
+  {
+    "url": "https://www.t-mobile.com/home-internet/plans",
+    "title": "T-Mobile 5G Home Internet Plans — Rely $35, Amplified $45, All-In $55 (with voice line + AutoPay)",
+    "content": "T-Mobile 5G Home Internet plans as of April 2026: Rely at $50/mo ($35 with voice line + AutoPay, 87-318 Mbps down), Amplified at $60/mo ($45 discounted, 170-498 Mbps), All-In at $70/mo ($55 discounted, WiFi 7 gateway, mesh extender, Hulu + Paramount+ included). All plans include unlimited data, 5-year price guarantee, no annual contract, 15-day test drive. Current promos: up to $300 prepaid Mastercard back + 1 free month for new customers.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "signal_type": "pricing",
+    "source_citation": "t-mobile.com, cabletv.com (April 2026)"
+  },
+  {
+    "url": "https://www.t-mobile.com/news/network/t-mobile-launches-fiber-home-internet-with-new-plans",
+    "title": "T-Mobile Fiber Plans — 500 Mbps $60, 1 Gig $75, 2 Gig $90 (with voice line + AutoPay)",
+    "content": "T-Mobile Fiber launched June 2025. Current plans: Fiber 500 at $75/mo ($60 with voice line), Fiber 1 Gig at $90/mo ($75 discounted), Fiber 2 Gig at $105/mo ($90 discounted). All symmetric speeds. Founders Club offer: 2 Gig for $70/mo with AutoPay, no voice line required, 10-year price guarantee (limited areas). All fiber plans include 5-year price guarantee, no contracts, equipment included.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "signal_type": "pricing",
+    "source_citation": "t-mobile.com (April 2026)"
+  },
+  {
+    "url": "https://www.verizon.com/deals/home-internet/",
+    "title": "Verizon Fios myHome Plans — 300 Mbps as low as $20/mo with full bundle stack",
+    "content": "Verizon Fios myHome pricing April 2026: 300 Mbps at $49.99/mo (as low as $20/mo with mobile + home bundle + AutoPay + bonus credits for 3 years), 500 Mbps ~$59.99/mo bundled, 1 Gig ~$74.99/mo bundled, 2 Gig ~$94.99/mo bundled. Promos: free Samsung 43-inch QLED TV or Galaxy Tab S10 FE 5G with 1 Gig/2 Gig plans (65-day maintenance required). Ray-Ban Meta glasses with 1 Gig+. Apple One 6-month trial. myHome perks: $10/mo add-on streaming bundles (Disney+, Netflix, Max, YouTube Premium). Price guarantees: 2-4 year locked pricing.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "verizon",
+    "signal_type": "pricing",
+    "source_citation": "verizon.com, broadbandnow.com (April 2026)"
+  },
+  {
+    "url": "https://www.verizon.com/about/news/verizon-introduces-myhome",
+    "title": "Verizon myPlan Price Increase for 5+ Lines — $3/mo per line increase effective Feb 2025",
+    "content": "Verizon raised prices for myPlan accounts with 5 or more lines, effective February 20, 2025, cutting multi-line discounts. Lines on those older plans pay about $3 more/month per line for 5+ lines. Additionally, +Play (streaming aggregator) new enrollments ended July 9, 2025 — existing subscriptions can be kept but new ones must use myHome/myPlan perks system. Disney/Hulu/ESPN+ bundle changed to Bundle Basic for new customers (April 2025), raising effective cost.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "verizon",
+    "signal_type": "policy_change",
+    "source_citation": "droid-life.com, verizon.com (2025-2026)"
+  },
+  {
+    "url": "https://www.tmonews.com/2026/03/t-mobile-closes-another-loophole-apple-customers-face-dcc-fee-in-april-bills/",
+    "title": "T-Mobile Expands Device Connection Charge to Apple Purchases — $35 activation fee",
+    "content": "T-Mobile expanded its Device Connection Charge (DCC) to include Apple device purchases as of March 27, 2026. iPhones bought via Apple Store (app, online, in-store) now subject to $35 activation fee on next month's bill. Only Samsung, Sam's Club, and Costco purchases remain exempt. This closes a loophole customers were using to avoid the fee.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "signal_type": "policy_change",
+    "source_citation": "tmonews.com (March 2026)"
+  },
+  {
+    "url": "https://www.tmonews.com/2026/04/t-mobiles-latest-plan-moves-could-hit-some-longtime-customers-hard/",
+    "title": "T-Mobile Legacy Plan Forced Migrations — $15 to $100+/mo increases for longtime customers",
+    "content": "T-Mobile is automatically moving some customers on very old plans to other legacy rate plans. Increases can be $15 to over $100 per month depending on plan and account structure. Longstanding perks like 'free line' benefits and legacy discounts are being reduced. Device promotion lines cut from four to two. Free lines may no longer qualify for financing deals. Plans from the Price Lock era or newer legacy plans with guarantees appear less impacted.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "signal_type": "pricing",
+    "source_citation": "tmonews.com (April 2026)"
+  },
+  {
+    "url": "https://www.tmonews.com/2026/04/t-mobile-expected-to-announce-changes-to-device-promotion-program-on-april-2/",
+    "title": "T-Mobile Device Promotion Program Changes — Fewer free devices, no 36-month Galaxy Watch installments",
+    "content": "Starting April 2, 2026, T-Mobile adjusted device promotion offerings: reduction in free devices per promotion (down to two from four), elimination of 36-month installment plans for Galaxy Watch promotions. Changes communicated internally to T-Mobile sales staff as of April 1.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "signal_type": "policy_change",
+    "source_citation": "tmonews.com (April 2026)"
+  },
+  {
+    "url": "https://www.tmonews.com/2026/04/netflix-pricing-changes-and-what-t-mobile-customers-need-to-know/",
+    "title": "Netflix Price Increase Impacts T-Mobile Customers — Standard $11→$13, Premium $18→$20",
+    "content": "Netflix raised plan prices affecting T-Mobile customers: Standard without ads from $11 to $13/month, Premium from $18 to $20/month. T-Mobile still covers full cost of Standard with ads plan ($8.99). For upgraded tiers, T-Mobile subsidizes $6.99 and subscribers pay the rest. Effective immediately.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "signal_type": "pricing",
+    "source_citation": "tmonews.com (April 2026)"
+  },
+  {
+    "url": "https://www.reddit.com/r/tmobileisp/comments/1n2hk5w/terrible_experience_with_t_mobile_home_internet/",
+    "title": "r/tmobileisp: Terrible experience with T-Mobile Home Internet — speeds drop to 50-10 Mbps evenings",
+    "content": "User switched from Xfinity to T-Mobile 5G home internet. Initial speeds great (800+ Mbps down, 80 Mbps up), but after couple months, evening performance dropped drastically to 50-10 Mbps. Intermittent outages becoming common. Upload speeds frequently much lower than promised (<10 Mbps), hurting gamers, streamers, remote workers. Peak-hour congestion worsens things significantly.",
+    "source_type": "reddit",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "subreddit": "tmobileisp",
+    "signal_type": "customer_sentiment",
+    "source_citation": "reddit.com/r/tmobileisp (2026)"
+  },
+  {
+    "url": "https://www.reddit.com/r/Fios/comments/1qeix2s/verizons_systems_continue_to_fail/",
+    "title": "r/Fios: Verizon's systems continue to fail — install delays, activation problems",
+    "content": "Users report installing fiber drops to the house but activation delayed — sometimes because pole connection or dig work isn't complete, or Verizon's systems don't show fiber readiness even though physical work was done. Major outage in mid-January 2026 impacted millions of users (wireless + wired). Post-outage, many FiOS users say things haven't returned fully to normal — higher latency, less reliability.",
+    "source_type": "reddit",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "verizon",
+    "subreddit": "Fios",
+    "signal_type": "outage",
+    "source_citation": "reddit.com/r/Fios, androidcentral.com (2026)"
+  },
+  {
+    "url": "https://www.reddit.com/r/ATTFiber/comments/1rvtc64/is_att_fiber_legit/",
+    "title": "r/ATTFiber: Is AT&T Fiber legit? — Mixed reviews, peak hour speed drops, gateway issues",
+    "content": "Mixed reviews on AT&T Fiber. Some users dealing with multi-day service interruptions. Even with fiber, speeds drop during peak hours (evening streaming, gaming). Upstream speeds remain good but latency/packet loss increases. Equipment complaints: gateways failing, extenders going bad, needing frequent repairs. Regional variation: newer fiber areas have higher satisfaction, older areas with more customers sharing fiber see more issues.",
+    "source_type": "reddit",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "att",
+    "subreddit": "ATTFiber",
+    "signal_type": "customer_sentiment",
+    "source_citation": "reddit.com/r/ATTFiber (2026)"
+  },
+  {
+    "url": "https://www.reddit.com/r/ATT/comments/1o9f9yo/att_announces_price_increase_for_every_home/",
+    "title": "r/ATT: AT&T announces price increase for every home internet customer — promo discounts disappearing",
+    "content": "Some AT&T customers report rates being raised unexpectedly, or promo discounts disappearing. Contractual fine print unclear around price increases. Billing complaints about charges not matching what was promised at signup. This is a key pain point for retention.",
+    "source_type": "reddit",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "att",
+    "subreddit": "ATT",
+    "signal_type": "customer_sentiment",
+    "source_citation": "reddit.com/r/ATT (2026)"
+  },
+  {
+    "url": "https://www.reddit.com/r/tmobileisp/comments/1pfsp9n/t_mobile_internet_fiber_service/",
+    "title": "r/tmobileisp: T-Mobile Internet Fiber Service — router failures, CGNAT complaints, long tech waits",
+    "content": "T-Mobile fiber installs generally seen as improvements over 5G home, but rollout issues noticeable: long wait times for tech, delays in provisioning, drops in account setup workflows. CGNAT (Carrier-Grade NAT) complaints from fiber users wanting routable IPs. Nokia 'trashcan' device failures. Customer service described as unhelpful — long wait times, bounced between departments.",
+    "source_type": "reddit",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "subreddit": "tmobileisp",
+    "signal_type": "customer_sentiment",
+    "source_citation": "reddit.com/r/tmobileisp (2026)"
+  },
+  {
+    "url": "https://www.tmonews.com/2026/01/what-you-need-to-know-about-t-mobiles-latest-surcharge-increase/",
+    "title": "T-Mobile Regulatory Surcharge Increase — voice and mobile internet line fees raised",
+    "content": "T-Mobile raised its Regulatory Programs & Telco Recovery Fee in early 2026. Voice lines and mobile internet lines both saw significant increases. Though not headline news in April, the increased visibility of such fees contributes to overall bill hikes even when advertised plan rates are unchanged. Customers on Reddit expressing frustration about 'hidden' fee increases.",
+    "source_type": "website",
+    "ingested_at": "2026-04-21T00:20:00Z",
+    "provider": "t-mobile",
+    "signal_type": "policy_change",
+    "source_citation": "tmonews.com (January 2026)"
+  }
+]

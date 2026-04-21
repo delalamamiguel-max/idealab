@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 
 from agent_config import build_full_context, get_experiment_count, get_experiment_fields
 from thinking_agent import ThinkingAgent
+from telecom_intel.pipeline import TelecomIntelPipeline
 
 # ---------------------------------------------------------------------------
 # Environment & Configuration
@@ -233,10 +234,73 @@ with st.sidebar:
 
     st.divider()
 
+    # ── Telecom Market Intelligence ──
+    st.markdown("""
+    <div class="sidebar-section">
+        <h3>📡 Market Intelligence</h3>
+        <p>Telecom competitive signals from Apify scrapers</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    market_intel_enabled = st.toggle(
+        "Enable Market Intel",
+        value=st.session_state.get("market_intel_enabled", False),
+        help="When enabled, the agent receives live competitive signals from T-Mobile, Verizon, Reddit, etc.",
+    )
+    st.session_state.market_intel_enabled = market_intel_enabled
+
+    if market_intel_enabled:
+        intel_mode = st.radio(
+            "Data Source",
+            options=["dry_run", "cached", "live"],
+            index=0,
+            format_func=lambda x: {
+                "dry_run": "🧪 Sample Data (no API calls)",
+                "cached": "💾 Cached Signals (last run)",
+                "live": "🌐 Live Scrape (Apify)",
+            }[x],
+            help="dry_run uses built-in sample data. cached loads the last scrape. live triggers Apify.",
+        )
+        st.session_state.intel_mode = intel_mode
+
+        use_llm_classification = st.checkbox(
+            "LLM Classification",
+            value=True,
+            help="Use GPT-4o-mini for signal classification instead of keyword rules.",
+        )
+        st.session_state.use_llm_classification = use_llm_classification
+
+        if st.button("🔄 Run Pipeline", use_container_width=True):
+            st.session_state.run_pipeline = True
+
+        # Show signal stats if available
+        if "market_intel_report" in st.session_state and st.session_state.market_intel_report:
+            report = st.session_state.market_intel_report
+            signal_count = report.total_signals
+            insight_count = report.total_insights
+            mode_label = report.mode
+
+            status_color = "#22c55e" if signal_count > 0 else "#f59e0b"
+            st.markdown(f"""
+            <div class="sidebar-section">
+                <h3>📊 Last Pipeline Run</h3>
+                <p>Mode: <strong>{mode_label}</strong></p>
+                <p>Signals: <strong>{signal_count}</strong></p>
+                <p>Insights: <strong>{insight_count}</strong></p>
+                <p style="color: {status_color};">
+                    {'✅ Signals loaded' if signal_count > 0 else '⚠️ No signals'}
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.divider()
+
     # Clear chat button
     if st.button("🗑️ Clear Conversation", use_container_width=True):
         st.session_state.messages = []
         st.session_state.context_messages = None
+        st.session_state.pop("market_intel_report", None)
+        st.session_state.pop("market_intel_context", None)
         st.rerun()
 
 
@@ -274,10 +338,9 @@ if "context_messages" not in st.session_state:
 # Pre-load context on first run
 # ---------------------------------------------------------------------------
 
-@st.cache_resource(show_spinner=False)
-def get_system_context():
-    """Load and cache the full system context (system prompt + experiment data)."""
-    return build_full_context()
+def get_system_context(market_intel_context: str = None):
+    """Load the full system context (system prompt + experiment data + market intel)."""
+    return build_full_context(market_intel_context=market_intel_context)
 
 
 # ---------------------------------------------------------------------------
@@ -314,6 +377,11 @@ STARTER_PROMPTS = [
         "icon": "📈",
         "label": "Find winning patterns",
         "prompt": "What are the common patterns across our winning experiments? What mechanisms drive success?",
+    },
+    {
+        "icon": "📡",
+        "label": "Market-driven experiments",
+        "prompt": "Based on current market signals from competitors, what experiments should we prioritize? Cross-reference with our historical data.",
     },
 ]
 
@@ -371,12 +439,54 @@ if prompt := st.chat_input("Ask about experiments, ideas, predictions, or intake
             )
         st.stop()
 
-    # Initialize thinking agent
+    # Initialize OpenAI client
     client = OpenAI(api_key=active_key)
-    thinking_agent = ThinkingAgent(client, model=model_choice, temperature=temperature)
-    
-    # Get system context for the thinking agent
-    system_context = get_system_context()
+
+    # ── Run Telecom Intel Pipeline if requested ──
+    market_intel_context = st.session_state.get("market_intel_context", None)
+
+    if st.session_state.get("run_pipeline", False):
+        st.session_state.run_pipeline = False
+        intel_mode = st.session_state.get("intel_mode", "dry_run")
+        use_llm = st.session_state.get("use_llm_classification", True)
+
+        with st.spinner(f"📡 Running Telecom Intel Pipeline ({intel_mode})..."):
+            pipeline = TelecomIntelPipeline(
+                openai_client=client,
+                use_llm=use_llm,
+            )
+            report = pipeline.run(mode=intel_mode)
+            st.session_state.market_intel_report = report
+            market_intel_context = pipeline.get_context_for_llm()
+            st.session_state.market_intel_context = market_intel_context
+
+    elif market_intel_enabled and not market_intel_context:
+        # Auto-run dry_run on first query if market intel is enabled but no data yet
+        intel_mode = st.session_state.get("intel_mode", "dry_run")
+        use_llm = st.session_state.get("use_llm_classification", True)
+
+        with st.spinner("📡 Loading market intelligence (first run)..."):
+            pipeline = TelecomIntelPipeline(
+                openai_client=client,
+                use_llm=use_llm,
+            )
+            report = pipeline.run(mode=intel_mode)
+            st.session_state.market_intel_report = report
+            market_intel_context = pipeline.get_context_for_llm()
+            st.session_state.market_intel_context = market_intel_context
+
+    # Initialize thinking agent with market intel context
+    thinking_agent = ThinkingAgent(
+        client,
+        model=model_choice,
+        temperature=temperature,
+        market_intel_context=market_intel_context if market_intel_enabled else None,
+    )
+
+    # Get system context for the thinking agent (includes market intel if available)
+    system_context = get_system_context(
+        market_intel_context=market_intel_context if market_intel_enabled else None,
+    )
     context_content = system_context[0]["content"] if system_context else ""
 
     # Stream the response with thinking agent

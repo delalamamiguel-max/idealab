@@ -2,7 +2,8 @@
 Experimentation Agent — Configuration & Document Loader
 
 Loads the system prompt, parses historical experiment data from the Excel file,
-and prepares the full agent context for the OpenAI API.
+loads telecom market intelligence signals, and prepares the full agent context
+for the OpenAI API.
 """
 
 import os
@@ -179,6 +180,40 @@ Audience: clear definition, exclusions noted.
 Operational: useful for triage, backlog review, planning.
 Learning: historical analogs used, failed patterns not repeated, mixed evidence surfaced.
 Truthfulness: no fabricated evidence, assumptions marked, confidence calibrated.
+
+==================================================
+6. MARKET INTELLIGENCE SUBAGENT (TELECOM INTEL)
+==================================================
+
+The system now includes a Telecom Market Intelligence pipeline that provides
+real-time competitive signals from the telecom market.
+
+Data Sources:
+- Competitor websites: T-Mobile, Verizon, plan changelogs, software update pages
+- Reddit communities: r/tmobile, r/verizon, r/ATT, r/NoContract, r/GoogleFi, etc.
+
+Signal Types:
+- pricing: Plan price changes, promotions, discounts
+- outage: Network outages, service disruptions
+- software_update: OS updates, firmware patches, carrier updates
+- customer_sentiment: Customer opinions, complaints, praise
+- policy_change: ToS changes, eligibility changes, regulatory
+- competitive_move: Strategic moves by competitors
+- churn_signal: Customers mentioning switching carriers
+
+How to use market intelligence:
+- When generating experiment ideas, cross-reference with recent market signals
+- When a competitor makes a pricing move, suggest defensive/offensive experiments
+- When outage signals appear for competitors, suggest opportunity experiments
+- When churn signals mention AT&T, flag as high-priority retention experiments
+- Always cite specific signals when referencing market intelligence
+- Distinguish between historical experiment evidence and market signal evidence
+
+Integration rules:
+- Market signals are SUPPLEMENTARY to historical experiment data
+- Never base experiment recommendations solely on market signals without historical grounding
+- When market signals contradict historical patterns, surface the tension explicitly
+- Confidence in market-driven recommendations should reflect signal freshness and volume
 """.strip()
 
 
@@ -333,10 +368,17 @@ def load_experiment_inventory_md(filepath: Optional[Path] = None) -> str:
 # Full context builder
 # ---------------------------------------------------------------------------
 
-def build_full_context() -> list[dict]:
+def build_full_context(market_intel_context: Optional[str] = None) -> list[dict]:
     """
     Build the complete messages list for the OpenAI API,
-    including the system prompt and pre-loaded document context.
+    including the system prompt, pre-loaded document context,
+    and optional market intelligence data.
+
+    Parameters
+    ----------
+    market_intel_context : str or None
+        Formatted market intelligence report from the TelecomIntelPipeline.
+        If provided, it's injected as a supplementary context section.
 
     Returns a list of message dicts ready for the API.
     """
@@ -367,6 +409,19 @@ def build_full_context() -> list[dict]:
         f"{summary_table}\n\n"
         f"{historical_data}"
     )
+
+    # Inject market intelligence if available
+    if market_intel_context:
+        full_system += (
+            f"\n\n"
+            f"==================================================\n"
+            f"TELECOM MARKET INTELLIGENCE (LIVE SIGNALS)\n"
+            f"==================================================\n\n"
+            f"The following market intelligence was collected from competitor websites "
+            f"and Reddit communities. Use these signals to inform experiment ideation, "
+            f"identify competitive threats, and surface market-driven opportunities.\n\n"
+            f"{market_intel_context}"
+        )
 
     return [{"role": "system", "content": full_system}]
 

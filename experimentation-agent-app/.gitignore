@@ -4,3 +4,12 @@ __pycache__/
 .streamlit/secrets.toml
 venv/
 .venv/
+
+# Telecom Intel pipeline output (auto-generated cache)
+telecom_intel/output/signals/
+telecom_intel/output/insights/
+telecom_intel/output/cache/
+
+# Keep raw web_search signals (real data) and experiment briefs tracked
+# telecom_intel/output/raw/ — tracked (real sourced data)
+# output/ — tracked (experiment deliverables)

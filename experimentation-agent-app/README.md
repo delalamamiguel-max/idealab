@@ -75,7 +75,8 @@ Open your browser to **http://localhost:8501** — the agent is ready.
 ```
 experimentation-agent-app/
 ├── app.py                           # Streamlit chat application
-├── agent_config.py                  # System prompt + Excel data parser
+├── agent_config.py                  # System prompt + Excel data parser + market intel loader
+├── thinking_agent.py                # Multi-agent orchestrator with market intel integration
 ├── requirements.txt                 # Python dependencies
 ├── start.sh                         # One-click startup script
 ├── .env.example                     # Environment config template
@@ -85,9 +86,22 @@ experimentation-agent-app/
 ├── 2025_EXPERIMENTS_QUICK_REFERENCE.md  # Summary of all 55 experiments
 ├── .streamlit/
 │   └── config.toml                  # Streamlit theme & server config
-└── documents/
-    ├── XTrack_Chat_Bot_export_2025-07-28T07_28_00.xlsx   # 55 experiments, 41 fields
-    └── Optimization Concept Intake Guide.pdf
+├── documents/
+│   ├── XTrack_Chat_Bot_export_2025-07-28T07_28_00.xlsx   # 55 experiments, 41 fields
+│   └── Optimization Concept Intake Guide.pdf
+├── telecom_intel/                   # 📡 Market Intelligence Pipeline
+│   ├── __init__.py                  # Package exports
+│   ├── models.py                    # Data models (MarketSignal, ClassifiedSignal, etc.)
+│   ├── config.py                    # URLs, subreddits, Apify config
+│   ├── ingestion_agent.py           # Apify scraper (websites + Reddit)
+│   ├── classification_agent.py      # LLM-powered signal classification
+│   ├── reasoning_agent.py           # Cross-signal pattern detection + insights
+│   ├── pipeline.py                  # Full pipeline orchestrator (4 modes — see below)
+│   └── output/                      # Auto-created: raw data, signals, insights, cache
+│       ├── raw/                     # Includes web_search_signals_*.json files
+│       ├── signals/
+│       └── insights/
+└── output/                          # Generated experiment briefs
 ```
 
 ---
@@ -136,6 +150,23 @@ The parser automatically detects and uses these columns (all optional — it use
 | `OPENAI_API_KEY` | *(required)* | Your OpenAI API key |
 | `OPENAI_MODEL` | `gpt-4o` | Model to use (`gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, `gpt-3.5-turbo`) |
 | `OPENAI_TEMPERATURE` | `0.4` | Response creativity (0.0–1.0) |
+| `APIFY_API_TOKEN` | *(optional)* | Apify API token for live scraping mode (not required for `web_search` mode) |
+| `APIFY_BASE_URL` | `https://api.apify.com/v2` | Apify API base URL |
+| `CLASSIFICATION_MODEL` | `gpt-4o-mini` | Model for signal classification (cost-optimized) |
+| `SIGNAL_CACHE_TTL` | `3600` | How long cached signals remain valid (seconds) |
+
+### Pipeline Modes
+
+The Telecom Intel Pipeline supports four ingestion modes:
+
+| Mode | Description | Requires Apify? | Requires Network? |
+|------|-------------|-----------------|--------------------|
+| `web_search` | **Recommended.** Loads real signals from `web_search_signals_*.json` files in `telecom_intel/output/raw/`. Data is collected externally via web search and saved to disk. | ❌ No | ❌ No |
+| `live` | Runs Apify Website Content Crawler + Reddit Scraper in real time. | ✅ Yes | ✅ Yes (api.apify.com) |
+| `cached` | Loads most recent classified signals from disk. Skips ingestion + classification. | ❌ No | ❌ No |
+| `dry_run` | Uses hardcoded sample data. **For development/testing only — data is synthetic.** | ❌ No | ❌ No |
+
+> ⚠️ **Corporate network note:** If your firewall blocks `api.apify.com` (common on VPN), use `web_search` mode. It produces the same pipeline output from real data without any Apify dependency.
 
 ### Runtime Settings (Sidebar)
 
@@ -143,6 +174,9 @@ All settings can also be adjusted in the app sidebar without restarting:
 - API Key
 - Model selection
 - Temperature slider
+- **Market Intelligence toggle** — enable/disable competitive signals
+- **Data source** — web search signals, cached signals, live Apify scrape, or sample data
+- **LLM Classification** — toggle between LLM and keyword-fallback classification
 
 ---
 
@@ -165,6 +199,11 @@ All settings can also be adjusted in the app sidebar without restarting:
 
 **Cross-reference:**
 > "Recommend an experiment for the add-a-line flow based on insights from our top 3 winning experiments."
+
+**Market-Driven (with Market Intel enabled):**
+> "Based on current market signals from competitors, what experiments should we prioritize?"
+
+> "T-Mobile just dropped their plan prices — what defensive experiments should we run?"
 
 ---
 
@@ -201,48 +240,91 @@ docker run -p 8501:8501 --env-file .env experimentation-agent
 
 ## 🏗️ Architecture
 
-The agent uses a **multi-agent orchestration pattern** internally:
+The agent uses a **multi-agent orchestration pattern** with two integrated data pipelines:
 
 ```
 User Query
     │
     ▼
-┌─────────────────────────────────────────┐
-│  Experimentation Agent (Orchestrator)   │  ← Main orchestrator (speaks to user)
-└────────┬────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│              ThinkingAgent (Multi-Agent Orchestrator)             │
+│                                                                  │
+│  Intent Analysis → Dynamic Context → Subagent Coordination       │
+└────────┬─────────────────────────────────────────────────────────┘
          │
-    ┌────┴────┬──────────┬──────────────┐
-    ▼         ▼          ▼              ▼
-┌────────┐ ┌────────┐ ┌──────────┐ ┌────────┐
-│Knowledge│ │Reasoning│ │  Skill   │ │ Output │
-│ Layer  │ │ Layer  │ │ Modules  │ │ Layer  │
-└────────┘ └────────┘ └──────────┘ └────────┘
-    ▲
-    │
-    └─ Powered by: 2025 XTrack Export
-       (55 experiments, 41 fields)
-       ├─ Impacted Journey
-       ├─ Technical Site Area
-       ├─ Test Results & Lift
-       ├─ Primary/Secondary Metrics
-       ├─ Audience Definition
-       ├─ Learnings & Opportunities
-       └─ Capability Focus Area
-                          │
-                    ┌─────┼─────┬──────────┐
-                    ▼     ▼     ▼          ▼
-                 Search  Ideate  Predict  Intake
+    ┌────┴────┬──────────┬──────────┬──────────┬──────────────┐
+    ▼         ▼          ▼          ▼          ▼              ▼
+┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
+│Knowledge│ │Ideation│ │Predict │ │ Intake │ │Market  │ │Reason- │
+│ Agent  │ │ Agent  │ │ Agent  │ │ Agent  │ │ Intel  │ │  ing   │
+└───┬────┘ └────────┘ └────────┘ └────────┘ └───┬────┘ └────────┘
+    │                                            │
+    ▼                                            ▼
+┌──────────────────────┐          ┌──────────────────────────────┐
+│  INTERNAL KNOWLEDGE   │          │  EXTERNAL MARKET SIGNALS     │
+│                       │          │                              │
+│  55 experiments       │          │  📡 Telecom Intel Pipeline   │
+│  2025 XTrack Export   │          │                              │
+│  41 fields per test   │          │  Ingestion → Classification  │
+│  Win/loss patterns    │          │       → Reasoning            │
+│  Historical lifts     │          │                              │
+│                       │          │  Sources:                    │
+│  Source: Excel        │          │  • T-Mobile, Verizon sites   │
+│                       │          │  • Reddit communities        │
+│                       │          │  • Plan changelogs           │
+│                       │          │  • Software update pages     │
+│                       │          │                              │
+│                       │          │  Classification: LLM-powered │
+│                       │          │  (GPT-4o-mini)               │
+└──────────────────────┘          └──────────────────────────────┘
 ```
 
-**Knowledge Layer** retrieves and ranks experiments from your 2025 data using these search dimensions:
-- Journey (Wireless, Wireline, Account Mgmt, Converged, etc.)
-- Site Area (PDP, Cart, Config, Plans, Homepage, etc.)
-- Metrics (Progression, POCR, Clicks, Sales, CVR, OSA calls, etc.)
-- Audience (Consumer, IRU, SMB, CaaS, FirstNet, etc.)
-- Results (Win, Loss, None, N/A)
-- Capability Focus (Trade-in, Plans, Offers, AiA, Port-in, Add-a-Line, etc.)
+### Data Pipelines
 
-All subagents are orchestrated within a single LLM call via structured prompting — no separate API calls per subagent. This keeps latency low and costs manageable.
+**Internal (Historical Experiments):**
+- 55 experiments from 2025 XTrack export
+- Searchable by journey, site area, metrics, audience, results, capability focus
+- Primary source for all recommendations and analogs
+
+**External (Market Intelligence):**
+- Competitive signals from **web search** (primary) or **Apify scrapers** (when network allows)
+- `web_search` mode loads real, sourced signals from JSON files on disk — no Apify or network dependency
+- `live` mode uses Apify Website Content Crawler + Reddit Scraper (requires `api.apify.com` access)
+- LLM-powered classification (with keyword fallback when no OpenAI key)
+- Signal types: pricing, outage, software_update, customer_sentiment, policy_change, competitive_move, churn_signal
+- Cross-signal reasoning generates actionable insights with experiment recommendations
+
+### How They Work Together
+
+When Market Intelligence is enabled, the agent sees **both worlds**:
+- Historical experiments tell it *what AT&T has tried and what worked*
+- Market signals tell it *what competitors are doing right now*
+- The Reasoning Agent synthesizes both into market-aware experiment recommendations
+
+Example: "T-Mobile dropped pricing → Reddit shows AT&T churn mentions → Historical data shows value-surfacing experiments win → **Recommend:** Test competitive price-match messaging on wireless PDP"
+
+### Web Search Mode — How It Works
+
+When Apify is blocked (e.g. corporate firewall), the pipeline uses pre-collected web search data:
+
+```
+External Web Search (runs outside corporate network)
+    │
+    ▼
+telecom_intel/output/raw/web_search_signals_YYYYMMDD.json   ← real, sourced signals
+    │
+    ▼
+┌──────────────────────────────────────────────────────────┐
+│  Pipeline (mode='web_search')                            │
+│                                                          │
+│  1. Load signals from JSON          (no Apify needed)    │
+│  2. Classification Agent            (LLM or keyword)     │
+│  3. Reasoning Agent                 (pattern detection)  │
+│  4. → Insights + experiment recs                         │
+└──────────────────────────────────────────────────────────┘
+```
+
+The JSON files contain the same data Apify would scrape — competitor pricing pages, Reddit posts, news articles — collected from the same approved sources listed in `config.py`. Every signal includes a `source_citation` field for audit.
 
 ---
 
