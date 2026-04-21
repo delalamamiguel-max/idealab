@@ -27,10 +27,7 @@ for _d in (OUTPUT_DIR, RAW_DIR, SIGNALS_DIR, INSIGHTS_DIR, CACHE_DIR):
 # Apify
 # ---------------------------------------------------------------------------
 
-APIFY_API_TOKEN = os.getenv(
-    "APIFY_API_TOKEN",
-    "",
-)
+APIFY_API_TOKEN = os.getenv("APIFY_API_TOKEN", "")
 APIFY_BASE_URL = os.getenv("APIFY_BASE_URL", "https://api.apify.com/v2")
 
 APIFY_WEBSITE_CRAWLER_ACTOR = "apify/website-content-crawler"
