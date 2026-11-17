@@ -19,7 +19,7 @@ A Python/Streamlit experimentation assistant for searching prior experiments, pr
 
 Streamlit handles the UI, OpenAI handles model generation, and pandas/openpyxl support spreadsheet loading. Telecom ingestion includes Apify website/Reddit adapters, while classification/reasoning can use model calls. The pipeline exposes live, cached, dry-run and disk-loaded web-search modes. A dry-run avoids Apify ingestion but does not by itself guarantee that all model calls are disabled; inspect the model setting before execution.
 
-The nested README describes an Excel export and fixed experiment count. That expected workbook is absent from this checkout. Current context assembly also loads a Markdown inventory when present; the UI's experiment count/field helpers only inspect Excel, so a zero count does not prove there is no Markdown context. Treat historical dataset counts and performance statements as unverified, not current ground truth.
+The nested README describes an Excel export and fixed experiment count. The configured workbook is tracked at `experimentation-agent-app/documents/XTrack_Chat_Bot_export_2025-07-28T07_28_00.xlsx`, with another tracked copy under root `documents/`. Its contents and experiment counts were not validated for this README. Current context assembly also loads a Markdown inventory when present; the UI's experiment count/field helpers only inspect Excel, so a zero count does not prove there is no Markdown context. Treat historical dataset counts and performance statements as unverified, not current ground truth.
 
 ## Setup and environments
 
